@@ -13,6 +13,24 @@ async function addBrainstorm(theme, hash, endBrainstormAt) {
   }
 }
 
+async function addBrainstormMessage(brainstormId, messageId) {
+  try {
+    const response = await pgpool.query("INSERT INTO brainstorm_messages (brainstorm_id, message_id) VALUES($1, $2)", [brainstormId, messageId]);
+    return response.ok;
+  } catch (err) {
+    return err.message;
+  }
+}
+
+async function getBrainstormMessages(brainstormId) {
+  try {
+    const response = await pgpool.query("SELECT * FROM brainstorm_messages WHERE brainstorm_id = $1 ORDER BY brainstorm_message_id", [brainstormId]);
+    return response.rows;
+  } catch (err) {
+    return err.message;
+  }
+}
+
 async function addBrainstormContribution(brainstormId, contribution) {
   try {
     const newContribution = await pgpool.query(
@@ -49,4 +67,6 @@ module.exports = {
   addBrainstormContribution,
   getBrainstorm,
   getBrainstormContributions,
+  addBrainstormMessage,
+  getBrainstormMessages,
 };

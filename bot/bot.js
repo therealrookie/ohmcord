@@ -46,6 +46,7 @@ function startBot() {
 
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
+    await interaction.deferReply(); // Delay reply
 
     const command = interaction.client.commands.get(interaction.commandName);
 
@@ -59,9 +60,9 @@ function startBot() {
     } catch (error) {
       console.error(error);
       if (interaction.replied || interaction.deferred) {
-        await interaction.followUp({ content: "There was an error while executing this command!", flags: MessageFlags.Ephemeral });
+        //await interaction.followUp({ content: "There was an error while executing this command!", flags: MessageFlags.Ephemeral });
       } else {
-        await interaction.reply({ content: "There was an error while executing this command!", flags: MessageFlags.Ephemeral });
+        //await interaction.reply({ content: "There was an error while executing this command!", flags: MessageFlags.Ephemeral });
       }
     }
   });

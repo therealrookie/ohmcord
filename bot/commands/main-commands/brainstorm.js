@@ -13,7 +13,6 @@ const {
 const { addBrainstormContribution } = require("../../../database/dbBrainstormFunctions");
 
 async function handleBrainstormCommand(interaction) {
-  await interaction.deferReply(); // Delay reply
   const client = interaction.client;
 
   let imageSent = false; // Flag to indicate if the canvas has already been sent to the channel
@@ -46,11 +45,11 @@ async function handleBrainstormCommand(interaction) {
   });
 
   // Handle a new contribution from Discord or the website
-  async function handleNewContribution(userIdea) {
-    await addContributionToCanvas(ws, hashRoute, brainstormId, userIdea);
+  async function handleNewContribution(contribution) {
+    await addContributionToCanvas(ws, hashRoute, brainstormId, contribution);
+    const contributionId = await addBrainstormContribution(brainstormId, contribution);
 
-    contributions.push(userIdea); // Add contribution to temporary array
-    await addBrainstormContribution(brainstormId, userIdea);
+    contributions.push({ contributionId, contribution }); // Add contribution to temporary array
 
     await startBrainstormEmbed(interaction, brainstormData, contributions);
   }
@@ -58,9 +57,14 @@ async function handleBrainstormCommand(interaction) {
   // Handle interaction with "add contribution"-button
   client.on("interactionCreate", async (buttonInteraction) => {
     if (!buttonInteraction.isButton()) return;
-    if (buttonInteraction.customId !== "contribute_button") return;
 
-    await openContributionModal(buttonInteraction, theme);
+    if (buttonInteraction.customId === "contribute_button") {
+      await openContributionModal(buttonInteraction, theme);
+    } else if (buttonInteraction.customId.contains("contribution_")) {
+      const contributionId = buttonInteraction.customId.replace("contribution_", "");
+      const userId = buttonInteraction.user.id;
+      console.log(contributionId, userId);
+    } else return;
   });
 
   // Handle interaction with the contribution-modal

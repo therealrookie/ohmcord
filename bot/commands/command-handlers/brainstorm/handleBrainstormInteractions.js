@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 
-const { addBrainstorm } = require("../../../../database/dbBrainstormFunctions");
+const { addBrainstorm, addBrainstormMessage, getBrainstormMessages } = require("../../../../database/dbBrainstormFunctions");
 const { createHashRoute } = require("../../../utils/utilsFunctions");
 
 // Extract important brainstorm-data, save it to the database
@@ -29,12 +29,62 @@ async function handleWebsocket(ws, theme) {
   });
 }
 
-// Create a String (list) of contributions
-function mapContributions(contributions) {
-  if (contributions.length === 0) {
-    return "No contributions yet. Click + to add your idea!";
-  } else {
-    return contributions.map((idea, index) => `${index + 1}. ${idea}`).join("\n");
+function createLastRow(hashRoute) {
+  const contributeButton = new ButtonBuilder().setCustomId("contribute_button").setLabel("+").setStyle(ButtonStyle.Success);
+  const linkButton = new ButtonBuilder()
+    .setLabel("Brainstorm Canvas")
+    .setURL(`${process.env.URL}:${process.env.port}/brainstorm/${hashRoute}`)
+    .setStyle(ButtonStyle.Link);
+
+  const actionRow = new ActionRowBuilder().addComponents(contributeButton).addComponents(linkButton);
+  return actionRow;
+}
+
+function createContributionActionRows(contributions) {
+  let actionRows = [];
+
+  for (let i = 0; i < contributions.length; i += 5) {
+    const actionRow = new ActionRowBuilder();
+
+    for (let j = i; j < i + 5 && j < contributions.length; j++) {
+      const contributionButton = new ButtonBuilder()
+        .setCustomId(`contribution_${contributions[j].contributionId}`)
+        .setLabel(contributions[j].contribution)
+        .setStyle(ButtonStyle.Primary);
+
+      actionRow.addComponents(contributionButton);
+    }
+    actionRows.push(actionRow);
+  }
+
+  const lastRow = createLastRow("asdfgg");
+  actionRows.push(lastRow);
+
+  return actionRows;
+}
+
+//await channel.send({ embeds: [startQuizEmbed], components: [actionRowQuizStart] });
+
+async function sendAdditionalMessage(contributions, interaction, brainstormId) {
+  const actionRows = createContributionActionRows(contributions);
+
+  for (let i = 0; i < actionRows.length; i += 5) {
+    const messageActionRows = [];
+    for (let j = i; j < i + 5 && j < actionRows.length; j++) {
+      messageActionRows.push(actionRows[j]);
+    }
+    const messageIndex = Math.floor(i / 5);
+    const messages = await getBrainstormMessages(brainstormId);
+
+    const channel = await interaction.client.channels.fetch(interaction.channelId);
+
+    if (messages[messageIndex]) {
+      const newMessage = await channel.messages.fetch(messages[messageIndex].message_id);
+      await newMessage.edit({ components: messageActionRows });
+    } else {
+      const message = await channel.send({ components: messageActionRows });
+      await addBrainstormMessage(brainstormId, message.id);
+    }
   }
 }
 
@@ -42,25 +92,20 @@ function mapContributions(contributions) {
 async function startBrainstormEmbed(interaction, brainstormData, contributions) {
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
 
-  const contributionField = mapContributions(contributions);
   const brainstormEmbed = new EmbedBuilder()
     .setColor(0x00ff00)
-    .setTitle(theme)
-    .setURL(`${process.env.URL}:${process.env.port}/brainstorm/${hashRoute}`)
+    .setTitle("Brainstorm")
     .setDescription(`A new brainstorming session has begun with the theme **${theme}**.`)
     .addFields(
       { name: "Theme", value: theme, inline: true },
       { name: "Time Limit", value: `${timeLimit} minutes`, inline: true },
-      { name: "ID: ", value: hashRoute, inline: true },
-      { name: "Contributions", value: contributionField }
-    )
-    .setFooter({ text: "Click the + button to contribute your ideas!" });
+      { name: "ID: ", value: hashRoute, inline: true }
+      //{ name: "Contributions", value: contributionField }
+    );
+  //.setFooter({ text: "Click the + button to contribute your ideas!" });
 
-  const contributeButton = new ButtonBuilder().setCustomId("contribute_button").setLabel("+").setStyle(ButtonStyle.Primary);
-
-  const actionRow = new ActionRowBuilder().addComponents(contributeButton);
-
-  await interaction.editReply({ embeds: [brainstormEmbed], components: [actionRow] });
+  await interaction.editReply({ embeds: [brainstormEmbed] });
+  await sendAdditionalMessage(contributions, interaction, brainstormId);
 }
 
 // Create and open the contribution-modal
@@ -71,6 +116,7 @@ async function openContributionModal(buttonInteraction, theme) {
     .setCustomId("idea_input")
     .setLabel("Your Idea")
     .setStyle(TextInputStyle.Short)
+    .setMaxLength(70)
     .setPlaceholder("Enter a single-line idea")
     .setRequired(true);
 

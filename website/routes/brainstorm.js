@@ -5,6 +5,34 @@ const { getBrainstorm, getBrainstormContributions } = require("../../database/db
 const { WebSocket } = require("ws");
 const ws = new WebSocket(`ws://${process.env.WS_URL}:${process.env.WS_PORT}`);
 
+const selectedProduct = Math.floor(Math.random() * 3);
+
+brainstormRouter.get("/:url", async (req, res) => {
+  try {
+    const brainstormData = await getBrainstorm(req.params.url);
+    const html = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Product Page</title>
+        </head>
+        <body>
+            <h1>${brainstormData.theme}</h1>
+            <h3>${brainstormData.brainstorm_id}, ${brainstormData.end_time_ms}</h3>
+            <p>${selectedProduct}</p>
+        </body>
+        </html>
+    `;
+    res.send(html);
+  } catch (error) {
+    console.log(error);
+    res.render("error", { text: "An error occurred while fetching brainstorm data" });
+  }
+});
+
+/*
 brainstormRouter.get("/:url", async (req, res) => {
   try {
     const brainstormData = await getBrainstorm(req.params.url);
@@ -23,6 +51,7 @@ brainstormRouter.get("/:url", async (req, res) => {
     res.render("error", { text: "An error occurred while fetching brainstorm data" });
   }
 });
+*/
 
 brainstormRouter.get("/contribution/:id", async (req, res) => {
   try {

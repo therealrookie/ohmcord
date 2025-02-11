@@ -95,7 +95,9 @@ function startServer() {
   app.set("view engine", "ejs"); // Assuming you use EJS
 
   app.get("/", (req, res) => {
-    res.render("index");
+    res.render("index", {
+      addBotUrl: process.env.ADD_URL,
+    });
   });
 
   app.get("/help", (req, res) => {

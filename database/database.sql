@@ -5,10 +5,23 @@ CREATE TABLE brainstorm (
     url VARCHAR(255)
 );
 
+CREATE TABLE brainstorm_messages (
+    brainstorm_message_id SERIAL PRIMARY KEY,
+    brainstorm_id INTEGER,
+    message_id VARCHAR(255)
+);
+
 CREATE TABLE brainstorm_contributions (
     contribution_id SERIAL PRIMARY KEY,
     brainstorm_id INTEGER,
     contribution VARCHAR(255),
+    score INTEGER
+);
+
+CREATE TABLE brainstorm_contribution_scoring (
+    scoring_id SERIAL PRIMARY KEY,
+    contribution_id INTEGER,
+    discord_user_id VARCHAR(255),
     score INTEGER
 );
 
