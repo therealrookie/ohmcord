@@ -1,0 +1,49 @@
+:root {
+    --black: #0a090c;
+    --white: #F0EDEE;
+    --primary: #90DDF0;
+    --secondary: #2C666E;
+    --tertiary: #07393C;
+  }
+
+body {
+    background-color: var(--black);
+    color: var(--white);
+    margin: 0;
+    overflow: hidden;
+}
+
+h1 {
+    color: var(--primary)
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-color: var(--tertiary);
+    height: 10vh;
+}
+
+.logo {
+    width: 50px;
+}
+
+#bs-canvas {
+    background-color: var(--black);
+    width: 100vw;
+    height: 80vh;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 10vh;
+    background-color: var(--tertiary);
+}
+

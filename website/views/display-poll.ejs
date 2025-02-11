@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta vharset="" UTF-8 />
+    <title>Poll</title>
+    <link rel="stylesheet" href="/styles/display-poll.css" />
+    <link rel="stylesheet" href="/styles/custom-alert.css" />
+    <link rel="icon" type="image/png" href="/assets/OhmcordLogo.png" />
+  </head>
+  <body>
+    <div id="page-container">
+      <div class="header">
+        <a href="/"><img class="logo" src="/assets/OhmcordLogo.png" /></a>
+        <h1>Finished poll</h1>
+        <h3 id="hashRoute" data-poll-id="<%= locals.id %>" data-hash-route="<%= locals.hashRoute %>"></h3>
+      </div>
+
+      <div id="poll-container" class="background">
+        <div id="display-container">
+          <div id="question-and-answers">
+            <h2><%= locals.title %></h2>
+            <div id="answers-list" answers-data="<%= locals.answers %>"></div>
+          </div>
+          <div id="poll-footer">
+            <div id="additional-data">
+              <% if(locals.multipleAnswers) { %>
+              <div>Multiple answers allowed.</div>
+              <% } else { %>
+              <div>Multiple answers not allowed.</div>
+              <% } %>
+
+              <p id="duration-element" duration-data="<%= locals.duration %> "></p>
+            </div>
+
+            <div id="copy-code-container">&#128203; <%= locals.hashRoute %></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer"></div>
+      <script src="/scripts/custom-alert.js"></script>
+      <script>
+        const durationElement = document.getElementById("duration-element");
+        const duration = parseInt(durationElement.getAttribute("duration-data"));
+
+        if (duration === 1) {
+          durationElement.innerHTML = `Duration: ${duration} hour`;
+        } else if (duration > 1 && duration < 25) {
+          durationElement.innerHTML = `Duration: ${duration} hours`;
+        } else if (duration === 72) {
+          durationElement.innerHTML = `Duration: 3 days`;
+        } else if (duration === 168) {
+          durationElement.innerHTML = `Duration: 1 week`;
+        } else if (duration === 336) {
+          durationElement.innerHTML = `Duration: 2 weeks`;
+        }
+
+        const answersList = document.getElementById("answers-list");
+        const answersString = answersList.getAttribute("answers-data");
+
+        const answers = JSON.parse(answersString);
+
+        function displayEmoji(emoji) {
+          if (emoji === "") return "";
+          else if (emoji.includes(",")) return `&#${emoji.split(",")[0]};&#${emoji.split(",")[1]};`;
+          else return `&#${emoji};`;
+        }
+
+        answers.forEach((answer) => {
+          const answerElement = document.createElement("div");
+          const emojiContainer = document.createElement("div");
+          const answerText = document.createElement("div");
+
+          emojiContainer.classList.add("emojiContainer");
+          answerText.classList.add("answerText");
+          answerElement.classList.add("answer-element");
+
+          const emoji = displayEmoji(answer.emoji);
+          emojiContainer.innerHTML = emoji;
+          answerText.innerHTML = `${answer.answer}`;
+
+          answerElement.appendChild(emojiContainer);
+          answerElement.appendChild(answerText);
+          answersList.appendChild(answerElement);
+        });
+
+        const copyCodeContainer = document.getElementById("copy-code-container");
+        copyCodeContainer.addEventListener("click", () => {
+          const code = document.getElementById("hashRoute").getAttribute("data-hash-route");
+          navigator.clipboard.writeText(code);
+          addAlert(code, `successfully copied to clipboard!`, 1000);
+        });
+      </script>
+    </div>
+  </body>
+</html>

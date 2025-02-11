@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta vharset="" UTF-8 />
+    <title>Anonymous Questions</title>
+    <link rel="stylesheet" href="/styles/questions.css" />
+    <link rel="icon" type="image/png" src="/assets/OhmcordLogo.png" />
+  </head>
+  <body>
+    <div id="container">
+      <div class="header">
+        <a href="/"><img class="logo" src="/assets/OhmcordLogo.png" /></a>
+        <h1>Anonymous Questions</h1>
+        <h3><%= locals.hash %></h3>
+      </div>
+
+      <div class="background">
+        <center><h2 id="topic"><%= locals.topic %></h2></center>
+        <div id="questions" data-session-id="<%= locals.id %>"></div>
+      </div>
+
+      <div class="footer">
+        <input type="text" id="ask-question" maxlength="256" placeholder="New question..." />
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/scripts/questions.js"></script>
+  </body>
+</html>
+
+<!--
+        <form action="#" onsubmit="handleFormSubmit(event)">
+
+<input type="submit" value="+" />
+        </form>
+
+-->

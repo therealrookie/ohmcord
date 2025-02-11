@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta vharset="" UTF-8 />
+    <title>Create Poll</title>
+    <link rel="stylesheet" href="/styles/create-poll.css" />
+  </head>
+  <body>
+    <div id="page-container">
+      <div class="header">
+        <a href="/"><img class="logo" src="/assets/OhmcordLogo.png" /></a>
+        <h1>Umfrage</h1>
+        <h3></h3>
+      </div>
+
+      <div id="body-container" class="background">
+        <div id="poll-container">
+          <h3>Erstelle eine Umfrage</h3>
+
+          <form id="question-form">
+            <input type="text" id="question-input" maxlength="300" placeholder="Frage..." />
+            <button id="add-answer-button" onclick="addAnswer(); return false;">+</button>
+          </form>
+          <div id="create-poll-container">
+            <form id="multiple-answers-form">
+              <input type="checkbox" id="multiple-answers-checkbox" name="multiple-answers" value="false" />
+              <label for="multiple-answers-checkbox">Mehrere Antworten</label>
+            </form>
+            <div class="dropdown">
+              <div id="set-duration" data-value="1">Dauer: 1 Stunde</div>
+              <div id="duration-dropdown" class="dropdown-content"></div>
+            </div>
+
+            <button id="create-poll-button" onclick="createPoll()">Umfrage erstellen</button>
+          </div>
+        </div>
+        <div id="markup-container">
+          <div id="markup-scroll-container">
+            <h3>Stichworte</h3>
+            <div id="keyword-picker"></div>
+            <div id="time-heading">
+              <h3>Uhrzeit</h3>
+            </div>
+            <div id="time-picker-container">
+              <div id="hour-picker" class="time-picker">
+                <div>00</div>
+                <div>00</div>
+                <div>00</div>
+              </div>
+              <div>:</div>
+              <div id="minute-picker" class="time-picker">
+                <div>00</div>
+                <div>00</div>
+                <div>00</div>
+              </div>
+              <div id="time-selection">
+                <div>00</div>
+                <div>:</div>
+                <div>00</div>
+              </div>
+            </div>
+            <h3>Wochentag</h3>
+            <div id="weekday-picker"></div>
+            <h3>Datum</h3>
+            <div class="calendar">
+              <div class="calendar-header">
+                <button id="prev-month">‹</button>
+                <div id="month-year"></div>
+                <button id="next-month">›</button>
+              </div>
+              <div class="calendar-body">
+                <div id="calendar-weekdays" class="calendar-weekdays"></div>
+                <div class="calendar-dates"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer"></div>
+      <div id="background"></div>
+      <emoji-picker id="emoji-menu"></emoji-picker>
+    </div>
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/scripts/create-poll.js"></script>
+    <script src="/scripts/answer-markups.js"></script>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta vharset="" UTF-8 />
+    <title>Welcome</title>
+    <link rel="stylesheet" href="/styles/help.css" />
+    <link rel="icon" type="image/png" href="/assets/OhmcordLogo.png" />
+  </head>
+  <body>
+    <div id="page-container">
+      <div class="header">
+        <a href="/"><img class="logo" src="/assets/OhmcordLogo.png" /></a>
+        <h1>Hilfe</h1>
+        <h3></h3>
+      </div>
+
+      <div id="tools-container">
+        <div id="quiz-container" class="tool-container">
+          <h1>Quiz</h1>
+          <div></div>
+          <p>
+            Erstelle ein neues Quiz oder bearbeite ein bestehendes mit Eingabe des 6 stelligen Codes. <br />
+            Starte das Quiz in discord mit dem command <i>/quiz</i> und dem 6 stelligen Code.
+          </p>
+          <div id="quiz-actions">
+            <a href="/create-quiz">Create Quiz</a>
+            <input id="quiz-input" type="text" />
+          </div>
+        </div>
+        <div id="brainstorm-container" class="tool-container">
+          <h1>Brainstorm</h1>
+          <p>
+            Starte eine Brainstorm-Session in discord mit dem command <i>/brainstorm</i>. <br />
+            Oder kopiere den 6 Stelligen Code einer bestehenden Session in das untere Feld um dir die Ergebnisse anzusehen.
+          </p>
+          <input id="brainstorm-session-input" type="text" />
+        </div>
+        <div id="question-container" class="tool-container">
+          <h1>Anonyme Fragen</h1>
+          <p>
+            Starte eine anonyme Fragerunde in discord mit dem command <i>/anonymous-question</i>. <br />
+            Oder kopiere den 6 Stelligen Code einer bestehenden Session in das untere Feld um dir die Ergebnisse anzusehen.
+          </p>
+          <input id="question-session-input" type="text" />
+        </div>
+
+        <div id="poll-container" class="tool-container">
+          <h1>Umfrage</h1>
+          <p>
+            Erstelle eine neue Umfrage über den Button. <br />
+            Starte die Umfrage in discord mit dem command <i>/poll</i> und dem 6 stelligen Code.
+          </p>
+          <a href="/poll">Create Poll</a>
+        </div>
+        <div id="installation-container" class="tool-container">
+          <h1>Umfrage</h1>
+          <p>
+            Erstelle eine neue Umfrage über den Button. <br />
+            Starte die Umfrage in discord mit dem command <i>/poll</i> und dem 6 stelligen Code.
+          </p>
+          <a href="/poll">Create Poll</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/scripts/questions.js"></script>
+  </body>
+</html>

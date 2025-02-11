@@ -1,0 +1,561 @@
+/* General*/
+:root {
+  --black: #191919;
+  --white: #ffffff;
+  --primary: #f15025;
+  --secondary: #e6e8e6;
+  --tertiary: #ced0ce;
+  --rich-black: #0d1b2aff;
+  --oxford-blue: #1b263bff;
+  --yinmn-blue: #415a77ff;
+  --silver-lake-blue: #778da9ff;
+  --platinum: #e0e1ddff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  width: 100%;
+  background-color: var(--black);
+  color: var(--white);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#page-container {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* Header */
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin: 0;
+  background-color: var(--black);
+  height: 10vh;
+  width: 100%;
+}
+
+h1 {
+  color: var(--white);
+}
+
+.logo {
+  width: 50px;
+}
+
+/* Body container */
+#body-container {
+  position: absolute;
+  left: 0;
+  top: 10vh;
+  background-color: var(--white);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.background {
+  width: 100%;
+  height: 100%;
+  --s: 100px; /* control the size */
+  --c1: #f8b195;
+  --c2: #355c7d;
+
+  --_g: var(--c2) 4% 14%, var(--c1) 14% 24%, var(--c2) 22% 34%, var(--c1) 34% 44%, var(--c2) 44% 56%, var(--c1) 56% 66%, var(--c2) 66% 76%,
+    var(--c1) 76% 86%, var(--c2) 86% 96%;
+  background: radial-gradient(100% 100% at 100% 0, var(--c1) 4%, var(--_g), #0008 96%, #0000),
+    radial-gradient(100% 100% at 0 100%, #0000, #0008 4%, var(--_g), var(--c1) 96%) var(--c1);
+  background-size: var(--s) var(--s);
+}
+
+/* Poll container*/
+#poll-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  margin: 0;
+  width: 50%;
+  height: 90%;
+  background-color: var(--secondary);
+  color: var(--black);
+  border-radius: 15px;
+}
+
+#poll-container h3 {
+  font-size: 1.5rem;
+  align-self: center;
+}
+
+/* Question */
+#question-form {
+  width: 100%;
+  height: 80%;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+#question-input,
+.answer-text-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+/* Answers */
+.answer-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+}
+
+.emoji-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 5px;
+  border-radius: 3px;
+  background-color: var(--white);
+  line-height: 1;
+  width: 40px;
+  height: 30px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.answer-text-input {
+  line-height: 1;
+  margin: 5px 5px;
+  padding: 5px 10px;
+}
+
+.delete-answer-button {
+  display: inline-block;
+  margin: 0;
+  padding: 5px 10px;
+  line-height: 1;
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  color: var(--black);
+  cursor: pointer;
+}
+
+#add-answer-button {
+  padding: 10px 20px;
+  margin-top: 5px;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#add-answer-button:hover {
+  background-color: var(--black);
+}
+
+#questions-container {
+  margin: 0;
+  border-radius: 5px;
+  width: 65%;
+  height: 90%;
+  background-color: var(--black);
+  color: var(--white);
+}
+
+#background {
+  position: absolute;
+  visibility: hidden;
+  height: 100vh;
+  width: 100vw;
+  z-index: 9;
+  background-color: var(--white);
+  opacity: 0.5;
+}
+
+#emoji-menu {
+  align-self: center;
+  justify-self: flex-start;
+  visibility: hidden;
+  position: relative;
+  left: 200px;
+  top: 150px;
+  z-index: 10;
+  --border-radius: 15px;
+  --border-size: 0;
+}
+
+#create-poll-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#multiple-answers-form {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background-color: var(--tertiary);
+  border-radius: 8px;
+  padding: 5px;
+  font-size: 1.1em;
+}
+
+#multiple-answers-checkbox {
+  width: 1.2em;
+  height: 1.2em;
+  accent-color: var(--primary);
+}
+
+#set-duration {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border: none;
+  background-color: none;
+  background-color: var(--tertiary);
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 1.1em;
+}
+
+.dropdown {
+  position: relative;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: var(--tertiary);
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  bottom: 0px;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 8px;
+}
+
+.dropdown-content div {
+  color: var(--black);
+  padding: 10px 16px;
+  display: block;
+}
+
+.dropdown-content div:hover {
+  border-radius: 8px;
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+#create-poll-button {
+  width: 30%;
+  height: 100%;
+  padding: 10px 20px;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#create-poll-button:hover {
+  background-color: var(--black);
+}
+
+#markup-container {
+  padding: 20px;
+  margin: 0;
+  width: 45%;
+  height: 90%;
+  background-color: var(--secondary);
+  color: var(--black);
+  border-radius: 15px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+#markup-scroll-container {
+  padding: 20px;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--black);
+  border-radius: 15px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#keyword-picker {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  background-color: var(--tertiary);
+  border-radius: 8px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+#weekday-picker {
+  background-color: var(--tertiary);
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+.keyword {
+  margin: 4px 4px;
+  padding: 5px 6px;
+  border: none;
+  background-color: var(--white);
+  border-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.keyword:hover {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+#time-heading {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+/*
+#time-picker {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  justify-content: flex-start;
+  background-color: var(--tertiary);
+  border-radius: 8px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+#hour-picker,
+#minute-picker {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+*/
+.calendar {
+  width: 100%;
+  border-radius: 8px;
+  background-color: var(--tertiary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+.calendar-header button {
+  background-color: transparent;
+  color: var(--primary);
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+#month-year {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.calendar-weekdays,
+.calendar-dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+.calendar-weekdays div,
+.calendar-dates div {
+  text-align: center;
+  padding: 5px 6px;
+  margin: 4px;
+}
+
+.calendar-weekdays div {
+  font-weight: bold;
+}
+.calendar-date {
+  border-radius: 15px;
+  background-color: var(--white);
+  cursor: pointer;
+}
+.calendar-date:hover {
+  color: var(--white);
+  background-color: var(--primary);
+}
+
+#time-picker-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: var(--tertiary);
+  border-radius: 8px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+#time-selection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  position: absolute;
+  z-index: 1;
+  background-color: var(--white);
+  left: 50% - 50px;
+  top: 50% - 15px;
+  width: 100px;
+  height: 30px;
+  border-radius: 15px;
+  font-size: 1.2em;
+  padding: 0 6px;
+}
+
+#time-selection:hover {
+  background-color: var(--primary);
+  color: var(--white);
+  cursor: pointer;
+}
+
+.time-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px;
+  margin: 5px;
+}
+
+.time-picker > div:nth-child(2) {
+  margin: 5px;
+  font-size: 1.2em;
+}
+
+.time-picker > div:first-child,
+.time-picker > div:nth-child(3) {
+  opacity: 0.5;
+}
+
+.footer {
+  position: absolute;
+  left: 0px;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  height: 10vh;
+  background-color: var(--black);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--white);
+  border-radius: 3px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--tertiary);
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.focus {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--primary);
+}

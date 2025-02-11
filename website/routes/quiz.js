@@ -1,0 +1,198 @@
+const express = require("express");
+const quizRouter = express.Router();
+const {
+  addQuiz,
+  getQuizByHashUrl,
+  createQuizQuestion,
+  addQuizAnswers,
+  getAllQuizQuestions,
+  updateQuizQuestion,
+  updateQuizAnswers,
+  updateQuizSettings,
+  createAnswer,
+  updateCorrectAnswer,
+  updateAnswerText,
+  deleteAnswer,
+  deleteQuestion,
+} = require("../../database/dbQuizFunctions");
+
+const { createHashRoute } = require("../../bot/utils/utilsFunctions");
+
+quizRouter.get("/:url", async (req, res) => {
+  try {
+    const quizData = await getQuizByHashUrl(req.params.url);
+    if (quizData) {
+      res.render("edit-quiz", {
+        title: quizData.quiz_title,
+        hash: req.params.url,
+        id: quizData.quiz_id,
+        visibility: quizData.visibility,
+      });
+    } else {
+      res.render("error", { text: "Quiz couldn't be found" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.render("error", { text: "An error occurred while fetching quiz data" });
+  }
+});
+
+quizRouter.post("/", async (req, res) => {
+  try {
+    const { title, visibility } = req.body;
+    const hashUrl = createHashRoute(title + visibility + Date.now());
+
+    const quizData = await addQuiz(title, visibility, hashUrl);
+    console.log("QuizDATA: : ", quizData);
+
+    res.status(200).json({ hashUrl: quizData.url });
+  } catch (error) {
+    res.status(500).send("Couldn't get Brainstorm contributions.");
+  }
+});
+
+quizRouter.post("/update-settings", async (req, res) => {
+  console.log("Router BODY: ", req.body);
+  try {
+    await updateQuizSettings(req.body);
+  } catch (error) {
+    res.status(500).send("Couldn't get Brainstorm contributions.");
+  }
+});
+
+quizRouter.post("/create-question", async (req, res) => {
+  try {
+    const { quizId, question } = req.body;
+
+    const quizQuestionId = await createQuizQuestion(quizId, question);
+
+    res.status(200).json({ quizQuestionId: quizQuestionId });
+  } catch (error) {
+    res.status(500).send("Couldn't get Brainstorm contributions.");
+  }
+});
+
+quizRouter.post("/save-answers", async (req, res) => {
+  try {
+    const { answers, quizQuestionId } = req.body;
+
+    console.log("SAVE QUESTION: ", req.body);
+
+    const result = await addQuizAnswers(quizQuestionId, answers);
+    console.log("QuizDATA: : ", result);
+
+    res.status(200);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Couldn't get Brainstorm contributions.");
+  }
+});
+
+quizRouter.get(`/get-questions/:quizid`, async (req, res) => {
+  try {
+    const quizId = req.params.quizid;
+    const allQuestions = await getAllQuizQuestions(quizId);
+    res.status(200).send(allQuestions);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Couldn't get Quiz questions.");
+  }
+});
+
+quizRouter.put("/update-question", async (req, res) => {
+  try {
+    const { questionId, question } = req.body;
+
+    console.log("UPDATE QUESTION: ", questionId, question);
+
+    const result = await updateQuizQuestion(questionId, question);
+    console.log("QuizDATA: ", result);
+
+    res.status(200).send("Question updated sucessfully.");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Couldn't update Question.");
+  }
+});
+
+quizRouter.put("/update-answers", async (req, res) => {
+  try {
+    const { questionId, answers, checkboxes } = req.body;
+
+    console.log("UPDATE ANSWER: ", req.body);
+
+    const result = await updateQuizAnswers(questionId, answers, checkboxes);
+    console.log("AnswerDATA: : ", result);
+
+    res.status(200).send("Answers updated sucessfully.");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Couldn't update answers.");
+  }
+});
+
+quizRouter.post("/create-answer", async (req, res) => {
+  try {
+    const { questionId } = req.body;
+
+    const result = await createAnswer(questionId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Couldn't update answers.");
+  }
+});
+
+quizRouter.put("/update-correct-answer", async (req, res) => {
+  try {
+    const { answerId, isChecked } = req.body;
+
+    const result = await updateCorrectAnswer(answerId, isChecked);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Couldn't update answers.");
+  }
+});
+
+quizRouter.put("/update-answer-text", async (req, res) => {
+  try {
+    const { answerId, text } = req.body;
+
+    const result = await updateAnswerText(answerId, text);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Couldn't update answers.");
+  }
+});
+
+quizRouter.delete("/answer", async (req, res) => {
+  try {
+    const { answerId } = req.body;
+
+    const result = await deleteAnswer(answerId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Couldn't update answers.");
+  }
+});
+
+quizRouter.delete("/question", async (req, res) => {
+  try {
+    const { questionId } = req.body;
+
+    const result = await deleteQuestion(questionId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Couldn't update answers.");
+  }
+});
+
+quizRouter.param("url", async (req, res, next, url) => {
+  next();
+});
+
+module.exports = { quizRouter };

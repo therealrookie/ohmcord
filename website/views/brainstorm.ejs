@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta vharset="" UTF-8 />
+    <title>Brainstorm</title>
+    <link rel="stylesheet" href="/styles/brainstorm.css" />
+    <link rel="icon" type="image/png" src="/assets/OhmcordLogo.png" />
+  </head>
+  <body>
+    <div class="header">
+      <a href="/"><img class="logo" src="/assets/OhmcordLogo.png" /></a>
+      <h1>Brainstorm</h1>
+      <h3><%= locals.hash %></h3>
+    </div>
+    <canvas data-brainstorm-id="<%= locals.id %>" id="bs-canvas"><%= locals.theme %></canvas>
+    <div class="footer">
+      <p id="timer" data-end-time="<%= locals.endBrainstormAt %>"></p>
+      <form action="#" onsubmit="handleFormSubmit(event)"><input type="text" id="add-contribution" /><input type="submit" value="+" /></form>
+      <button onclick="downloadCanvas()"><img src="/assets/download.svg" /></button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/scripts/brainstorm.js"></script>
+  </body>
+</html>

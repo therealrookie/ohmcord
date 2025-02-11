@@ -1,0 +1,275 @@
+:root {
+  --black: #191919;
+  --white: #ffffff;
+  --primary: #f15025;
+  --secondary: #e6e8e6;
+  --tertiary: #ced0ce;
+  --discord-blue: #5865f2;
+  --discord-dark-blue: #4752c4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100%;
+  background-color: var(--white);
+  color: var(--white);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#page-container {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+h1 {
+  color: var(--white);
+}
+
+p {
+  margin: 20px;
+  text-align: center;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin: 0;
+  background-color: var(--black);
+  height: 10vh;
+  width: 100%;
+}
+
+.header a {
+  text-decoration: none;
+  color: var(--white);
+}
+
+.header a:hover {
+  color: var(--secondary);
+}
+
+.logo {
+  width: 50px;
+}
+
+#tools-container {
+  position: absolute;
+  left: 0;
+  top: 10vh;
+  background-color: var(--white);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tool-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  transition: transform 0.4s ease;
+  scroll-snap-align: start;
+}
+
+.tool-container h1 {
+  opacity: 1;
+  font-size: 2.5em;
+  transform: translateY(50px);
+  transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
+.tool-container:hover h1 {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+.tool-container p,
+.tool-container input,
+.tool-container a {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s ease, transform 0.5s ease, display 0.5s ease;
+}
+
+.tool-container:hover p,
+.tool-container:hover input,
+.tool-container:hover a {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tool-container input {
+  margin: 10px;
+  width: 100px;
+  height: 30px;
+  border: none;
+  border-radius: 3px;
+}
+
+.tool-container a {
+  margin: 10px;
+  padding: 10px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  height: 30px;
+  background-color: var(--white);
+  color: var(--black);
+}
+
+:focus {
+  outline: none;
+}
+
+#brainstorm-container {
+  background-color: #313131;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.171) 2px, transparent 0);
+  background-size: 30px 30px;
+  background-position: -5px -5px;
+}
+
+#question-container {
+  --color: rgba(114, 114, 114, 0.3);
+  background-color: #191a1a;
+  background-image: linear-gradient(
+      0deg,
+      transparent 24%,
+      var(--color) 25%,
+      var(--color) 26%,
+      transparent 27%,
+      transparent 74%,
+      var(--color) 75%,
+      var(--color) 76%,
+      transparent 77%,
+      transparent
+    ),
+    linear-gradient(
+      90deg,
+      transparent 24%,
+      var(--color) 25%,
+      var(--color) 26%,
+      transparent 27%,
+      transparent 74%,
+      var(--color) 75%,
+      var(--color) 76%,
+      transparent 77%,
+      transparent
+    );
+  background-size: 55px 55px;
+  transition: background-size 0.2s ease-in-out;
+}
+
+#quiz-container {
+  background: radial-gradient(25px at calc(100% + calc(25px * 0.866)) 50%, #762b52 99%, transparent 101%) 0 calc(-5 * 25px / 2),
+    radial-gradient(25px at calc(100% + calc(25px * 0.866)) 50%, #762b52 99%, transparent 101%) calc(-2 * calc(25px * 0.866)) calc(25px / 2),
+    radial-gradient(25px at 100% 50%, #d36164 99%, transparent 101%) 0 calc(-2 * 25px),
+    radial-gradient(25px, #762b52 99%, transparent 101%) calc(25px * 0.866) calc(-5 * 25px / 2),
+    radial-gradient(25px, #d36164 99%, transparent 101%) calc(25px * 0.866) calc(5 * 25px / 2),
+    radial-gradient(25px at 100% 100%, #762b52 99%, transparent 101%) 0 calc(-1 * 25px),
+    radial-gradient(25px at 0% 50%, #762b52 99%, transparent 101%) 0 calc(-4 * 25px),
+    radial-gradient(25px, #d36164 99%, transparent 101%) calc(-1 * calc(25px * 0.866)) calc(-7 * 25px / 2),
+    radial-gradient(25px, #762b52 99%, transparent 101%) calc(-1 * calc(25px * 0.866)) calc(-5 * 25px / 2),
+    radial-gradient(25px at 100% 50%, #d36164 99%, transparent 101%) calc(-2 * calc(25px * 0.866)) 25px,
+    radial-gradient(25px, #762b52 99%, transparent 101%) calc(-1 * calc(25px * 0.866)) calc(25px / 2),
+    radial-gradient(25px, #d36164 99%, transparent 101%) calc(-1 * calc(25px * 0.866)) calc(25px / -2),
+    radial-gradient(25px, #762b52 99%, transparent 101%) 0 calc(-1 * 25px),
+    radial-gradient(25px, #d36164 99%, transparent 101%) calc(25px * 0.866) calc(25px / -2),
+    radial-gradient(25px, #762b52 99%, transparent 101%) calc(25px * 0.866) calc(25px / 2) #d36164;
+  background-size: calc(4 * calc(25px * 0.866)) calc(6 * 25px);
+  transition: zoom 0.5s ease-in-out;
+}
+
+#quiz-actions {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+
+#poll-container {
+  --s: 100px; /* control the size */
+  --c1: #f8b195;
+  --c2: #355c7d;
+
+  --_g: var(--c2) 4% 14%, var(--c1) 14% 24%, var(--c2) 22% 34%, var(--c1) 34% 44%, var(--c2) 44% 56%, var(--c1) 56% 66%, var(--c2) 66% 76%,
+    var(--c1) 76% 86%, var(--c2) 86% 96%;
+  background: radial-gradient(100% 100% at 100% 0, var(--c1) 4%, var(--_g), #0008 96%, #0000),
+    radial-gradient(100% 100% at 0 100%, #0000, #0008 4%, var(--_g), var(--c1) 96%) var(--c1);
+  background-size: var(--s) var(--s);
+}
+
+.footer {
+  position: absolute;
+  left: 0px;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  height: 10vh;
+  background-color: var(--black);
+}
+
+.discord-button {
+  padding: 10px;
+  border-radius: 5px;
+  color: var(--white);
+  background-color: var(--discord-blue);
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.discord-button:hover {
+  background-color: var(--discord-dark-blue);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
