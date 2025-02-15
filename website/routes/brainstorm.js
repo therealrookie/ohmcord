@@ -7,6 +7,7 @@ const ws = new WebSocket(`ws://${process.env.WS_URL}:${process.env.WS_PORT}`);
 
 const selectedProduct = Math.floor(Math.random() * 3);
 
+/*
 brainstormRouter.get("/:url", async (req, res) => {
   try {
     const brainstormData = await getBrainstorm(req.params.url);
@@ -31,8 +32,8 @@ brainstormRouter.get("/:url", async (req, res) => {
     res.render("error", { text: "An error occurred while fetching brainstorm data" });
   }
 });
+*/
 
-/*
 brainstormRouter.get("/:url", async (req, res) => {
   try {
     const brainstormData = await getBrainstorm(req.params.url);
@@ -51,7 +52,6 @@ brainstormRouter.get("/:url", async (req, res) => {
     res.render("error", { text: "An error occurred while fetching brainstorm data" });
   }
 });
-*/
 
 brainstormRouter.get("/contribution/:id", async (req, res) => {
   try {

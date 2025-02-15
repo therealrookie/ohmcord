@@ -10,7 +10,11 @@ const {
   sendBrainstormCanvas,
 } = require("../command-handlers/brainstorm/handleBrainstormInteractions");
 
-const { addBrainstormContribution } = require("../../../database/dbBrainstormFunctions");
+const {
+  addBrainstormContribution,
+  updateBrainstormContributionScoring,
+  updateContributionScore,
+} = require("../../../database/dbBrainstormFunctions");
 
 async function handleBrainstormCommand(interaction) {
   const client = interaction.client;
@@ -49,7 +53,7 @@ async function handleBrainstormCommand(interaction) {
     await addContributionToCanvas(ws, hashRoute, brainstormId, contribution);
     const contributionId = await addBrainstormContribution(brainstormId, contribution);
 
-    contributions.push({ contributionId, contribution }); // Add contribution to temporary array
+    contributions.push({ contributionId, contribution, score: 0 }); // Add contribution to temporary array
 
     await startBrainstormEmbed(interaction, brainstormData, contributions);
   }
@@ -60,10 +64,30 @@ async function handleBrainstormCommand(interaction) {
 
     if (buttonInteraction.customId === "contribute_button") {
       await openContributionModal(buttonInteraction, theme);
-    } else if (buttonInteraction.customId.contains("contribution_")) {
-      const contributionId = buttonInteraction.customId.replace("contribution_", "");
+    } else if (buttonInteraction.customId.includes("contribution_")) {
+      const contributionId = parseInt(await buttonInteraction.customId.replace("contribution_", ""));
       const userId = buttonInteraction.user.id;
-      console.log(contributionId, userId);
+
+      const score = await updateBrainstormContributionScoring(contributionId, userId);
+
+      for (let cont of contributions) {
+        if (cont.contributionId === contributionId) {
+          cont.score += score;
+          await updateContributionScore(contributionId, cont.score);
+          ws.send(
+            JSON.stringify({
+              source: "discord",
+              type: "score",
+              brainstormId: brainstormId,
+              contribution: { id: contributionId, score: cont.score },
+            })
+          );
+        }
+      }
+
+      await startBrainstormEmbed(interaction, brainstormData, contributions);
+
+      await buttonInteraction.deferUpdate();
     } else return;
   });
 

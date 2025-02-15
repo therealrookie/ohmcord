@@ -56,6 +56,8 @@ socket.onmessage = async function (event) {
   const message = JSON.parse(event.data);
   const validBrainstormId = parseInt(message.brainstormId) === parseInt(brainstormId);
   const isContribution = message.type === "contribution";
+  const isScore = message.type === "score";
+
   const discordSource = message.source === "server-discord";
 
   if (validBrainstormId && isContribution && discordSource) {
@@ -64,6 +66,9 @@ socket.onmessage = async function (event) {
     const contribution = message.contribution;
 
     addContributionToCanvas(contribution);
+  } else if (validBrainstormId && isScore && discordSource) {
+    console.log(message.contribution);
+    console.log(contributions);
   }
 };
 

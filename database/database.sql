@@ -22,7 +22,7 @@ CREATE TABLE brainstorm_contribution_scoring (
     scoring_id SERIAL PRIMARY KEY,
     contribution_id INTEGER,
     discord_user_id VARCHAR(255),
-    score INTEGER
+    clicks INTEGER
 );
 
 CREATE TABLE question_sessions (

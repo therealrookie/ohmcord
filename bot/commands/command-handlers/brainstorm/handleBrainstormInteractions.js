@@ -40,16 +40,17 @@ function createLastRow(hashRoute) {
   return actionRow;
 }
 
-function createContributionActionRows(contributions) {
+function createContributionActionRows(contributions, hashRoute) {
   let actionRows = [];
 
   for (let i = 0; i < contributions.length; i += 5) {
     const actionRow = new ActionRowBuilder();
 
     for (let j = i; j < i + 5 && j < contributions.length; j++) {
+      console.log(contributions[j]);
       const contributionButton = new ButtonBuilder()
         .setCustomId(`contribution_${contributions[j].contributionId}`)
-        .setLabel(contributions[j].contribution)
+        .setLabel(`${contributions[j].contribution} (${contributions[j].score})`)
         .setStyle(ButtonStyle.Primary);
 
       actionRow.addComponents(contributionButton);
@@ -57,7 +58,7 @@ function createContributionActionRows(contributions) {
     actionRows.push(actionRow);
   }
 
-  const lastRow = createLastRow("asdfgg");
+  const lastRow = createLastRow(hashRoute);
   actionRows.push(lastRow);
 
   return actionRows;
@@ -65,8 +66,9 @@ function createContributionActionRows(contributions) {
 
 //await channel.send({ embeds: [startQuizEmbed], components: [actionRowQuizStart] });
 
-async function sendAdditionalMessage(contributions, interaction, brainstormId) {
-  const actionRows = createContributionActionRows(contributions);
+async function sendAdditionalMessage(contributions, interaction, brainstormData) {
+  const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
+  const actionRows = createContributionActionRows(contributions, hashRoute);
 
   for (let i = 0; i < actionRows.length; i += 5) {
     const messageActionRows = [];
@@ -78,11 +80,18 @@ async function sendAdditionalMessage(contributions, interaction, brainstormId) {
 
     const channel = await interaction.client.channels.fetch(interaction.channelId);
 
-    if (messages[messageIndex]) {
+    if (i === 0) {
+      await interaction.editReply({
+        content: `**Thema:** ** ** *${theme}* \n **Zeitlimit:** ** ** *${timeLimit} Minute${timeLimit > 1 ? "n" : ""}* \n`,
+        components: messageActionRows,
+      });
+    } else if (messages[messageIndex]) {
       const newMessage = await channel.messages.fetch(messages[messageIndex].message_id);
       await newMessage.edit({ components: messageActionRows });
     } else {
-      const message = await channel.send({ components: messageActionRows });
+      const message = await channel.send({
+        components: messageActionRows,
+      });
       await addBrainstormMessage(brainstormId, message.id);
     }
   }
@@ -92,6 +101,7 @@ async function sendAdditionalMessage(contributions, interaction, brainstormId) {
 async function startBrainstormEmbed(interaction, brainstormData, contributions) {
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
 
+  /*
   const brainstormEmbed = new EmbedBuilder()
     .setColor(0x00ff00)
     .setTitle("Brainstorm")
@@ -105,7 +115,8 @@ async function startBrainstormEmbed(interaction, brainstormData, contributions) 
   //.setFooter({ text: "Click the + button to contribute your ideas!" });
 
   await interaction.editReply({ embeds: [brainstormEmbed] });
-  await sendAdditionalMessage(contributions, interaction, brainstormId);
+  */
+  await sendAdditionalMessage(contributions, interaction, brainstormData);
 }
 
 // Create and open the contribution-modal
