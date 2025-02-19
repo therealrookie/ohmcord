@@ -1,49 +1,122 @@
 :root {
-    --black: #0a090c;
-    --white: #F0EDEE;
-    --primary: #90DDF0;
-    --secondary: #2C666E;
-    --tertiary: #07393C;
-  }
-
-body {
-    background-color: var(--black);
-    color: var(--white);
-    margin: 0;
-    overflow: hidden;
+  --black: #191919;
+  --white: #ffffff;
+  --primary: #f15025;
+  --secondary: #e6e8e6;
+  --tertiary: #ced0ce;
 }
 
-h1 {
-    color: var(--primary)
+body {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--secondary);
+  color: var(--white);
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    background-color: var(--tertiary);
-    height: 10vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  background-color: var(--black);
+  width: 100%;
+  height: 10vh;
+  a,
+  h3 {
+    margin: 0 20px;
+  }
 }
 
-.logo {
-    width: 50px;
+.header .logo {
+  width: 50px;
 }
 
+#canvas-container {
+  position: absolute;
+  top: 10vh;
+  left: 0;
+  width: 100vw;
+  height: 80vh;
+  overflow: hidden;
+}
+
+#canvas-button-container {
+  color: black;
+  position: absolute;
+  display: flex;
+
+  right: 0;
+  top: 0;
+  margin: 20px;
+  z-index: 5;
+}
+
+.canvas-button {
+}
+
+#canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  background-color: #313131;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.171) 2px, transparent 0);
+  background-size: 30px 30px;
+  background-position: -5px -5px;
+  display: grid;
+  cursor: grab;
+}
+
+#theme {
+  text-align: center;
+  color: var(--primary);
+  font-weight: 900;
+  font-size: 250%;
+  max-width: 13ch;
+  align-self: center;
+  justify-self: center;
+  padding: 10px;
+}
+
+.contribution {
+  text-align: center;
+  max-width: 13ch;
+  font-size: large;
+  position: absolute;
+  padding: 5px;
+}
+
+.footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  width: 100vw;
+  height: 10vh;
+  background-color: var(--black);
+  p,
+  button {
+    margin: 0 20px;
+  }
+}
+
+/*
 #bs-canvas {
     background-color: var(--black);
     width: 100vw;
     height: 80vh;
 }
-
-.footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    height: 10vh;
-    background-color: var(--tertiary);
-}
-
+*/

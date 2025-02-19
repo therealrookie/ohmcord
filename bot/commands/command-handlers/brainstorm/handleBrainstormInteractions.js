@@ -127,7 +127,7 @@ async function openContributionModal(buttonInteraction, theme) {
     .setCustomId("idea_input")
     .setLabel("Your Idea")
     .setStyle(TextInputStyle.Short)
-    .setMaxLength(70)
+    .setMaxLength(69)
     .setPlaceholder("Enter a single-line idea")
     .setRequired(true);
 

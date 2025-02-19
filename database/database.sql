@@ -25,6 +25,13 @@ CREATE TABLE brainstorm_contribution_scoring (
     clicks INTEGER
 );
 
+CREATE TABLE brainstorm_contribution_positions (
+    position_id SERIAL PRIMARY KEY,
+    contribution_id INTEGER,
+    x_pos INTEGER,
+    y_pos INTEGER
+);
+
 CREATE TABLE question_sessions (
     questions_session_id SERIAL PRIMARY KEY,
     topic VARCHAR(255),

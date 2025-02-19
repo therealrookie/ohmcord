@@ -50,8 +50,8 @@ async function handleBrainstormCommand(interaction) {
 
   // Handle a new contribution from Discord or the website
   async function handleNewContribution(contribution) {
-    await addContributionToCanvas(ws, hashRoute, brainstormId, contribution);
     const contributionId = await addBrainstormContribution(brainstormId, contribution);
+    await addContributionToCanvas(ws, hashRoute, brainstormId, contribution);
 
     contributions.push({ contributionId, contribution, score: 0 }); // Add contribution to temporary array
 
@@ -107,8 +107,12 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("brainstorm")
     .setDescription("Starte eine Brainstorm-Session!")
-    .addStringOption((option) => option.setName("theme").setDescription("Bestimme ein Thema der Brainstorm-Session.").setRequired(true))
-    .addIntegerOption((option) => option.setName("time_limit").setDescription("Zeitlimit für die Brainstorm-Session").setRequired(true)),
+    .addStringOption((option) =>
+      option.setName("theme").setDescription("Bestimme ein Thema der Brainstorm-Session.").setRequired(true).setMaxLength(100)
+    )
+    .addIntegerOption((option) =>
+      option.setName("time_limit").setDescription("Zeitlimit für die Brainstorm-Session").setRequired(true).setMaxValue(999)
+    ),
   async execute(interaction) {
     await handleBrainstormCommand(interaction);
   },

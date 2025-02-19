@@ -12,14 +12,25 @@
       <h1>Brainstorm</h1>
       <h3><%= locals.hash %></h3>
     </div>
-    <canvas data-brainstorm-id="<%= locals.id %>" id="bs-canvas"><%= locals.theme %></canvas>
+    <div id="canvas-container">
+      <div id="canvas-button-container">
+        <button onclick="centerCanvas()">&#128162;</button>
+        <button onclick="zoomIn()">&#128269;+</button>
+        <button onclick="zoomOut()">&#128269;-</button>
+      </div>
+      <div id="canvas" data-brainstorm-id="<%= locals.id %>"><h1 id="theme"><%= locals.theme %></h1></div>
+    </div>
     <div class="footer">
       <p id="timer" data-end-time="<%= locals.endBrainstormAt %>"></p>
       <form action="#" onsubmit="handleFormSubmit(event)"><input type="text" id="add-contribution" /><input type="submit" value="+" /></form>
-      <button onclick="downloadCanvas()"><img src="/assets/download.svg" /></button>
+      <button onclick="test()/*downloadCanvas()*/">TEST<!--img src="/assets/download.svg" /--></button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/scripts/brainstorm.js"></script>
   </body>
 </html>
+
+<!--
+<canvas data-brainstorm-id="<%= locals.id %>" id="bs-canvas"><%= locals.theme %></canvas>
+-->
