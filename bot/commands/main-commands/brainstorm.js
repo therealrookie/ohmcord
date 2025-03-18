@@ -44,6 +44,7 @@ async function handleBrainstormCommand(interaction) {
       await sendBrainstormCanvas(client, parsedMessage, interaction.channelId);
       imageSent = true;
     } else if (validBrainstormId && discordSource && parsedMessage.type === "contribution") {
+      console.log("New WS message: ", message);
       await handleNewContribution(parsedMessage.contribution);
     }
   });
@@ -51,7 +52,7 @@ async function handleBrainstormCommand(interaction) {
   // Handle a new contribution from Discord or the website
   async function handleNewContribution(contribution) {
     const contributionId = await addBrainstormContribution(brainstormId, contribution);
-    await addContributionToCanvas(ws, hashRoute, brainstormId, contribution);
+    await addContributionToCanvas(ws, contributionId, brainstormId, contribution);
 
     contributions.push({ contributionId, contribution, score: 0 }); // Add contribution to temporary array
 

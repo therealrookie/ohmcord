@@ -1,9 +1,14 @@
 const express = require("express");
 const brainstormRouter = express.Router();
-const { getBrainstorm, getBrainstormContributions } = require("../../database/dbBrainstormFunctions");
+const { getBrainstorm, getBrainstormContributions, getContributionPositions, setPosition } = require("../../database/dbBrainstormFunctions");
 
 const { WebSocket } = require("ws");
 const ws = new WebSocket(`ws://${process.env.WS_URL}:${process.env.WS_PORT}`);
+
+const https = require("https");
+const fs = require("fs");
+
+var domtoimage = require("dom-to-image");
 
 const selectedProduct = Math.floor(Math.random() * 3);
 
@@ -53,7 +58,7 @@ brainstormRouter.get("/:url", async (req, res) => {
   }
 });
 
-brainstormRouter.get("/contribution/:id", async (req, res) => {
+brainstormRouter.get("/contributions/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const contributions = await getBrainstormContributions(id);
@@ -61,6 +66,54 @@ brainstormRouter.get("/contribution/:id", async (req, res) => {
   } catch (error) {
     res.status(500).send("Couldn't get Brainstorm contributions.");
   }
+});
+
+brainstormRouter.post("/set-position", async (req, res) => {
+  try {
+    const { contId, xPos, yPos } = req.body;
+
+    const newPosition = await setPosition(contId, xPos, yPos);
+
+    res.status(200).send(newPosition);
+  } catch (error) {
+    res.status(500).send("Couldn't update position.");
+  }
+});
+
+brainstormRouter.put("/download-screenshot", async (req, res) => {
+  try {
+    const canvas = req.body.canvas;
+
+    console.log(canvas);
+
+    domtoimage.toPng(canvas).then(function (dataUrl) {
+      console.log(dataUrl);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  /*
+  try {
+    const { url, hashRoute } = req.body;
+
+    console.log(url);
+
+    https.get(
+      "https://api.apiflash.com/v1/urltoimage?" +
+        new URLSearchParams({
+          access_key: "bc3e9711cb104410acafbcda2e2a4fcb",
+          url: "https://www.example.com/",
+          element: "div",
+        }).toString(),
+      (response) => {
+        response.pipe(fs.createWriteStream(`website/public/uploads/brainstorm-${hashRoute}.jpeg`));
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+    */
 });
 
 brainstormRouter.param("url", async (req, res, next, url) => {

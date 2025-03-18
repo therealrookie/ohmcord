@@ -99,3 +99,53 @@ CREATE TABLE poll_answers (
     emoji VARCHAR(255),
     answer VARCHAR(255)
 );
+
+CREATE FUNCTION get_expired_brainstorm_ids() RETURNS TABLE(brainstorm_id INT) AS $$
+BEGIN
+    RETURN QUERY 
+    SELECT brainstorm_id FROM brainstorm WHERE timestamp < NOW() - INTERVAL '1 month';
+END;
+$$ LANGUAGE plpgsql; 
+
+
+CREATE FUNCTION get_expired_brainstorm_contribution_ids(expired_brainstorm_ids INT[]) 
+RETURNS TABLE(contribution_id INT) AS $$
+BEGIN
+    RETURN QUERY 
+    SELECT contribution_id FROM brainstorm_contributions 
+    WHERE brainstorm_id = ANY(expired_brainstorm_ids);
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE FUNCTION delete_expired_brainstorm() RETURNS TRIGGER AS $$
+DECLARE
+    expired_brainstorm_ids INT[];
+    expired_contribution_ids INT[];
+BEGIN
+    -- Get expired brainstorm IDs
+    SELECT array_agg(brainstorm_id) INTO expired_brainstorm_ids 
+    FROM get_expired_brainstorm_ids();
+    
+    -- Get expired contribution IDs
+    SELECT array_agg(contribution_id) INTO expired_contribution_ids 
+    FROM get_expired_brainstorm_contribution_ids(expired_brainstorm_ids);
+
+    -- Delete linked data
+    DELETE FROM brainstorm_contribution_positions WHERE contribution_id = ANY(expired_contribution_ids);
+    DELETE FROM brainstorm_contribution_scoring WHERE contribution_id = ANY(expired_contribution_ids);
+    DELETE FROM brainstorm_contributions WHERE brainstorm_id = ANY(expired_brainstorm_ids);
+    DELETE FROM brainstorm_messages WHERE brainstorm_id = ANY(expired_brainstorm_ids);
+
+    -- Delete expired brainstorm entries
+    DELETE FROM brainstorm WHERE brainstorm_id = ANY(expired_brainstorm_ids);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER expired_brainstorm_trigger
+    AFTER INSERT ON brainstorm
+    EXECUTE FUNCTION delete_expired_brainstorm();
+    

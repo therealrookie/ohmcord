@@ -10,7 +10,7 @@
     <div class="header">
       <a href="/"><img class="logo" src="/assets/OhmcordLogo.png" /></a>
       <h1>Brainstorm</h1>
-      <h3><%= locals.hash %></h3>
+      <h3 id="hash-route"><%= locals.hash %></h3>
     </div>
     <div id="canvas-container">
       <div id="canvas-button-container">
@@ -22,11 +22,52 @@
     </div>
     <div class="footer">
       <p id="timer" data-end-time="<%= locals.endBrainstormAt %>"></p>
-      <form action="#" onsubmit="handleFormSubmit(event)"><input type="text" id="add-contribution" /><input type="submit" value="+" /></form>
+      <input type="text" id="add-contribution" placeholder="New contribution" />
       <button onclick="test()/*downloadCanvas()*/">TEST<!--img src="/assets/download.svg" /--></button>
     </div>
 
+    <script src="/bower_components/dom-to-image/src/dom-to-image.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+    <script>
+      async function test() {
+        const url = window.location.href;
+        const hashRoute = document.getElementById("hash-route").innerHTML;
+
+        const canvas = document.getElementById("canvas");
+
+        domtoimage
+          .toJpeg(canvas, { quality: 0.95, height: 1080, width: 1920 })
+          .then(function (dataUrl) {
+            var link = document.createElement("a");
+            link.download = "my-image-name.jpeg";
+            link.href = dataUrl;
+            link.click();
+          })
+          .catch(function (error) {
+            console.error("oops, something went wrong!", error);
+          });
+
+        /*
+      console.log("HERE: ", url, hashRoute);
+      try {
+        const response = await fetch(`${URL}/brainstorm/download-screenshot`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ canvas }),
+        });
+
+        //return newPosition;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+        */
+      }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/scripts/brainstorm-canvas.js"></script>
     <script src="/scripts/brainstorm.js"></script>
   </body>
 </html>

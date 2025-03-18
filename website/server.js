@@ -58,6 +58,7 @@ function handleBrainstormConnection(ws) {
 
       if (data.type === "image") {
         data.image = await getImageUrl(data);
+      } else if (data.type === "contribution") {
       }
       wsAnswer(data);
     }

@@ -138,12 +138,13 @@ async function openContributionModal(buttonInteraction, theme) {
 }
 
 // Send a ws-message to the website to add it to the canvas
-async function addContributionToCanvas(ws, hashRoute, brainstormId, userIdea) {
+async function addContributionToCanvas(ws, contributionId, brainstormId, userIdea) {
   ws.send(
     JSON.stringify({
       source: "discord",
       type: "contribution",
       brainstormId: brainstormId,
+      contributionId: contributionId,
       contribution: userIdea,
     })
   );
