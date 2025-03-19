@@ -26,12 +26,16 @@ function startServer() {
 
   // Set up view engine
   app.set("views", path.join(__dirname, "views"));
-  app.set("view engine", "ejs"); // Assuming you use EJS
+  app.set("view engine", "ejs");
 
   app.get("/", (req, res) => {
+    res.send("Hello world!");
+
+    /*
     res.render("index", {
       addBotUrl: process.env.ADD_URL,
     });
+    */
   });
 
   app.get("/help", (req, res) => {
@@ -55,6 +59,8 @@ function startServer() {
   const server = app.listen(PORT, () => {
     console.log(`Server running on ${URL}:${PORT}`);
   });
+
+  /*
 
   const WSS = new WebSocketServer({ server });
 
@@ -126,6 +132,7 @@ function startServer() {
       }
     });
   }
+    */
 }
 
 module.exports = { startServer };
