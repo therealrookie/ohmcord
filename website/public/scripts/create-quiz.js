@@ -19,7 +19,7 @@ document.getElementById("create-quiz-btn").addEventListener("click", async () =>
 
   const quizHashUrl = await createQuiz(quizData);
 
-  window.location.href = `/quiz/${quizHashUrl}`;
+  //window.location.href = `/quiz/${quizHashUrl}`;
 });
 
 const createQuiz = async (quizData) => {
@@ -31,6 +31,8 @@ const createQuiz = async (quizData) => {
       },
       body: JSON.stringify(quizData),
     });
+
+    console.log("Create quiz: ", quizData, response);
 
     if (!response.ok) {
       throw new Error("Failed to create quiz");
