@@ -131,3 +131,4 @@ dist
 
 # Environment Variables
 .env
+.env copy
