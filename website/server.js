@@ -14,6 +14,7 @@ const url = require("url");
 const WSS = new WebSocketServer({ port: process.env.WS_PORT });
 
 WSS.on("connection", (ws, req) => {
+  console.log("New client connected...");
   const path = url.parse(req.url).pathname;
 
   if (path === "/brainstorm") {

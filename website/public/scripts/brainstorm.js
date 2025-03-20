@@ -3,6 +3,8 @@
 const brainstormId = canvas.getAttribute("data-brainstorm-id");
 const wsUrl = canvas.getAttribute("data-ws-url");
 
+console.log("Websocket URL: ", wsUrl);
+
 const socket = new WebSocket(`${wsUrl}/brainstorm`);
 
 let contributions = [];

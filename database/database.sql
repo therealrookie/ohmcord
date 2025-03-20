@@ -32,6 +32,8 @@ CREATE TABLE brainstorm_messages (
     message_id VARCHAR(255)
 );
 
+
+
 CREATE TABLE question_sessions (
     questions_session_id SERIAL PRIMARY KEY,
     topic VARCHAR(255),
