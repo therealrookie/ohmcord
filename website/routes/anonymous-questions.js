@@ -15,6 +15,7 @@ questionRouter.get("/:url", async (req, res) => {
         topic: questionSession.topic,
         hash: req.params.url,
         id: questionSession.question_session_id,
+        wsUrl: process.env.WS_URL,
       });
     } else {
       res.render("error", { text: "Question-Session couldn't be found" });

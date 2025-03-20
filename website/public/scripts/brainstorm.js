@@ -1,9 +1,9 @@
 // public/scripts/brainstorm.js
 
-const socket = new WebSocket(`ws://localhost:443/brainstorm`);
-const URL = "http://localhost:3000";
-
 const brainstormId = canvas.getAttribute("data-brainstorm-id");
+const wsUrl = canvas.getAttribute("data-ws-url");
+
+const socket = new WebSocket(`${wsUrl}/brainstorm`);
 
 let contributions = [];
 let weightRange = [-1, 1];
@@ -23,7 +23,7 @@ function determineWeightRange() {
 
 async function getContributions() {
   try {
-    const response = await fetch(`${URL}/brainstorm/contributions/${brainstormId}`);
+    const response = await fetch(`/brainstorm/contributions/${brainstormId}`);
     const contributions = await response.json();
 
     return contributions;
@@ -36,7 +36,7 @@ async function getContributions() {
 async function setPosition(contId, xPos, yPos) {
   //console.log("HERE:: ", contId, xPos, yPos);
   try {
-    const response = await fetch(`${URL}/brainstorm/set-position`, {
+    const response = await fetch(`/brainstorm/set-position`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contId, xPos, yPos }),

@@ -1,10 +1,11 @@
 // public/scripts/brainstorm.js
 
-const socket = new WebSocket(`ws://localhost:443/questions`);
-const URL = "http://localhost:3000";
-
 const questionContainer = document.getElementById("questions");
 const questionSessionId = questionContainer.getAttribute("data-session-id");
+
+const wsUrl = questionContainer.getAttribute("data-ws-url");
+
+const socket = new WebSocket(`${wsUrl}/questions`);
 
 const questions = getQuestions(questionSessionId);
 
@@ -63,7 +64,7 @@ function newQuestion(question) {
 
 async function getQuestions(id) {
   try {
-    const response = await fetch(`${URL}/anonymous-questions/get-questions/${id}`);
+    const response = await fetch(`/anonymous-questions/get-questions/${id}`);
     const questions = await response.json();
     renderQuestionNotes(questions);
     return questions.map((cont) => Object.values(cont)[0]);
@@ -177,7 +178,7 @@ function addNewAnswer(data) {
 
 async function getAnswers(questionId) {
   try {
-    const response = await fetch(`${URL}/anonymous-questions/get-answers/${questionId}`);
+    const response = await fetch(`/anonymous-questions/get-answers/${questionId}`);
     const answers = await response.json();
     console.log("ANSWERS: ", answers);
 

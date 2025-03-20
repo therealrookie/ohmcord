@@ -49,6 +49,7 @@ brainstormRouter.get("/:url", async (req, res) => {
         hash: req.params.url,
         id: brainstormData.brainstorm_id,
         endBrainstormAt: brainstormData.end_time_ms,
+        wsUrl: process.env.WS_URL,
       });
     } else {
       res.render("error", { text: "Brainstorm couldn't be found" });
