@@ -1,6 +1,7 @@
+/*
 const Pool = require("pg").Pool;
 
-const pool = new Pool({
+const pgpool = new Pool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
@@ -8,4 +9,17 @@ const pool = new Pool({
   database: process.env.DATABASE,
 });
 
-module.exports = pool;
+
+module.exports = pgpool;
+
+*/
+const { Pool } = require("pg");
+
+const pgpool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // Required for cloud-hosted databases
+  },
+});
+
+module.exports = pgpool;

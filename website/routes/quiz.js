@@ -40,6 +40,8 @@ quizRouter.get("/:url", async (req, res) => {
 quizRouter.post("/", async (req, res) => {
   try {
     const { title, visibility } = req.body;
+    console.log("QuizDATA (post: /quiz) : ", title, visibility);
+
     const hashUrl = createHashRoute(title + visibility + Date.now());
 
     const quizData = await addQuiz(title, visibility, hashUrl);
