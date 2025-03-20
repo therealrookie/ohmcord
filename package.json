@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "echo 'No build step needed'",
-    "deploy": "npm install && npm run start"
+    "build": "npm install",
+    "deploy": "npm run start"
   },
   "keywords": [],
   "author": "",

@@ -121,7 +121,7 @@ brainstormRouter.put("/download-screenshot", async (req, res) => {
 brainstormRouter.param("url", async (req, res, next, url) => {
   next();
 });
-
+/*
 async function handleBrainstormMessage(message, ws, wss) {
   const { brainstormId, contribution } = message;
 
@@ -130,13 +130,14 @@ async function handleBrainstormMessage(message, ws, wss) {
 
   // Broadcast the new contribution to all connected clients
 
-  /*
+  
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify({ type: "newContribution", data: { brainstormId, contribution } }));
     }
   });
-  */
+ 
 }
+   */
 
-module.exports = { brainstormRouter, handleBrainstormMessage };
+module.exports = { brainstormRouter };

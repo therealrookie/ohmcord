@@ -48,6 +48,7 @@ questionRouter.param("url", async (req, res, next, url) => {
   next();
 });
 
+/*
 async function handleQuestionMessage(message, ws, wss) {
   console.log("MESSAGE: ", message);
   const { questionSessionId, question, question_id } = message;
@@ -72,4 +73,6 @@ async function handleAnswerMessage(message, ws, wss) {
   });
 }
 
-module.exports = { questionRouter, handleQuestionMessage, handleAnswerMessage };
+*/
+
+module.exports = { questionRouter };
