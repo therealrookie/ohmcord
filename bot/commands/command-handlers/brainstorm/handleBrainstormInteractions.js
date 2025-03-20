@@ -33,7 +33,7 @@ function createLastRow(hashRoute) {
   const contributeButton = new ButtonBuilder().setCustomId("contribute_button").setLabel("+").setStyle(ButtonStyle.Success);
   const linkButton = new ButtonBuilder()
     .setLabel("Brainstorm Canvas")
-    .setURL(`${process.env.URL}:${process.env.port}/brainstorm/${hashRoute}`)
+    .setURL(`${process.env.URL}/brainstorm/${hashRoute}`)
     .setStyle(ButtonStyle.Link);
 
   const actionRow = new ActionRowBuilder().addComponents(contributeButton).addComponents(linkButton);

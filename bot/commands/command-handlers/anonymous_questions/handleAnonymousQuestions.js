@@ -47,7 +47,7 @@ async function sendAddQuestionEmbed(interaction, questionSessionData) {
   const questionSessionEmbed = new EmbedBuilder()
     .setColor(0x191923)
     .setTitle(topic)
-    .setURL(`${process.env.URL}:${process.env.port}/anonymous-questions/${hashRoute}`)
+    .setURL(`${process.env.URL}/anonymous-questions/${hashRoute}`)
     .setDescription(`A new anonymous question session has begun about the topic:\n **${topic}**.`);
 
   const questionButton = new ButtonBuilder()
