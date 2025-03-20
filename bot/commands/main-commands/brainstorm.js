@@ -27,7 +27,7 @@ async function handleBrainstormCommand(interaction) {
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
 
   // Open a new websocket to send and listen to messages from the website
-  const ws = new WebSocket(`ws://${process.env.WS_URL}:${process.env.WS_PORT}/brainstorm`);
+  const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
   await handleWebsocket(ws, theme);
 
   // Open an embed with a button to see and add contributions
