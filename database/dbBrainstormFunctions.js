@@ -4,7 +4,7 @@ const pgpool = require("./db");
 async function addBrainstorm(theme, hash, endBrainstormAt) {
   await deleteExpiredBrainstorms();
   try {
-    const brainstorm = await pgpool.query("INSERT INTO brainstorm (theme, url, end_time_ms) VALUES($1, $2, $3) RETURNING *", [
+    const brainstorm = await pgpool.query("INSERT INTO public.brainstorm (theme, url, end_time_ms) VALUES($1, $2, $3) RETURNING *", [
       theme,
       hash,
       endBrainstormAt,
@@ -18,7 +18,10 @@ async function addBrainstorm(theme, hash, endBrainstormAt) {
 // Saves the the ID of the Discord message, that contains all the contributions/buttons
 async function addBrainstormMessage(brainstormId, messageId) {
   try {
-    const response = await pgpool.query("INSERT INTO brainstorm_messages (brainstorm_id, message_id) VALUES($1, $2)", [brainstormId, messageId]);
+    const response = await pgpool.query("INSERT INTO public.brainstorm_messages (brainstorm_id, message_id) VALUES($1, $2)", [
+      brainstormId,
+      messageId,
+    ]);
     return response.ok;
   } catch (err) {
     return err.message;
@@ -28,7 +31,9 @@ async function addBrainstormMessage(brainstormId, messageId) {
 // Returns all the data of each Discord message, that contain the contributions/buttons
 async function getBrainstormMessages(brainstormId) {
   try {
-    const response = await pgpool.query("SELECT * FROM brainstorm_messages WHERE brainstorm_id = $1 ORDER BY brainstorm_message_id", [brainstormId]);
+    const response = await pgpool.query("SELECT * FROM public.brainstorm_messages WHERE brainstorm_id = $1 ORDER BY brainstorm_message_id", [
+      brainstormId,
+    ]);
     return response.rows;
   } catch (err) {
     return err.message;
@@ -39,7 +44,7 @@ async function getBrainstormMessages(brainstormId) {
 async function addBrainstormContribution(brainstormId, contribution) {
   try {
     const newContribution = await pgpool.query(
-      "INSERT INTO brainstorm_contributions (brainstorm_id, contribution, score) VALUES($1, $2, $3) RETURNING *",
+      "INSERT INTO public.brainstorm_contributions (brainstorm_id, contribution, score) VALUES($1, $2, $3) RETURNING *",
       [brainstormId, contribution, 0]
     );
     return newContribution.rows[0].contribution_id;
@@ -51,7 +56,7 @@ async function addBrainstormContribution(brainstormId, contribution) {
 // Get the brainstorm-session-data by its 6 digit Hash Route
 async function getBrainstorm(hash) {
   try {
-    const brainstorm = await pgpool.query("SELECT * FROM brainstorm WHERE url = $1", [hash]);
+    const brainstorm = await pgpool.query("SELECT * FROM public.brainstorm WHERE url = $1", [hash]);
     return brainstorm.rows[0];
   } catch (err) {
     throw new Error("Failed to fetch brainstorm data");
@@ -68,8 +73,8 @@ async function getBrainstormContributions(id) {
         cont.score, 
         pos.x_pos AS xpos, 
         pos.y_pos AS ypos
-      FROM brainstorm_contributions cont
-      LEFT JOIN brainstorm_contribution_positions pos 
+      FROM public.brainstorm_contributions cont
+      LEFT JOIN public.brainstorm_contribution_positions pos 
       ON cont.contribution_id = pos.contribution_id
       WHERE cont.brainstorm_id = $1
     `;
@@ -86,7 +91,7 @@ async function getBrainstormContributions(id) {
 async function getContributionPositions(contIds) {
   //contIds = [1, 2, 3, 4];
   try {
-    const positions = await pgpool.query("SELECT * FROM brainstorm_contribution_positions WHERE contribution_id = any($1)", [contIds]);
+    const positions = await pgpool.query("SELECT * FROM public.brainstorm_contribution_positions WHERE contribution_id = any($1)", [contIds]);
     return positions.rows;
   } catch (error) {
     console.log(error);
@@ -98,7 +103,7 @@ async function getContributionPositions(contIds) {
 async function setPosition(contId, xPos, yPos) {
   try {
     const query = `
-      INSERT INTO brainstorm_contribution_positions (contribution_id, x_pos, y_pos) 
+      INSERT INTO public.brainstorm_contribution_positions (contribution_id, x_pos, y_pos) 
       VALUES ($1, $2, $3) 
       ON CONFLICT (contribution_id) 
       DO UPDATE SET x_pos = $2, y_pos = $3
@@ -117,7 +122,7 @@ async function setPosition(contId, xPos, yPos) {
 async function updateBrainstormContributionScoring(contributionId, userId) {
   try {
     const result = await pgpool.query(
-      `INSERT INTO brainstorm_contribution_scoring (contribution_id, discord_user_id, clicks)
+      `INSERT INTO public.brainstorm_contribution_scoring (contribution_id, discord_user_id, clicks)
        VALUES ($1, $2, 1)
        ON CONFLICT (contribution_id, discord_user_id) 
        DO UPDATE SET clicks = (
@@ -145,7 +150,7 @@ async function updateBrainstormContributionScoring(contributionId, userId) {
 // Update the actual score of the contribution
 async function updateContributionScore(contributionId, score) {
   try {
-    await pgpool.query("UPDATE brainstorm_contributions SET score = $2 WHERE contribution_id = $1", [contributionId, score]);
+    await pgpool.query("UPDATE public.brainstorm_contributions SET score = $2 WHERE contribution_id = $1", [contributionId, score]);
   } catch (err) {
     return err.message;
   }
@@ -158,24 +163,24 @@ async function deleteExpiredBrainstorms() {
   try {
     await client.query("BEGIN");
 
-    const brainstormResult = await client.query("SELECT brainstorm_id FROM brainstorm WHERE timestamp < NOW() - INTERVAL '1 minute'");
+    const brainstormResult = await client.query("SELECT brainstorm_id FROM public.brainstorm WHERE timestamp < NOW() - INTERVAL '1 minute'");
     const expiredBrainstormIds = brainstormResult.rows.map((res) => {
       return res.brainstorm_id;
     });
 
-    const contributionResult = await client.query("SELECT contribution_id FROM brainstorm_contributions WHERE brainstorm_id = any($1)", [
+    const contributionResult = await client.query("SELECT contribution_id FROM public.brainstorm_contributions WHERE brainstorm_id = any($1)", [
       expiredBrainstormIds,
     ]);
     const expiredBrainstormContributionIds = contributionResult.rows.map((res) => {
       return res.contribution_id;
     });
 
-    await client.query("DELETE FROM brainstorm WHERE brainstorm_id = any($1)", [expiredBrainstormIds]);
-    await client.query("DELETE FROM brainstorm_messages WHERE brainstorm_id = any($1)", [expiredBrainstormIds]);
+    await client.query("DELETE FROM public.brainstorm WHERE brainstorm_id = any($1)", [expiredBrainstormIds]);
+    await client.query("DELETE FROM public.brainstorm_messages WHERE brainstorm_id = any($1)", [expiredBrainstormIds]);
 
-    await client.query("DELETE FROM brainstorm_contributions WHERE contribution_id = any($1)", [expiredBrainstormContributionIds]);
-    await client.query("DELETE FROM brainstorm_contribution_positions WHERE contribution_id = any($1)", [expiredBrainstormContributionIds]);
-    await client.query("DELETE FROM brainstorm_contribution_scoring WHERE contribution_id = any($1)", [expiredBrainstormContributionIds]);
+    await client.query("DELETE FROM public.brainstorm_contributions WHERE contribution_id = any($1)", [expiredBrainstormContributionIds]);
+    await client.query("DELETE FROM public.brainstorm_contribution_positions WHERE contribution_id = any($1)", [expiredBrainstormContributionIds]);
+    await client.query("DELETE FROM public.brainstorm_contribution_scoring WHERE contribution_id = any($1)", [expiredBrainstormContributionIds]);
 
     await client.query("COMMIT");
     return "Expired brainstorm data deleted successfully.";

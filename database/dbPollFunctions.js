@@ -3,7 +3,7 @@ const pgpool = require("./db");
 
 async function getPollByHashRoute(hashRoute) {
   try {
-    const quiz = await pgpool.query("SELECT * FROM polls WHERE hash_route = $1", [hashRoute]);
+    const quiz = await pgpool.query("SELECT * FROM public.polls WHERE hash_route = $1", [hashRoute]);
     return quiz.rows[0];
   } catch (error) {
     console.log(error);
@@ -13,7 +13,7 @@ async function getPollByHashRoute(hashRoute) {
 
 async function getPollAnswers(pollId) {
   try {
-    const quiz = await pgpool.query("SELECT * FROM poll_answers WHERE poll_id = $1", [pollId]);
+    const quiz = await pgpool.query("SELECT * FROM public.poll_answers WHERE poll_id = $1", [pollId]);
     return quiz.rows;
   } catch (error) {
     console.log(error);
@@ -31,7 +31,7 @@ async function addPoll(questionObj, answers) {
     await client.query("BEGIN");
 
     const newQuestion = await client.query(
-      "INSERT INTO polls (hash_route, question, multiple_answers, duration) VALUES ($1, $2, $3, $4) RETURNING poll_id",
+      "INSERT INTO public.polls (hash_route, question, multiple_answers, duration) VALUES ($1, $2, $3, $4) RETURNING poll_id",
       [hashRoute, question, multipleAnswers, duration]
     );
 
@@ -42,7 +42,7 @@ async function addPoll(questionObj, answers) {
     const insertParams = answers.flatMap((answer) => [answer.emoji, answer.answer]);
 
     if (answers.length > 0) {
-      await client.query(`INSERT INTO poll_answers (poll_id, emoji, answer) VALUES ${insertValues}`, insertParams);
+      await client.query(`INSERT INTO public.poll_answers (poll_id, emoji, answer) VALUES ${insertValues}`, insertParams);
     }
 
     await client.query("COMMIT");

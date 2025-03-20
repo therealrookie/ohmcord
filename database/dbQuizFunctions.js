@@ -2,7 +2,11 @@ const pgpool = require("./db");
 
 async function addQuiz(title, visibility, hashUrl) {
   try {
-    const newQuiz = await pgpool.query("INSERT INTO quiz (quiz_title, visibility, url) VALUES($1, $2, $3) RETURNING *", [title, visibility, hashUrl]);
+    const newQuiz = await pgpool.query("INSERT INTO public.quiz (quiz_title, visibility, url) VALUES($1, $2, $3) RETURNING *", [
+      title,
+      visibility,
+      hashUrl,
+    ]);
     return newQuiz.rows[0];
   } catch (err) {
     return err.message;
@@ -11,7 +15,7 @@ async function addQuiz(title, visibility, hashUrl) {
 
 async function getQuizByHashUrl(hashUrl) {
   try {
-    const quiz = await pgpool.query("SELECT * FROM quiz WHERE url = $1", [hashUrl]);
+    const quiz = await pgpool.query("SELECT * FROM public.quiz WHERE url = $1", [hashUrl]);
     return quiz.rows[0];
   } catch (error) {
     console.log(error);
@@ -21,12 +25,10 @@ async function getQuizByHashUrl(hashUrl) {
 
 async function createQuizQuestion(quizId, question) {
   try {
-    const newQuiz = await pgpool.query("INSERT INTO quiz_questions (quiz_id, quiz_question, attempts, correct) VALUES($1, $2, $3, $4) RETURNING *", [
-      quizId,
-      question,
-      0,
-      0,
-    ]);
+    const newQuiz = await pgpool.query(
+      "INSERT INTO public.quiz_questions (quiz_id, quiz_question, attempts, correct) VALUES($1, $2, $3, $4) RETURNING *",
+      [quizId, question, 0, 0]
+    );
     return newQuiz.rows[0].quiz_question_id;
   } catch (err) {
     return err.message;
@@ -35,7 +37,7 @@ async function createQuizQuestion(quizId, question) {
 
 async function createAnswer(quizQuestionId) {
   try {
-    const response = await pgpool.query("INSERT INTO quiz_answers (quiz_question_id) VALUES($1) RETURNING quiz_answer_id", [quizQuestionId]);
+    const response = await pgpool.query("INSERT INTO public.quiz_answers (quiz_question_id) VALUES($1) RETURNING quiz_answer_id", [quizQuestionId]);
     return response.rows[0].quiz_answer_id;
   } catch (error) {
     return error.message;
@@ -44,7 +46,7 @@ async function createAnswer(quizQuestionId) {
 
 async function updateCorrectAnswer(answerId, isChecked) {
   try {
-    const response = await pgpool.query("UPDATE quiz_answers SET is_correct = $1 WHERE quiz_answer_id = $2", [isChecked, answerId]);
+    const response = await pgpool.query("UPDATE public.quiz_answers SET is_correct = $1 WHERE quiz_answer_id = $2", [isChecked, answerId]);
     console.log("RESPONSE: ", response);
     return response;
   } catch (error) {
@@ -54,7 +56,7 @@ async function updateCorrectAnswer(answerId, isChecked) {
 
 async function updateAnswerText(answerId, text) {
   try {
-    const response = await pgpool.query("UPDATE quiz_answers SET quiz_answer = $1 WHERE quiz_answer_id = $2", [text, answerId]);
+    const response = await pgpool.query("UPDATE public.quiz_answers SET quiz_answer = $1 WHERE quiz_answer_id = $2", [text, answerId]);
     return response;
   } catch (error) {
     return error.message;
@@ -63,7 +65,7 @@ async function updateAnswerText(answerId, text) {
 
 async function deleteAnswer(answerId) {
   try {
-    const response = await pgpool.query("DELETE FROM quiz_answers WHERE quiz_answer_id = $1", [answerId]);
+    const response = await pgpool.query("DELETE FROM public.quiz_answers WHERE quiz_answer_id = $1", [answerId]);
     return response;
   } catch (error) {
     return error.message;
@@ -76,9 +78,9 @@ async function deleteQuestion(questionId) {
   try {
     await client.query("BEGIN");
 
-    await client.query("DELETE FROM quiz_questions WHERE quiz_question_id = $1", [questionId]);
+    await client.query("DELETE FROM public.quiz_questions WHERE quiz_question_id = $1", [questionId]);
 
-    await client.query("DELETE FROM quiz_answers WHERE quiz_question_id = $1", [questionId]);
+    await client.query("DELETE FROM public.quiz_answers WHERE quiz_question_id = $1", [questionId]);
 
     await client.query("COMMIT");
     return "Answers updated successfully.";
@@ -104,7 +106,7 @@ async function addQuizAnswers(quizQuestionId, answers) {
       const { answerString, isCorrect } = answer;
       console.log("ANSWER: ", answer);
 
-      await pgpool.query("INSERT INTO quiz_answers (quiz_question_id, quiz_answer, is_correct) VALUES($1, $2, $3)", [
+      await pgpool.query("INSERT INTO public.quiz_answers (quiz_question_id, quiz_answer, is_correct) VALUES($1, $2, $3)", [
         quizQuestionId,
         answerString,
         isCorrect,
@@ -127,8 +129,8 @@ async function getAllQuizQuestions(quizId) {
           a.quiz_answer_id,
           a.quiz_answer, 
           a.is_correct 
-        FROM quiz_questions q
-        LEFT JOIN quiz_answers a ON q.quiz_question_id = a.quiz_question_id
+        FROM public.quiz_questions q
+        LEFT JOIN public.quiz_answers a ON q.quiz_question_id = a.quiz_question_id
         WHERE q.quiz_id = $1
         `,
       [quizId]
@@ -169,7 +171,7 @@ async function getAllQuizQuestions(quizId) {
 
 async function updateQuizQuestion(questionId, question) {
   try {
-    const questionData = await pgpool.query("UPDATE quiz_questions SET quiz_question = $1 WHERE quiz_question_id = $2 RETURNING *", [
+    const questionData = await pgpool.query("UPDATE public.quiz_questions SET quiz_question = $1 WHERE quiz_question_id = $2 RETURNING *", [
       question,
       questionId,
     ]);
@@ -186,13 +188,13 @@ async function updateQuizAnswers(questionId, answers, checkboxes) {
   try {
     await client.query("BEGIN");
 
-    await client.query("DELETE FROM quiz_answers WHERE quiz_question_id = $1", [questionId]);
+    await client.query("DELETE FROM public.quiz_answers WHERE quiz_question_id = $1", [questionId]);
 
     const insertValues = answers.map((answer, index) => `(${questionId}, $${index * 2 + 1}, $${index * 2 + 2})`).join(", ");
     const insertParams = answers.flatMap((answer, index) => [answer, checkboxes[index]]);
 
     if (answers.length > 0) {
-      await client.query(`INSERT INTO quiz_answers (quiz_question_id, quiz_answer, is_correct) VALUES ${insertValues}`, insertParams);
+      await client.query(`INSERT INTO public.quiz_answers (quiz_question_id, quiz_answer, is_correct) VALUES ${insertValues}`, insertParams);
     }
 
     await client.query("COMMIT");
@@ -211,7 +213,7 @@ async function addQuizParticipant(data) {
     const { quizId, userId, startTimeMs, questionStatus } = data;
 
     const response = await pgpool.query(
-      "INSERT INTO quiz_participants (quiz_id, participant_discord_id, start_time_ms, correct_answers, question_status) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      "INSERT INTO public.quiz_participants (quiz_id, participant_discord_id, start_time_ms, correct_answers, question_status) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [quizId, userId, startTimeMs, 0, questionStatus]
     );
 
@@ -224,7 +226,7 @@ async function addQuizParticipant(data) {
 
 async function getUserQuestionStatus(quizId, userId) {
   try {
-    const response = await pgpool.query(`SELECT question_status FROM quiz_participants WHERE quiz_id = $1 AND participant_discord_id = $2`, [
+    const response = await pgpool.query(`SELECT question_status FROM public.quiz_participants WHERE quiz_id = $1 AND participant_discord_id = $2`, [
       quizId,
       userId,
     ]);
@@ -237,11 +239,10 @@ async function getUserQuestionStatus(quizId, userId) {
 
 async function setUserQuestionStatus(quizId, userId, status) {
   try {
-    const response = await pgpool.query("UPDATE quiz_participants SET question_status = $1 WHERE quiz_id = $2 AND participant_discord_id = $3", [
-      status,
-      quizId,
-      userId,
-    ]);
+    const response = await pgpool.query(
+      "UPDATE public.quiz_participants SET question_status = $1 WHERE quiz_id = $2 AND participant_discord_id = $3",
+      [status, quizId, userId]
+    );
     return response.rows[0];
   } catch (error) {
     console.log(error);
@@ -251,10 +252,10 @@ async function setUserQuestionStatus(quizId, userId, status) {
 // ...
 async function updateCorrectAnswers(quizId, userId) {
   try {
-    await pgpool.query("UPDATE quiz_participants SET correct_answers = correct_answers + 1 WHERE quiz_id = $1 AND participant_discord_id = $2", [
-      quizId,
-      userId,
-    ]);
+    await pgpool.query(
+      "UPDATE public.quiz_participants SET correct_answers = correct_answers + 1 WHERE quiz_id = $1 AND participant_discord_id = $2",
+      [quizId, userId]
+    );
   } catch (error) {
     console.log(error);
   }
@@ -262,7 +263,7 @@ async function updateCorrectAnswers(quizId, userId) {
 
 async function addQuizEndtime(quizId, userId, endTimeMs) {
   try {
-    await pgpool.query("UPDATE quiz_participants SET end_time_ms = $1 WHERE quiz_id = $2 AND participant_discord_id = $3", [
+    await pgpool.query("UPDATE public.quiz_participants SET end_time_ms = $1 WHERE quiz_id = $2 AND participant_discord_id = $3", [
       endTimeMs,
       quizId,
       userId,
@@ -274,7 +275,10 @@ async function addQuizEndtime(quizId, userId, endTimeMs) {
 
 async function getQuizParticipantData(quizId, userId) {
   try {
-    const response = await pgpool.query("SELECT * FROM quiz_participants WHERE quiz_id = $1 AND participant_discord_id = $2", [quizId, userId]);
+    const response = await pgpool.query("SELECT * FROM public.quiz_participants WHERE quiz_id = $1 AND participant_discord_id = $2", [
+      quizId,
+      userId,
+    ]);
     return response.rows[0];
   } catch (error) {
     console.log(error);
@@ -285,7 +289,7 @@ async function getQuizParticipantsRanking(quizId) {
   try {
     const response = await pgpool.query(
       `SELECT * 
-         FROM quiz_participants
+         FROM public.quiz_participants
          WHERE quiz_id = $1
          ORDER BY correct_answers DESC, (end_time_ms - start_time_ms) ASC`,
       [quizId]
@@ -298,7 +302,7 @@ async function getQuizParticipantsRanking(quizId) {
 
 async function getQuestionAttemptsById(questionId) {
   try {
-    const response = await pgpool.query("SELECT attempts, correct FROM quiz_questions WHERE quiz_question_id = $1", [questionId]);
+    const response = await pgpool.query("SELECT attempts, correct FROM public.quiz_questions WHERE quiz_question_id = $1", [questionId]);
     return { attempts: response.rows[0].attempts, correct: response.rows[0].correct };
   } catch (error) {
     console.log(error);
@@ -309,7 +313,7 @@ async function setQuestionAttemptsById(questionId, isCorrect) {
   console.log("NEW ATTEMPT", questionId, isCorrect);
   try {
     const response = await pgpool.query(
-      `UPDATE quiz_questions
+      `UPDATE public.quiz_questions
          SET attempts = attempts + 1,
              correct = correct + CASE WHEN $2 THEN 1 ELSE 0 END
          WHERE quiz_question_id = $1
@@ -328,9 +332,9 @@ async function clearQuizData(quizId) {
   try {
     await client.query("BEGIN");
 
-    await client.query("DELETE FROM quiz_participants WHERE quiz_id = $1", [quizId]);
+    await client.query("DELETE FROM public.quiz_participants WHERE quiz_id = $1", [quizId]);
 
-    await client.query("UPDATE quiz_questions SET attempts = 0, correct = 0 WHERE quiz_id = $1", [quizId]);
+    await client.query("UPDATE public.quiz_questions SET attempts = 0, correct = 0 WHERE quiz_id = $1", [quizId]);
 
     await client.query("COMMIT");
 
@@ -348,7 +352,7 @@ async function updateQuizSettings(body) {
   console.log("BODY: ", body);
   try {
     const { quizId, column, value } = body;
-    const response = await pgpool.query(`UPDATE quiz SET ${column} = $1 WHERE quiz_id = $2 RETURNING *`, [value, quizId]);
+    const response = await pgpool.query(`UPDATE public.quiz SET ${column} = $1 WHERE quiz_id = $2 RETURNING *`, [value, quizId]);
     console.log(response);
   } catch (error) {
     console.log(error);
