@@ -2,8 +2,10 @@ const express = require("express");
 const questionRouter = express.Router();
 const { getQuestionSession, getAnonymousQuestions, getAnonymousAnswers } = require("../../database/dbAnonymousQuestionFunctions");
 
+/*
 const { WebSocket } = require("ws");
-const ws = new WebSocket(`ws://${process.env.WS_URL}:${process.env.WS_PORT}`);
+const ws = new WebSocket(`${process.env.WS_URL}`);
+*/
 
 questionRouter.get("/:url", async (req, res) => {
   try {

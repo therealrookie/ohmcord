@@ -2,9 +2,10 @@ const express = require("express");
 const brainstormRouter = express.Router();
 const { getBrainstorm, getBrainstormContributions, getContributionPositions, setPosition } = require("../../database/dbBrainstormFunctions");
 
+/*
 const { WebSocket } = require("ws");
-const ws = new WebSocket(`ws://${process.env.WS_URL}:${process.env.WS_PORT}`);
-
+const ws = new WebSocket(`${process.env.WS_URL}`);
+*/
 const https = require("https");
 const fs = require("fs");
 
@@ -128,11 +129,13 @@ async function handleBrainstormMessage(message, ws, wss) {
 
   // Broadcast the new contribution to all connected clients
 
+  /*
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify({ type: "newContribution", data: { brainstormId, contribution } }));
     }
   });
+  */
 }
 
 module.exports = { brainstormRouter, handleBrainstormMessage };

@@ -24,7 +24,7 @@ async function handleAnonymousQuestions(interaction) {
   const { topic, hashRoute, questionSessionId } = questionSessionData;
 
   // Open a new websocket to send and listen to messages from the website
-  const ws = new WebSocket(`ws://${process.env.WS_URL}:${process.env.WS_PORT}/questions`);
+  const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
   await handleWebsocket(ws, topic);
 
   // Send an embed with a button for the user to ask a question
