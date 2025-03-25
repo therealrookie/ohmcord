@@ -71,6 +71,11 @@ socket.onopen = function (event) {
   console.log("WebSocket Open (client)");
 };
 
+socket.onerror = function (event) {
+  console.log("Error Event: ", event);
+  console.log("Socket: ", socket);
+};
+
 socket.onmessage = async function (event) {
   const message = JSON.parse(event.data);
   const validBrainstormId = parseInt(message.brainstormId) === parseInt(brainstormId);
