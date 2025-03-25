@@ -1,7 +1,7 @@
 // public/scripts/brainstorm.js
 
 const brainstormId = canvas.getAttribute("data-brainstorm-id");
-const wsUrl = canvas.getAttribute("data-ws-url");
+const wsUrl = "wss://ohmcord-hyxt"; //canvas.getAttribute("data-ws-url");
 
 console.log("Websocket URL: ", wsUrl);
 
