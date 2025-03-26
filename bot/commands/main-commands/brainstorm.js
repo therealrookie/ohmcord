@@ -27,7 +27,9 @@ async function handleBrainstormCommand(interaction) {
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
 
   // Open a new websocket to send and listen to messages from the website
-  const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
+  //const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
+  const ws = new WebSocket(`ws://ohmcord-hyxt:433/brainstorm`);
+
   await handleWebsocket(ws, theme);
 
   // Open an embed with a button to see and add contributions
@@ -47,6 +49,18 @@ async function handleBrainstormCommand(interaction) {
       console.log("New WS message: ", message);
       await handleNewContribution(parsedMessage.contribution);
     }
+  });
+
+  ws.on("open", () => {
+    console.log(`WebSocket connection established (brainstorm: ${theme})`);
+  });
+
+  ws.on("close", () => {
+    console.log("WebSocket connection closed");
+  });
+
+  ws.on("error", (error) => {
+    console.error("WebSocket error:", error);
   });
 
   // Handle a new contribution from Discord or the website
