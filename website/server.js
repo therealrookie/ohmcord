@@ -9,9 +9,15 @@ const { pollRouter } = require("./routes/poll");
 
 const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
+const server = require("http").createServer();
+
 const { WebSocketServer, WebSocket } = require("ws");
 const url = require("url");
-const WSS = new WebSocketServer({ port: process.env.WS_PORT, host: "0.0.0.0" });
+const WSS = new WebSocketServer({ server });
+
+server.listen(process.env.WS_PORT, () => {
+  console.log(`WebSocket server listening on port ${process.env.WS_PORT}`);
+});
 
 WSS.on("connection", (ws, req) => {
   console.log("New client connected...");
