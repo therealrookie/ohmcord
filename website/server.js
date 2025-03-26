@@ -11,7 +11,7 @@ const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctio
 
 const { WebSocketServer, WebSocket } = require("ws");
 const url = require("url");
-const WSS = new WebSocketServer({ port: process.env.WS_PORT });
+const WSS = new WebSocketServer({ port: process.env.WS_PORT, host: "0.0.0.0" });
 
 WSS.on("connection", (ws, req) => {
   console.log("New client connected...");
