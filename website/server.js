@@ -9,6 +9,18 @@ const { pollRouter } = require("./routes/poll");
 
 const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
+const WebSocket = require("ws");
+const PORT = process.env.PORT || 3000;
+const wss = new WebSocket.Server({ port: PORT });
+wss.on("connection", (ws) => {
+  ws.on("message", (message) => {
+    console.log(`Received message => ${message}`);
+  });
+  ws.send("Hello! Message From Server!!");
+});
+
+/*
+
 const server = require("http").createServer();
 
 const { WebSocketServer, WebSocket } = require("ws");
@@ -87,6 +99,8 @@ function handleQuestionsConnection(ws) {
     }
   });
 }
+
+*/
 
 // Server
 function startServer() {

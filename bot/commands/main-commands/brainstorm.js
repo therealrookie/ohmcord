@@ -32,6 +32,24 @@ async function handleBrainstormCommand(interaction) {
 
   await handleWebsocket(ws, theme);
 
+  var conn = new WebSocket("wss://ohmcord-hyxt.onrender.com");
+  conn.onopen = function (e) {
+    console.log("Connection established!");
+  };
+  setInterval(() => {
+    conn.send("Hello server!");
+  }, 1000);
+  conn.onmessage = function (e) {
+    console.log(e.data);
+  };
+  conn.onclose = function (e) {
+    console.log(e.code);
+    console.log(e.reason);
+  };
+  conn.onerror = function (e) {
+    console.log(e);
+  };
+
   // Open an embed with a button to see and add contributions
   await startBrainstormEmbed(interaction, brainstormData, contributions);
 
@@ -49,18 +67,6 @@ async function handleBrainstormCommand(interaction) {
       console.log("New WS message: ", message);
       await handleNewContribution(parsedMessage.contribution);
     }
-  });
-
-  ws.on("open", () => {
-    console.log(`WebSocket connection established (brainstorm: ${theme})`);
-  });
-
-  ws.on("close", () => {
-    console.log("WebSocket connection closed");
-  });
-
-  ws.on("error", (error) => {
-    console.error("WebSocket error:", error);
   });
 
   // Handle a new contribution from Discord or the website

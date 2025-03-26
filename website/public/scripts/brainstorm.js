@@ -1,7 +1,25 @@
 // public/scripts/brainstorm.js
 
 const brainstormId = canvas.getAttribute("data-brainstorm-id");
-const wsUrl = "wss://ohmcord.robinvollbracht.com"; //canvas.getAttribute("data-ws-url");
+const wsUrl = "wss://ohmcord-hyxt.onrender.com/"; //canvas.getAttribute("data-ws-url");
+
+var conn = new WebSocket("wss://ohmcord-hyxt.onrender.com");
+conn.onopen = function (e) {
+  console.log("Connection established!");
+};
+setInterval(() => {
+  conn.send("Hello server!");
+}, 1000);
+conn.onmessage = function (e) {
+  console.log(e.data);
+};
+conn.onclose = function (e) {
+  console.log(e.code);
+  console.log(e.reason);
+};
+conn.onerror = function (e) {
+  console.log(e);
+};
 
 console.log("Websocket URL: ", wsUrl);
 
