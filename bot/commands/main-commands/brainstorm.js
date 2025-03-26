@@ -28,7 +28,7 @@ async function handleBrainstormCommand(interaction) {
 
   // Open a new websocket to send and listen to messages from the website
   //const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
-  const ws = new WebSocket(`ws://ohmcord-hyxt:443/brainstorm`);
+  const ws = new WebSocket(`ws://ohmcord.robinvollbracht.com/brainstorm`);
 
   await handleWebsocket(ws, theme);
 
