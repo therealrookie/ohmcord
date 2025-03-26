@@ -15,7 +15,8 @@ const { WebSocketServer, WebSocket } = require("ws");
 const url = require("url");
 const WSS = new WebSocketServer({ server });
 
-server.listen(process.env.WS_PORT, () => {
+server.listen(process.env.PORT, "0.0.0.0", () => {
+  console.log(server);
   console.log(`WebSocket server listening on port ${process.env.WS_PORT}`);
 });
 
