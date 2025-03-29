@@ -100,20 +100,20 @@ function handleQuestionsConnection(ws) {
 
 */
 
+var express = require("express");
+var http = require("http");
+var WebSocket = require("ws");
+
+var app = express();
+var server = http.createServer(app);
+var wss = new WebSocket.Server({ server });
+
+const path = require("path");
+
+const PORT = process.env.PORT || 3000;
+const URL = process.env.URL;
+
 function startServer() {
-  const express = require("express");
-  const http = require("http");
-  const WebSocket = require("ws");
-
-  const path = require("path");
-
-  const PORT = process.env.PORT || 3000;
-  const URL = process.env.URL;
-
-  const app = express();
-  const server = http.createServer(app);
-  const wss = new Websocket.Server({ server });
-
   // Set EJS as the templating engine
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "/views")); // Set views folder
@@ -155,7 +155,9 @@ function startServer() {
   });
 
   // Start server
-  server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+  server.listen(PORT, function () {
+    console.log(`Server running on port ${PORT}`);
+  });
 }
 
 module.exports = { startServer };
