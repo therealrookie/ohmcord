@@ -28,7 +28,7 @@ async function handleBrainstormCommand(interaction) {
   const brainstormData = await saveBrainStormData(interaction);
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
 
-  const ws = new Websocket(`${process.env.WS_URL}`);
+  const ws = new WebSocket(`${process.env.WS_URL}`);
 
   ws.on("message", (message) => {
     console.log("HERE: ", message);
