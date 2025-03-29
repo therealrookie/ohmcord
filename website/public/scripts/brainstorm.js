@@ -1,8 +1,9 @@
 // public/scripts/brainstorm.js
 
 const brainstormId = canvas.getAttribute("data-brainstorm-id");
-const wsUrl = "wss://ohmcord-hyxt.onrender.com/"; //canvas.getAttribute("data-ws-url");
+const wsUrl = canvas.getAttribute("data-ws-url");
 
+/*
 var conn = new WebSocket("wss://ohmcord-hyxt.onrender.com");
 conn.onopen = function (e) {
   console.log("Connection established!");
@@ -20,10 +21,14 @@ conn.onclose = function (e) {
 conn.onerror = function (e) {
   console.log(e);
 };
+*/
 
 console.log("Websocket URL: ", wsUrl);
-
+/*
 const socket = new WebSocket(`${wsUrl}/brainstorm`);
+*/
+
+const socket = new WebSocket(`${wsUrl}`);
 
 let contributions = [];
 let weightRange = [-1, 1];

@@ -1,25 +1,23 @@
 // website/server.js
-const express = require("express");
-const path = require("path");
-const fs = require("fs");
+//const express = require("express");
+//const path = require("path");
 const { brainstormRouter } = require("./routes/brainstorm");
 const { questionRouter } = require("./routes/anonymous-questions");
 const { quizRouter } = require("./routes/quiz");
 const { pollRouter } = require("./routes/poll");
 
+const fs = require("fs");
 const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
+/*
 const WebSocket = require("ws");
 const PORT = process.env.PORT || 3000;
 const wss = new WebSocket.Server({ port: PORT });
-wss.on("connection", (ws) => {
-  ws.on("message", (message) => {
-    console.log(`Received message => ${message}`);
-  });
-  ws.send("Hello! Message From Server!!");
-});
 
-/*
+
+
+
+
 
 const server = require("http").createServer();
 
@@ -102,21 +100,28 @@ function handleQuestionsConnection(ws) {
 
 */
 
-// Server
 function startServer() {
-  const app = express();
+  const express = require("express");
+  const http = require("http");
+  const WebSocket = require("ws");
+
+  const path = require("path");
+
   const PORT = process.env.PORT || 3000;
   const URL = process.env.URL;
 
-  // Middleware
-  app.use(express.json());
+  const app = express();
+  const server = http.createServer(app);
+  const wss = new Websocket.Server({ server });
+
+  // Set EJS as the templating engine
+  app.set("view engine", "ejs");
+  app.set("views", path.join(__dirname, "/views")); // Set views folder
+
+  // Serve static files (CSS, JS, images, etc.)
   app.use(express.static(path.join(__dirname, "public")));
-  app.use(express.urlencoded({ extended: true }));
 
-  // Set up view engine
-  app.set("views", path.join(__dirname, "views"));
-  app.set("view engine", "ejs"); // Assuming you use EJS
-
+  // Route to render index.ejs
   app.get("/", (req, res) => {
     res.render("index", {
       addBotUrl: process.env.ADD_URL,
@@ -140,10 +145,17 @@ function startServer() {
   app.use("/quiz", quizRouter);
   app.use("/poll", pollRouter);
 
-  // Start the server
-  app.listen(PORT, () => {
-    console.log(`Server running on ${URL}:${PORT}`);
+  wss.on("connection", (ws) => {
+    console.log("New WebSocket connection established.");
+
+    ws.on("message", (message) => {
+      console.log(`Received message => ${message}`);
+    });
+    ws.send("Hello! Message From Server!!");
   });
+
+  // Start server
+  server.listen(PORT, () => console.log(`Listening on ${PORT}`));
 }
 
 module.exports = { startServer };

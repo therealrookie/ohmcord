@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { WebSocket } = require("ws");
+const { io } = require("socket.io-client");
 
 const {
   handleWebsocket,
@@ -19,6 +20,8 @@ const {
 async function handleBrainstormCommand(interaction) {
   const client = interaction.client;
 
+  console.log("WebSocket URL: ", process.env.WS_URL);
+
   let imageSent = false; // Flag to indicate if the canvas has already been sent to the channel
   const contributions = []; // Store all the contributions in a temporary array
 
@@ -26,11 +29,36 @@ async function handleBrainstormCommand(interaction) {
   const brainstormData = await saveBrainStormData(interaction);
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
 
+  const ws = io(`${process.env.WS_URL}`);
+
+  ws.on("message", (message) => {
+    console.log("HERE: ", message);
+  });
+
+  ws.on("connect", () => {
+    console.log("Successfully connected to WebSocket server!");
+    ws.emit("message", "Hello from Discord Bot!"); // Send a message from the bot
+  });
+
+  ws.on("message", (message) => {
+    console.log("Received from WebSocket server:", message);
+  });
+
+  ws.on("disconnect", () => {
+    console.log("Disconnected from WebSocket server");
+  });
+
+  ws.on("error", (error) => {
+    console.log("Error connecting to WebSocket server", error);
+  });
+
   // Open a new websocket to send and listen to messages from the website
   //const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
-  const ws = new WebSocket(`wss://ohmcord.robinvollbracht.com/brainstorm`);
+  //const ws = new WebSocket(`wss://ohmcord.robinvollbracht.com/brainstorm`);
 
-  await handleWebsocket(ws, theme);
+  //await handleWebsocket(ws, theme);
+
+  /*
 
   var conn = new WebSocket("wss://ohmcord-hyxt.onrender.com");
   conn.onopen = function (e) {
@@ -49,6 +77,8 @@ async function handleBrainstormCommand(interaction) {
   conn.onerror = function (e) {
     console.log(e);
   };
+
+  */
 
   // Open an embed with a button to see and add contributions
   await startBrainstormEmbed(interaction, brainstormData, contributions);

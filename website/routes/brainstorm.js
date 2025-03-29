@@ -41,6 +41,7 @@ brainstormRouter.get("/:url", async (req, res) => {
 */
 
 brainstormRouter.get("/:url", async (req, res) => {
+  console.log("HERE brainstormrouter");
   try {
     const brainstormData = await getBrainstorm(req.params.url);
     if (brainstormData) {
