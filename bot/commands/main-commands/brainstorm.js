@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { WebSocket } = require("ws");
-const { io } = require("socket.io-client");
 
 const {
   handleWebsocket,
@@ -29,7 +28,7 @@ async function handleBrainstormCommand(interaction) {
   const brainstormData = await saveBrainStormData(interaction);
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
 
-  const ws = io(`${process.env.WS_URL}`);
+  const ws = new Websocket(`${process.env.WS_URL}`);
 
   ws.on("message", (message) => {
     console.log("HERE: ", message);
