@@ -1,13 +1,6 @@
 // website/server.js
 //const express = require("express");
 //const path = require("path");
-const { brainstormRouter } = require("./routes/brainstorm");
-const { questionRouter } = require("./routes/anonymous-questions");
-const { quizRouter } = require("./routes/quiz");
-const { pollRouter } = require("./routes/poll");
-
-const fs = require("fs");
-const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
 /*
 const WebSocket = require("ws");
@@ -60,6 +53,7 @@ var http = require("http");
 var WebSocket = require("ws");
 
 var app = express();
+app.use(express.json());
 var server = http.createServer(app);
 var wss = new WebSocket.Server({ server });
 const url = require("url");
@@ -68,6 +62,14 @@ const path = require("path");
 
 const PORT = process.env.PORT || 3000;
 const URL = process.env.URL;
+
+const { brainstormRouter } = require("./routes/brainstorm");
+const { questionRouter } = require("./routes/anonymous-questions");
+const { quizRouter } = require("./routes/quiz");
+const { pollRouter } = require("./routes/poll");
+
+const fs = require("fs");
+const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
 async function handleBrainstormMessage(data) {
   if (!data.source?.startsWith("server")) {

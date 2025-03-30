@@ -116,6 +116,7 @@ async function createPoll() {
 }
 
 async function savePoll(question, answers) {
+  console.log("HERE: ", question, answers);
   try {
     const response = await fetch("/poll/save-poll/", {
       method: "POST",
@@ -205,8 +206,6 @@ function getAnswers() {
     const emoji = getEmoji(answerContainer);
 
     const realEmoji = answerContainer.querySelector("div").innerHTML;
-
-    console.log(realEmoji, emoji);
 
     const answer = answerContainer.querySelector("input").value;
 

@@ -30,13 +30,10 @@ async function handleBrainstormCommand(interaction) {
 
   const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
 
+  /*
   ws.on("connect", () => {
     console.log("Successfully connected to WebSocket server!");
     ws.emit("message", "Hello from Discord Bot!"); // Send a message from the bot
-  });
-
-  ws.on("message", (message) => {
-    console.log("Received from WebSocket server:", message);
   });
 
   ws.on("disconnect", () => {
@@ -46,12 +43,13 @@ async function handleBrainstormCommand(interaction) {
   ws.on("error", (error) => {
     console.log("Error connecting to WebSocket server", error);
   });
+  */
 
   // Open a new websocket to send and listen to messages from the website
   //const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
   //const ws = new WebSocket(`wss://ohmcord.robinvollbracht.com/brainstorm`);
 
-  //await handleWebsocket(ws, theme);
+  await handleWebsocket(ws, theme);
 
   /*
 

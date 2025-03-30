@@ -4,6 +4,8 @@ const { getPollByHashRoute, getPollAnswers, addPoll } = require("../../database/
 
 pollRouter.post("/save-poll", async (req, res) => {
   try {
+    console.log(req);
+
     const { question, answers } = req.body;
 
     console.log("SAVE POLL: ", req.body);
