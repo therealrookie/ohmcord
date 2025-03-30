@@ -8,8 +8,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "build": "npm install",
-    "deploy": "npm run start",
-    "host": "sh -c 'git add . && git commit -m \"$1\" && git push origin main' --"
+    "deploy": "npm run start"
   },
   "keywords": [],
   "author": "",
