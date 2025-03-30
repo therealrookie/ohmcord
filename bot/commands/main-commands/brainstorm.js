@@ -30,10 +30,6 @@ async function handleBrainstormCommand(interaction) {
 
   const ws = new WebSocket(`${process.env.WS_URL}`);
 
-  ws.on("message", (message) => {
-    console.log("HERE: ", message);
-  });
-
   ws.on("connect", () => {
     console.log("Successfully connected to WebSocket server!");
     ws.emit("message", "Hello from Discord Bot!"); // Send a message from the bot

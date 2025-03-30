@@ -151,7 +151,7 @@ function startServer() {
     ws.on("message", (message) => {
       console.log(`Received message => ${message}`);
     });
-    ws.send("Hello! Message From Server!!");
+    ws.send({ data: "Hello! Message From Server!!" });
   });
 
   // Start server
