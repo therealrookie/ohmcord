@@ -107,11 +107,36 @@ var WebSocket = require("ws");
 var app = express();
 var server = http.createServer(app);
 var wss = new WebSocket.Server({ server });
+const url = require("url");
 
 const path = require("path");
 
 const PORT = process.env.PORT || 3000;
 const URL = process.env.URL;
+
+wss.on("connection", (ws, req) => {
+  const path = url.parse(req.url).pathname;
+
+  console.log("New WebSocket connection established.", path);
+
+  if (path === "/brainstorm") {
+    console.log("BRAINSTORM PATH");
+    //handleBrainstormConnection(ws);
+  } else if (path === "/questions") {
+    console.log("QUESTIONS PATH");
+
+    //handleQuestionsConnection(ws);
+  } else {
+    console.log("OTHER PATH");
+
+    //ws.close(4000, "Invalid WebSocket route");
+  }
+
+  ws.on("message", (message) => {
+    console.log(`Received message => ${message}`);
+  });
+  ws.send(JSON.stringify({ data: "Hello! Message From Server!!" }));
+});
 
 function startServer() {
   // Set EJS as the templating engine
@@ -144,15 +169,6 @@ function startServer() {
   app.use("/anonymous-questions", questionRouter);
   app.use("/quiz", quizRouter);
   app.use("/poll", pollRouter);
-
-  wss.on("connection", (ws) => {
-    console.log("New WebSocket connection established.");
-
-    ws.on("message", (message) => {
-      console.log(`Received message => ${message}`);
-    });
-    ws.send(JSON.stringify({ data: "Hello! Message From Server!!" }));
-  });
 
   // Start server
   server.listen(PORT, function () {
