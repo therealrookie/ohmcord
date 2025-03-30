@@ -47,7 +47,7 @@ async function sendAddQuestionEmbed(interaction, questionSessionData) {
   const questionSessionEmbed = new EmbedBuilder()
     .setColor(0x191923)
     .setTitle(topic)
-    .setURL(`${process.env.URL}/anonymous-questions/${hashRoute}`)
+    //.setURL(`${process.env.URL}/anonymous-questions/${hashRoute}`)
     .setDescription(`A new anonymous question session has begun about the topic:\n **${topic}**.`);
 
   const questionButton = new ButtonBuilder()
@@ -55,7 +55,12 @@ async function sendAddQuestionEmbed(interaction, questionSessionData) {
     .setLabel("Ask question")
     .setStyle(ButtonStyle.Primary);
 
-  const actionRow = new ActionRowBuilder().addComponents(questionButton);
+  const linkButton = new ButtonBuilder()
+    .setLabel("Brainstorm Canvas")
+    .setURL(`${process.env.URL}/anonymous-questions/${hashRoute}`)
+    .setStyle(ButtonStyle.Link);
+
+  const actionRow = new ActionRowBuilder().addComponents(questionButton).addComponents(linkButton);
 
   await interaction.editReply({ embeds: [questionSessionEmbed], components: [actionRow] });
 }
