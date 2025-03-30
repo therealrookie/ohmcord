@@ -28,7 +28,7 @@ async function handleBrainstormCommand(interaction) {
   const brainstormData = await saveBrainStormData(interaction);
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
 
-  const ws = new WebSocket(`${process.env.WS_URL}`);
+  const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
 
   ws.on("connect", () => {
     console.log("Successfully connected to WebSocket server!");

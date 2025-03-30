@@ -28,7 +28,7 @@ console.log("Websocket URL: ", wsUrl);
 const socket = new WebSocket(`${wsUrl}/brainstorm`);
 */
 
-const socket = new WebSocket(`${wsUrl}`);
+const socket = new WebSocket(`${wsUrl}/brainstorm`);
 
 let contributions = [];
 let weightRange = [-1, 1];
