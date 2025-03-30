@@ -73,7 +73,7 @@ async function createQuestionEmbed(client, interaction, parsedMessage) {
     .setTitle(parsedMessage.question);
 
   // Create a button for users to contribute ideas
-  const answerButton = new ButtonBuilder().setCustomId(`answer_button_${questionId}`).setLabel("Add answer").setStyle(ButtonStyle.Primary);
+  const answerButton = new ButtonBuilder().setCustomId(`answer_button_${questionId}`).setLabel("Add answer").setStyle(ButtonStyle.Success);
 
   // Action row to hold the button
   const actionRow = new ActionRowBuilder().addComponents(answerButton);
