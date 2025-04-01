@@ -84,6 +84,7 @@ brainstormRouter.post("/set-position", async (req, res) => {
 });
 
 brainstormRouter.put("/download-screenshot", async (req, res) => {
+  /*
   try {
     const canvas = req.body.canvas;
 
@@ -95,19 +96,19 @@ brainstormRouter.put("/download-screenshot", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+    */
 
-  /*
   try {
     const { url, hashRoute } = req.body;
 
-    console.log(url);
+    console.log("API FLASH URL: ", url);
 
     https.get(
       "https://api.apiflash.com/v1/urltoimage?" +
         new URLSearchParams({
-          access_key: "bc3e9711cb104410acafbcda2e2a4fcb",
-          url: "https://www.example.com/",
-          element: "div",
+          access_key: process.env.API_FLASH_KEY,
+          url: url,
+          element: "#canvas",
         }).toString(),
       (response) => {
         response.pipe(fs.createWriteStream(`website/public/uploads/brainstorm-${hashRoute}.jpeg`));
@@ -116,7 +117,6 @@ brainstormRouter.put("/download-screenshot", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-    */
 });
 
 brainstormRouter.param("url", async (req, res, next, url) => {

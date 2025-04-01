@@ -55,10 +55,7 @@ async function sendAddQuestionEmbed(interaction, questionSessionData) {
     .setLabel("Ask question")
     .setStyle(ButtonStyle.Primary);
 
-  const linkButton = new ButtonBuilder()
-    .setLabel("Brainstorm Canvas")
-    .setURL(`${process.env.URL}/anonymous-questions/${hashRoute}`)
-    .setStyle(ButtonStyle.Link);
+  const linkButton = new ButtonBuilder().setLabel("Website").setURL(`${process.env.URL}/anonymous-questions/${hashRoute}`).setStyle(ButtonStyle.Link);
 
   const actionRow = new ActionRowBuilder().addComponents(questionButton).addComponents(linkButton);
 
