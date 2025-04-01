@@ -374,7 +374,7 @@ async function downloadCanvas() {
     const response = await fetch(`/brainstorm/download-screenshot`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ canvas }),
+      body: JSON.stringify({ url, hashRoute }),
     });
 
     //return newPosition;
