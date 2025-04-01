@@ -83,21 +83,22 @@ brainstormRouter.post("/set-position", async (req, res) => {
 });
 
 function saveImage(response, hashRoute) {
-  const uploadDir = path.join(__dirname, "../public/uploads");
-  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+  return new Promise((resolve, reject) => {
+    const uploadDir = path.join(__dirname, "../public/uploads");
+    const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
 
-  console.log("Paths: ", uploadDir, filePath);
+    console.log("Paths: ", uploadDir, filePath);
 
-  const fileStream = fs.createWriteStream(filePath);
-  response.pipe(fileStream);
+    // Ensure the directory exists
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
 
-  fileStream.on("finish", () => {
-    return true;
-  });
+    const fileStream = fs.createWriteStream(filePath);
+    response.pipe(fileStream);
 
-  fileStream.on("error", (err) => {
-    console.error("File write error:", err);
-    return false;
+    fileStream.on("finish", () => resolve(filePath));
+    fileStream.on("error", (err) => reject(err));
   });
 }
 
@@ -114,11 +115,14 @@ brainstormRouter.put("/download-screenshot", async (req, res) => {
           url: url,
           element: "#canvas",
         }).toString(),
-      (response) => {
-        const success = saveImage(response, hashRoute);
-
-        if (success) res.status(200).json({ message: "Screenshot saved successfully!", filePath });
-        else throw new Error("Failed to save the screenshot.");
+      async (response) => {
+        try {
+          const filePath = await saveImage(response, hashRoute);
+          res.status(200).json({ message: "Screenshot saved successfully!", filePath });
+        } catch (error) {
+          console.error("File save error:", error);
+          res.status(500).json({ error: "Failed to save the screenshot." });
+        }
 
         //response.pipe(fs.createWriteStream(`../public/uploads/brainstorm-${hashRoute}.jpeg`));
       }
