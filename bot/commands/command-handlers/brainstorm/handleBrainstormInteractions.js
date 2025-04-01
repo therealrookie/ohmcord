@@ -2,12 +2,13 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder
 
 const { addBrainstorm, addBrainstormMessage, getBrainstormMessages } = require("../../../../database/dbBrainstormFunctions");
 const { createHashRoute } = require("../../../utils/utilsFunctions");
+const path = require("path");
 
 // Extract important brainstorm-data, save it to the database
 async function saveBrainStormData(interaction) {
   const theme = interaction.options.get("theme").value;
-  const timeLimit = interaction.options.get("time_limit").value;
-  const endBrainstormAt = Date.now() + timeLimit * 60000;
+  const timeLimit = interaction.options.get("time_limit").value * 60000;
+  const endBrainstormAt = Date.now() + timeLimit;
   const hashRoute = createHashRoute(`${theme} + ${Date.now()}`);
 
   const brainstormId = await addBrainstorm(theme, hashRoute, endBrainstormAt);
@@ -151,11 +152,14 @@ async function addContributionToCanvas(ws, contributionId, brainstormId, userIde
 }
 
 // Send the canvas-image to the channel
-async function sendBrainstormCanvas(client, parsedMessage, channelId) {
+async function sendBrainstormCanvas(client, hashRoute, channelId) {
+  const uploadDir = path.join(process.cwd(), "website/public/uploads");
+  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+
   const channel = await client.channels.fetch(channelId);
   await channel.send({
     content: "Here's the brainstorm canvas:",
-    files: [parsedMessage.image],
+    files: [filePath],
   });
 }
 

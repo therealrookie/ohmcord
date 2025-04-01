@@ -30,48 +30,7 @@ async function handleBrainstormCommand(interaction) {
 
   const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
 
-  /*
-  ws.on("connect", () => {
-    console.log("Successfully connected to WebSocket server!");
-    ws.emit("message", "Hello from Discord Bot!"); // Send a message from the bot
-  });
-
-  ws.on("disconnect", () => {
-    console.log("Disconnected from WebSocket server");
-  });
-
-  ws.on("error", (error) => {
-    console.log("Error connecting to WebSocket server", error);
-  });
-  */
-
-  // Open a new websocket to send and listen to messages from the website
-  //const ws = new WebSocket(`${process.env.WS_URL}/brainstorm`);
-  //const ws = new WebSocket(`wss://ohmcord.robinvollbracht.com/brainstorm`);
-
   await handleWebsocket(ws, theme);
-
-  /*
-
-  var conn = new WebSocket("wss://ohmcord-hyxt.onrender.com");
-  conn.onopen = function (e) {
-    console.log("Connection established!");
-  };
-  setInterval(() => {
-    conn.send("Hello server!");
-  }, 1000);
-  conn.onmessage = function (e) {
-    console.log(e.data);
-  };
-  conn.onclose = function (e) {
-    console.log(e.code);
-    console.log(e.reason);
-  };
-  conn.onerror = function (e) {
-    console.log(e);
-  };
-
-  */
 
   // Open an embed with a button to see and add contributions
   await startBrainstormEmbed(interaction, brainstormData, contributions);
@@ -101,6 +60,16 @@ async function handleBrainstormCommand(interaction) {
 
     await startBrainstormEmbed(interaction, brainstormData, contributions);
   }
+
+  setTimeout(async () => {
+    if (!imageSent) {
+      console.log(`Time limit reached! Sending image for brainstorm ${theme}...`);
+
+      // Send image to Discord channel
+      await sendBrainstormCanvas(client, hashRoute, interaction.channelId);
+      imageSent = true;
+    }
+  }, timeLimit);
 
   // Handle interaction with "add contribution"-button
   client.on("interactionCreate", async (buttonInteraction) => {
