@@ -354,21 +354,6 @@ async function downloadCanvas() {
   const url = window.location.href;
   const hashRoute = document.getElementById("hash-route").innerHTML;
 
-  const canvas = document.getElementById("canvas");
-  /*
-  domtoimage
-    .toJpeg(canvas, { quality: 0.95, height: 1080, width: 1920 })
-    .then(function (dataUrl) {
-      var link = document.createElement("a");
-      link.download = "my-image-name.jpeg";
-      link.href = dataUrl;
-      link.click();
-    })
-    .catch(function (error) {
-      console.error("oops, something went wrong!", error);
-    });
-  */
-
   console.log("HERE: ", url, hashRoute);
   try {
     const response = await fetch(`/brainstorm/download-screenshot`, {
@@ -377,7 +362,7 @@ async function downloadCanvas() {
       body: JSON.stringify({ url, hashRoute }),
     });
 
-    //return newPosition;
+    console.log(response);
   } catch (error) {
     console.error(error);
     return null;

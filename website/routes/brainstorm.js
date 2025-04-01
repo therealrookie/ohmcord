@@ -81,21 +81,24 @@ brainstormRouter.post("/set-position", async (req, res) => {
   }
 });
 
+function saveImage(response, hashRoute) {
+  const uploadDir = path.join(__dirname, "../public/uploads");
+  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+
+  const fileStream = fs.createWriteStream(filePath);
+  response.pipe(fileStream);
+
+  fileStream.on("finish", () => {
+    return true;
+  });
+
+  fileStream.on("error", (err) => {
+    console.error("File write error:", err);
+    return false;
+  });
+}
+
 brainstormRouter.put("/download-screenshot", async (req, res) => {
-  /*
-  try {
-    const canvas = req.body.canvas;
-
-    console.log(canvas);
-
-    domtoimage.toPng(canvas).then(function (dataUrl) {
-      console.log(dataUrl);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-    */
-
   try {
     const { url, hashRoute } = req.body;
 
@@ -109,11 +112,17 @@ brainstormRouter.put("/download-screenshot", async (req, res) => {
           element: "#canvas",
         }).toString(),
       (response) => {
-        response.pipe(fs.createWriteStream(`website/public/uploads/brainstorm-${hashRoute}.jpeg`));
+        const success = saveImage(response, hashRoute);
+
+        if (success) res.status(200).json({ message: "Screenshot saved successfully!", filePath });
+        else throw new Error("Failed to save the screenshot.");
+
+        //response.pipe(fs.createWriteStream(`../public/uploads/brainstorm-${hashRoute}.jpeg`));
       }
     );
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: "Failed to save the screenshot." });
   }
 });
 
