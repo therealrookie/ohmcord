@@ -86,6 +86,8 @@ function saveImage(response, hashRoute) {
   const uploadDir = path.join(__dirname, "../public/uploads");
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
 
+  console.log("Paths: ", uploadDir, filePath);
+
   const fileStream = fs.createWriteStream(filePath);
   response.pipe(fileStream);
 
