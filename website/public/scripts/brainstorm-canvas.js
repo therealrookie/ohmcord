@@ -71,7 +71,60 @@ canvasContainer.addEventListener("mousemove", (event) => {
 //window.onload = centerCanvas;
 window.onresize = centerCanvas;
 
-const setupTimer = () => {
+async function downloadCanvas() {
+  const hashRoute = document.getElementById("hash-route").innerHTML;
+  try {
+    const response = await fetch(`/brainstorm/download-screenshot/${hashRoute}`, {
+      method: "GET",
+    });
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `brainstorm-${hashRoute}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function saveCanvasScreenshot() {
+  const url = window.location.href;
+  const hashRoute = document.getElementById("hash-route").innerHTML;
+
+  try {
+    const response = await fetch(`/brainstorm/upload-screenshot`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url, hashRoute }),
+    });
+
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function timerEnds(timer) {
+  timer.innerHTML = "00:00";
+
+  const downloadButton = document.getElementById("download-button");
+  downloadButton.style.visibility = "visible";
+
+  const addContribution = document.getElementById("add-contribution");
+  addContribution.disabled = true;
+
+  await saveCanvasScreenshot();
+}
+
+const setupTimer = async () => {
   const timer = document.getElementById("timer");
 
   const endTime = timer.getAttribute("data-end-time");
@@ -79,13 +132,13 @@ const setupTimer = () => {
   let totalSeconds = Math.floor(timeLeftMillis / 1000);
   let minutes = Math.floor(totalSeconds / 60);
   let seconds = totalSeconds - minutes * 60;
-  timer.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
 
   if (minutes + seconds <= 0) {
-    clearInterval(timerInterval);
-    timer.innerHTML = "00:00";
+    await timerEnds(timer);
 
-    //sendcanvasToDiscord();
+    clearInterval(timerInterval);
+  } else {
+    timer.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   }
 };
 

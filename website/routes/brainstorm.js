@@ -102,7 +102,23 @@ function saveImage(response, hashRoute) {
   });
 }
 
-brainstormRouter.put("/download-screenshot", async (req, res) => {
+brainstormRouter.get("/download-screenshot/:hashroute", async (req, res) => {
+  try {
+    const hashRoute = req.params.hashroute;
+
+    //const file = path.join(__dirname, `../public/uploads/brainstorm-${hashRoute}.jpeg`);
+    const file = path.join(__dirname, `../public/assets/OhmcordLogo.png`);
+
+    console.log("FILEPATH: ", file);
+
+    res.download(file);
+  } catch (error) {
+    console.log("Error inside /download-canvas : ", error);
+    res.status(500).json({ error: "Failed to get the data from the server." });
+  }
+});
+
+brainstormRouter.put("/upload-screenshot", async (req, res) => {
   try {
     const { url, hashRoute } = req.body;
 

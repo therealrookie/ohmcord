@@ -3,31 +3,6 @@
 const brainstormId = canvas.getAttribute("data-brainstorm-id");
 const wsUrl = canvas.getAttribute("data-ws-url");
 
-/*
-var conn = new WebSocket("wss://ohmcord-hyxt.onrender.com");
-conn.onopen = function (e) {
-  console.log("Connection established!");
-};
-setInterval(() => {
-  conn.send("Hello server!");
-}, 1000);
-conn.onmessage = function (e) {
-  console.log(e.data);
-};
-conn.onclose = function (e) {
-  console.log(e.code);
-  console.log(e.reason);
-};
-conn.onerror = function (e) {
-  console.log(e);
-};
-*/
-
-console.log("Websocket URL: ", wsUrl);
-/*
-const socket = new WebSocket(`${wsUrl}/brainstorm`);
-*/
-
 const socket = new WebSocket(`${wsUrl}/brainstorm`);
 
 let contributions = [];
@@ -349,22 +324,3 @@ contributionInput.addEventListener("keypress", (event) => {
     contributionInput.value = "";
   }
 });
-
-async function downloadCanvas() {
-  const url = window.location.href;
-  const hashRoute = document.getElementById("hash-route").innerHTML;
-
-  console.log("HERE: ", url, hashRoute);
-  try {
-    const response = await fetch(`/brainstorm/download-screenshot`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url, hashRoute }),
-    });
-
-    console.log(response);
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}

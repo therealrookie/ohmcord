@@ -113,6 +113,10 @@ body {
   }
 }
 
+#add-input {
+  visibility: hidden;
+}
+
 /*
 #bs-canvas {
     background-color: var(--black);
