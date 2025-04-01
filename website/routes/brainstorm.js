@@ -1,6 +1,7 @@
 const express = require("express");
 const brainstormRouter = express.Router();
 const { getBrainstorm, getBrainstormContributions, getContributionPositions, setPosition } = require("../../database/dbBrainstormFunctions");
+const path = require("path");
 
 /*
 const { WebSocket } = require("ws");
