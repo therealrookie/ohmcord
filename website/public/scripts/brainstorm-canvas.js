@@ -113,6 +113,8 @@ async function saveCanvasScreenshot() {
 }
 
 async function timerEnds(timer) {
+  clearInterval(timerInterval);
+
   timer.innerHTML = "00:00";
 
   const downloadButton = document.getElementById("download-button");
@@ -129,17 +131,17 @@ const setupTimer = async () => {
 
   const endTime = timer.getAttribute("data-end-time");
   const timeLeftMillis = endTime - Date.now();
+
+  if (timeLeftMillis <= 0) {
+    await timerEnds(timer);
+    return;
+  }
+
   let totalSeconds = Math.floor(timeLeftMillis / 1000);
   let minutes = Math.floor(totalSeconds / 60);
   let seconds = totalSeconds - minutes * 60;
 
-  if (minutes + seconds <= 0) {
-    await timerEnds(timer);
-
-    clearInterval(timerInterval);
-  } else {
-    timer.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
-  }
+  timer.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
 };
 
 let timerInterval = window.setInterval(setupTimer, 100);

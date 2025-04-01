@@ -59,9 +59,6 @@ body {
   z-index: 5;
 }
 
-.canvas-button {
-}
-
 #canvas {
   position: absolute;
   left: 0;
@@ -113,7 +110,7 @@ body {
   }
 }
 
-#add-input {
+#download-button {
   visibility: hidden;
 }
 

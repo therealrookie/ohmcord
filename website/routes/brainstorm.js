@@ -106,8 +106,8 @@ brainstormRouter.get("/download-screenshot/:hashroute", async (req, res) => {
   try {
     const hashRoute = req.params.hashroute;
 
-    //const file = path.join(__dirname, `../public/uploads/brainstorm-${hashRoute}.jpeg`);
-    const file = path.join(__dirname, `../public/assets/OhmcordLogo.png`);
+    const file = path.join(__dirname, `../public/uploads/brainstorm-${hashRoute}.jpeg`);
+    //const file = path.join(__dirname, `../public/assets/OhmcordLogo.png`);
 
     console.log("FILEPATH: ", file);
 
