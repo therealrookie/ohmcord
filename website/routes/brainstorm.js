@@ -9,8 +9,6 @@ const ws = new WebSocket(`${process.env.WS_URL}`);
 const https = require("https");
 const fs = require("fs");
 
-var domtoimage = require("dom-to-image");
-
 const selectedProduct = Math.floor(Math.random() * 3);
 
 /*
