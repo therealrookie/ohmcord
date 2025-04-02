@@ -77,6 +77,9 @@ async function downloadCanvas() {
     const response = await fetch(`/brainstorm/download-screenshot/${hashRoute}`, {
       method: "GET",
     });
+
+    console.log(response);
+
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -117,7 +120,7 @@ async function timerEnds(timer) {
 
   timer.innerHTML = "00:00";
 
-  await uploadCanvas();
+  //await uploadCanvas();
 
   const downloadButton = document.getElementById("download-button");
   downloadButton.style.visibility = "visible";

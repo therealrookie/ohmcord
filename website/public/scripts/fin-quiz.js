@@ -45,11 +45,11 @@ function displayQuestions() {
   });
 }
 
-const copyCodeContainer = document.getElementById("copy-code-container");
+const copyCodeContainer = document.getElementById("copy-code-field");
 copyCodeContainer.addEventListener("click", () => {
   const code = document.getElementById("hash-url").innerHTML;
   navigator.clipboard.writeText(code);
-  showToast(`Code "${code}" kopiert`);
+  showToast(`Code <i>${code}</i> kopiert!`);
 });
 
 function showToast(text) {

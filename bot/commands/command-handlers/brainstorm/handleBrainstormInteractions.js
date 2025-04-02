@@ -85,7 +85,7 @@ async function sendAdditionalMessage(contributions, interaction, brainstormData)
 
     if (i === 0) {
       await interaction.editReply({
-        content: `**Thema:** ** ** *${theme}* \n **Zeitlimit:** ** ** *${timeLimit} Minute${timeLimit > 1 ? "n" : ""}* \n`,
+        content: `**Thema:** ** ** *${theme}* \n **Zeitlimit:** ** ** *${timeLimit / 60000} Minute${timeLimit > 1 ? "n" : ""}* \n`,
         components: messageActionRows,
       });
     } else if (messages[messageIndex]) {
@@ -160,10 +160,12 @@ async function sendBrainstormCanvas(client, hashRoute, channelId) {
 
   const filePath = await saveCanvasScreenshot(hashRoute);
 
+  console.log("FILEPATH: ", filePath);
+
   const channel = await client.channels.fetch(channelId);
   await channel.send({
     content: "Here's the brainstorm canvas:",
-    files: ["https://api.apiflash.com/v1/urltoimage/cache/wkzz9x22gw.jpeg?access_key=bc3e9711cb104410acafbcda2e2a4fcb", filePath],
+    //files: ["https://api.apiflash.com/v1/urltoimage/cache/wkzz9x22gw.jpeg?access_key=bc3e9711cb104410acafbcda2e2a4fcb", filePath],
   });
 }
 

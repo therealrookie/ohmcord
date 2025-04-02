@@ -132,6 +132,20 @@ h1 {
 #copy-code-container {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+  p {
+    margin: 0 10px;
+    padding: 0;
+    font-size: 0.8rem;
+    color: var(--primary);
+  }
+}
+
+#copy-code-field {
+  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-around;
   border: 1px solid var(--primary);
