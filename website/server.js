@@ -107,7 +107,7 @@ async function getImageUrl(hashRoute) {
   }
 }
 
-function saveImage(hashRoute) {
+function saveImage(response, hashRoute) {
   return new Promise((resolve, reject) => {
     const uploadDir = path.join(process.cwd(), "uploads");
     const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
