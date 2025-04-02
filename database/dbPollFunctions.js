@@ -2,21 +2,28 @@ const { createHashRoute } = require("../bot/utils/utilsFunctions");
 const pgpool = require("./db");
 
 async function getPollByHashRoute(hashRoute) {
+  console.log("GET POLL", hashRoute);
   try {
     const quiz = await pgpool.query("SELECT * FROM public.polls WHERE hash_route = $1", [hashRoute]);
+    console.log("GET POLL", quiz.rows[0]);
+
     return quiz.rows[0];
   } catch (error) {
-    console.log(error);
+    console.log("Error at function getPollByHashRoute(): ", error);
     throw new Error("Failed to fetch poll data");
   }
 }
 
 async function getPollAnswers(pollId) {
+  console.log("GET POLL ANSWERS: ", pollId);
+
   try {
     const quiz = await pgpool.query("SELECT * FROM public.poll_answers WHERE poll_id = $1", [pollId]);
+    console.log("GET POLL ANSWERS: ", quiz.rows);
+
     return quiz.rows;
   } catch (error) {
-    console.log(error);
+    console.log("Error at function getPollAnswers(): ", error);
     throw new Error("Failed to fetch poll data");
   }
 }
@@ -49,7 +56,7 @@ async function addPoll(questionObj, answers) {
     return hashRoute;
   } catch (error) {
     await client.query("ROLLBACK");
-    console.error("Error updating quiz answers:", error);
+    console.error("Error at function addPoll():", error);
     throw new Error("Failed to update quiz answers");
   } finally {
     client.release();
