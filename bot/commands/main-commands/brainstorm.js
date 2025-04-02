@@ -40,12 +40,13 @@ async function handleBrainstormCommand(interaction) {
     const parsedMessage = JSON.parse(message);
     const validBrainstormId = parseInt(parsedMessage.brainstormId) === parseInt(brainstormId);
     const isContribution = parsedMessage.type === "contribution";
-    const discordSource = parsedMessage.source === "server-website";
+    const validSource = parsedMessage.source === "server-website";
 
-    if (validBrainstormId && discordSource && parsedMessage.type === "image" && !imageSent) {
-      await sendBrainstormCanvas(client, parsedMessage, interaction.channelId);
+    if (validBrainstormId && validSource && parsedMessage.type === "image" && !imageSent) {
+      console.log("ParsedMessage: ", parsedMessage.image);
+      await sendBrainstormCanvas(client, hashRoute, interaction.channelId);
       imageSent = true;
-    } else if (validBrainstormId && discordSource && parsedMessage.type === "contribution") {
+    } else if (validBrainstormId && validSource && parsedMessage.type === "contribution") {
       console.log("New WS message: ", message);
       await handleNewContribution(parsedMessage.contribution);
     }
@@ -65,9 +66,14 @@ async function handleBrainstormCommand(interaction) {
     if (!imageSent) {
       console.log(`Time limit reached! Sending image for brainstorm ${theme}...`);
 
-      // Send image to Discord channel
-      await sendBrainstormCanvas(client, hashRoute, interaction.channelId);
-      imageSent = true;
+      ws.send(
+        JSON.stringify({
+          source: "discord",
+          type: "image-request",
+          brainstorm: brainstormId,
+          hashRoute: hashRoute,
+        })
+      );
     }
   }, timeLimit);
 

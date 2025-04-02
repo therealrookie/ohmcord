@@ -2,9 +2,6 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder
 
 const { addBrainstorm, addBrainstormMessage, getBrainstormMessages } = require("../../../../database/dbBrainstormFunctions");
 const { createHashRoute } = require("../../../utils/utilsFunctions");
-const path = require("path");
-const https = require("https");
-const fs = require("fs");
 
 // Extract important brainstorm-data, save it to the database
 async function saveBrainStormData(interaction) {
@@ -158,7 +155,7 @@ async function sendBrainstormCanvas(client, hashRoute, channelId) {
   //const uploadDir = path.join(process.cwd(), "website/public/uploads");
   //const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
 
-  const testPath = path.join(process.cwd(), "uploads/OhmcordLogo.png");
+  const testPath = path.join(process.cwd(), `uploads/brainstorm-${hashRoute}.jpeg`);
 
   const filePath = await saveCanvasScreenshot(hashRoute);
 
@@ -169,9 +166,11 @@ async function sendBrainstormCanvas(client, hashRoute, channelId) {
     content: `Here's the brainstorm canvas: ${filePath}`,
     files: [testPath],
 
-    //files: ["https://api.apiflash.com/v1/urltoimage/cache/wkzz9x22gw.jpeg?access_key=bc3e9711cb104410acafbcda2e2a4fcb", filePath],
+    //files: [],
   });
 }
+
+/*
 
 function saveImage(response, hashRoute) {
   return new Promise((resolve, reject) => {
@@ -214,5 +213,7 @@ async function saveCanvasScreenshot(hashRoute) {
     return null;
   }
 }
+
+*/
 
 module.exports = { handleWebsocket, saveBrainStormData, startBrainstormEmbed, openContributionModal, addContributionToCanvas, sendBrainstormCanvas };

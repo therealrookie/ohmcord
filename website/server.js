@@ -50,6 +50,9 @@ WSS.on("connection", (ws, req) => {
 
 var express = require("express");
 var http = require("http");
+const https = require("https");
+const fs = require("fs");
+
 var WebSocket = require("ws");
 
 var app = express();
@@ -75,30 +78,54 @@ async function handleBrainstormMessage(data) {
   if (!data.source?.startsWith("server")) {
     data.source = `server-${data.source}`; // server-discord or server-website
 
-    if (data.type === "image") {
-      data.image = await getImageUrl(data);
+    if (data.type === "image-request") {
+      data.source = `server-website`;
+      data.type = "image";
+      data.image = await getImageUrl(data.hashRoute);
     }
-    /*
-    else if (data.type === "contribution") {
-    }
-    */
+
     wsAnswer(data);
   }
 }
 
-async function getImageUrl(parsedMessage) {
-  /*
-  const base64Data = parsedMessage.image.replace("data:image/png;base64,", "");
-  const fileName = `brainstorm-${Date.now()}.png`;
-  const imagePath = path.join(__dirname, "public", "uploads", fileName);
+async function getImageUrl(hashRoute) {
+  try {
+    https.get(
+      "https://api.apiflash.com/v1/urltoimage?" +
+        new URLSearchParams({
+          access_key: process.env.API_FLASH_KEY,
+          url: `${process.env.URL}/${hashRoute}`,
+          element: "#canvas",
+        }).toString(),
+      async (response) => {
+        const filePath = await saveImage(response, hashRoute);
+        return filePath;
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
 
-  fs.writeFile(imagePath, base64Data, "base64", (error) => {
-    if (error) console.log("Error writing file: ", error);
+function saveImage(hashRoute) {
+  return new Promise((resolve, reject) => {
+    const uploadDir = path.join(process.cwd(), "uploads");
+    const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+
+    console.log("Paths: ", uploadDir, filePath);
+
+    // Ensure the directory exists
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    const fileStream = fs.createWriteStream(filePath);
+    response.pipe(fileStream);
+
+    fileStream.on("finish", () => resolve(filePath));
+    fileStream.on("error", (err) => reject(err));
   });
-  console.log("Image saved successfully:", imagePath);
-
-  return `${process.env.URL}:${process.env.PORT}/uploads/${fileName}`;
-  */
 }
 
 function handleBrainstormConnection(ws) {
