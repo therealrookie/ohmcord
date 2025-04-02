@@ -71,7 +71,6 @@ const { questionRouter } = require("./routes/anonymous-questions");
 const { quizRouter } = require("./routes/quiz");
 const { pollRouter } = require("./routes/poll");
 
-const fs = require("fs");
 const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
 async function handleBrainstormMessage(data) {
