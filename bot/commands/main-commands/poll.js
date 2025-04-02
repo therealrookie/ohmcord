@@ -18,7 +18,7 @@ async function handlePoll(interaction) {
     return { text: answer.answer, emoji: getEmoji(answer.emoji) };
   });
 
-  await interaction.reply({
+  await interaction.editReply({
     poll: {
       question: { text: pollData.question },
       answers: answers,
