@@ -17,12 +17,10 @@ questionRouter.get("/:url", async (req, res) => {
         id: questionSession.question_session_id,
         wsUrl: process.env.WS_URL,
       });
-    } else {
-      res.render("error", { text: "Question-Session couldn't be found" });
     }
   } catch (error) {
     console.log(error);
-    res.render("error", { text: "An error occurred while fetching question data" });
+    res.render("error", { text: "Diese Fragerunde existiert leider nicht...", url: process.env.URL });
   }
 });
 

@@ -132,6 +132,7 @@ async function getAllQuizQuestions(quizId) {
         FROM public.quiz_questions q
         LEFT JOIN public.quiz_answers a ON q.quiz_question_id = a.quiz_question_id
         WHERE q.quiz_id = $1
+        ORDER BY q.quiz_question_id, a.quiz_answer_id
         `,
       [quizId]
     );

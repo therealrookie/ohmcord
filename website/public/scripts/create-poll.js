@@ -5,24 +5,51 @@ const background = document.getElementById("background");
 const closeEmojiMenu = () => {
   picker.style.visibility = "hidden";
   background.style.visibility = "hidden";
-  picker.removeEventListener("emoji-click", handleEmojiClick);
-  background.removeEventListener("click", closeEmojiMenu);
+  //background.removeEventListener("click", closeEmojiMenu);
 };
 
 const handleEmojiClick = (event, emojiContainer) => {
+  console.log("HERE");
   emojiContainer.innerHTML = event.detail.unicode;
   closeEmojiMenu();
 };
 
 function openEmojiMenu(emojiContainer) {
+  console.log(emojiContainer);
+
   background.style.visibility = "visible";
   picker.style.visibility = "visible";
+
+  function handleGlobalEmojiClick(event) {
+    handleEmojiClick(event, emojiContainer);
+    picker.removeEventListener("emoji-click", handleGlobalEmojiClick);
+  }
+
+  picker.addEventListener("emoji-click", handleGlobalEmojiClick);
+  background.addEventListener("click", closeEmojiMenu);
+
+  return false;
+}
+/*
+
+function openEmojiMenu(emojiContainer) {
+  console.log(emojiContainer);
+
+  background.style.visibility = "visible";
+  picker.style.visibility = "visible";
+
+  picker.removeEventListener("emoji-click", handleEmojiClick);
+
+  picker.onclick = (event) => {
+    console.log(event);
+    handleEmojiClick(event, emojiContainer);
+  };
 
   picker.addEventListener("emoji-click", (event) => handleEmojiClick(event, emojiContainer));
   background.addEventListener("click", closeEmojiMenu);
   return false;
 }
-
+  */
 function addAnswer(text, emoji) {
   const answerIndex = questionForm.children.length - 1;
 
@@ -34,6 +61,7 @@ function addAnswer(text, emoji) {
 
   const emojiContainer = document.createElement("div");
   emojiContainer.classList.add("emoji-container");
+  emojiContainer.id = `emoji-container-${answerIndex}`;
 
   if (emoji) {
     emojiContainer.innerHTML = emoji;

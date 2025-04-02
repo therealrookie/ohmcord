@@ -51,12 +51,10 @@ brainstormRouter.get("/:url", async (req, res) => {
         endBrainstormAt: brainstormData.end_time_ms,
         wsUrl: process.env.WS_URL,
       });
-    } else {
-      res.render("error", { text: "Brainstorm couldn't be found" });
     }
   } catch (error) {
     console.log(error);
-    res.render("error", { text: "An error occurred while fetching brainstorm data" });
+    res.render("error", { text: "Dieses Brainstorm existiert leider nicht...", url: process.env.URL });
   }
 });
 

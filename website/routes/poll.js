@@ -24,7 +24,6 @@ pollRouter.get("/:hashRoute", async (req, res) => {
   try {
     const pollData = await getPollByHashRoute(req.params.hashRoute);
     const answers = await getPollAnswers(pollData.poll_id);
-    console.log("ANSWERS: ", answers);
     if (pollData) {
       res.render("display-poll", {
         title: pollData.question,
@@ -34,12 +33,10 @@ pollRouter.get("/:hashRoute", async (req, res) => {
         duration: pollData.duration,
         answers: JSON.stringify(answers),
       });
-    } else {
-      res.render("error", { text: "Quiz couldn't be found" });
     }
   } catch (error) {
     console.log(error);
-    res.render("error", { text: "An error occurred while fetching quiz data" });
+    res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deiner Umfrage...", url: process.env.URL });
   }
 });
 

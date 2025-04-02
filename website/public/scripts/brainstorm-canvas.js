@@ -94,7 +94,7 @@ async function downloadCanvas() {
   }
 }
 
-async function saveCanvasScreenshot() {
+async function uploadCanvas() {
   const url = window.location.href;
   const hashRoute = document.getElementById("hash-route").innerHTML;
 
@@ -117,13 +117,13 @@ async function timerEnds(timer) {
 
   timer.innerHTML = "00:00";
 
+  await uploadCanvas();
+
   const downloadButton = document.getElementById("download-button");
   downloadButton.style.visibility = "visible";
 
   const addContribution = document.getElementById("add-contribution");
-  addContribution.disabled = true;
-
-  await saveCanvasScreenshot();
+  addContribution.style.visibility = "hidden";
 }
 
 const setupTimer = async () => {

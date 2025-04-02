@@ -28,12 +28,33 @@ quizRouter.get("/:url", async (req, res) => {
         id: quizData.quiz_id,
         visibility: quizData.visibility,
       });
-    } else {
-      res.render("error", { text: "Quiz couldn't be found" });
     }
   } catch (error) {
     console.log(error);
-    res.render("error", { text: "An error occurred while fetching quiz data" });
+    res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deines Quizzes...", url: process.env.URL });
+  }
+});
+
+function quizVisibility(index) {
+  if (index === 0) return "Nimand ist sichtbar";
+  else if (index === 1) return "Nur Plätze 1-3 sichtbar";
+  else if (index === 2) return "Alle Teilnehmer sichtbar";
+}
+
+quizRouter.get("/fin/:url", async (req, res) => {
+  try {
+    const quizData = await getQuizByHashUrl(req.params.url);
+    if (quizData) {
+      res.render("fin-quiz", {
+        title: quizData.quiz_title,
+        hash: req.params.url,
+        id: quizData.quiz_id,
+        visibility: quizVisibility(quizData.visibility),
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deines Quizzes...", url: process.env.URL });
   }
 });
 

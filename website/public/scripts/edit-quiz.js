@@ -88,7 +88,7 @@ function createAnswerContainer(answerIndex, answerId) {
 
   const newAnswerCheckbox = document.createElement("input");
   newAnswerCheckbox.classList.add("answer-checkbox");
-  newAnswerCheckbox.type = "checkbox";
+  newAnswerCheckbox.type = "radio";
   newAnswerCheckbox.onchange = () => {
     setCorrectAnswer(answerIndex);
   };
@@ -210,11 +210,50 @@ async function newQuestion(question) {
   addAnswer();
 }
 
+function checkForValidQuiz() {
+  let isValid = true;
+
+  for (const q of questions) {
+    if (q.questionString.trim() === "") {
+      showToast("Fragen dürfen nicht leer bleiben");
+      isValid = false;
+    }
+
+    if (q.answers.length < 2) {
+      showToast("Fragen brauchen mindestens zwei Antwortmöglichkeiten");
+      isValid = false;
+    }
+
+    let hasCorrectAnswer = false;
+    for (const a of q.answers) {
+      if (a.quizAnswer === null || a.quizAnswer.trim() === "") {
+        showToast("Antworten dürfen nicht leer bleiben");
+        isValid = false;
+      }
+      if (a.isCorrect === true) {
+        hasCorrectAnswer = true;
+      }
+    }
+
+    if (!hasCorrectAnswer) {
+      showToast("Jede Frage muss mindestens eine richtige Antwort haben");
+      isValid = false;
+    }
+  }
+
+  return isValid;
+}
+
 async function saveAndFinish() {
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  console.log(queryString);
-  //await saveCurrentQuestionData();
+  await getQuestions();
+  const validQuiz = checkForValidQuiz();
+
+  if (validQuiz) {
+    console.log("Quiz is valid!");
+    window.location.href = `/quiz/fin/${quizHashUrl}`;
+  }
+
+  console.log(questions);
 }
 
 async function nextQuestion() {
@@ -397,4 +436,19 @@ async function deleteQuestion(questionId) {
     console.error("Error in deleteQuestion:", error);
     return false;
   }
+}
+
+function showToast(text) {
+  // Get the snackbar DIV
+  var toast = document.getElementById("snackbar");
+
+  toast.innerHTML = text;
+
+  // Add the "show" class to DIV
+  toast.className = "show";
+
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function () {
+    toast.className = toast.className.replace("show", "");
+  }, 3000);
 }

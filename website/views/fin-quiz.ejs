@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta vharset="" UTF-8 />
+    <title>Create Quiz</title>
+    <link rel="stylesheet" href="/styles/fin-quiz.css" />
+    <link rel="icon" type="image/png" href="/assets/OhmcordLogo.png" />
+  </head>
+  <body>
+    <div id="page-container">
+      <div class="header">
+        <a href="/"><img class="logo" src="/assets/OhmcordLogo.png" /></a>
+        <h1>Fertiges Quiz</h1>
+        <h3 id="hash-url" data-quiz-id="<%= locals.id %>"><%= locals.hash %></h3>
+      </div>
+
+      <div id="quiz-container">
+        <div id="display-container">
+          <h2><%= locals.title %></h2>
+          <p><%= locals.visibility %></p>
+          <div id="questions"></div>
+
+          <div id="copy-code-container">&#128203; <%= locals.hash %></div>
+        </div>
+      </div>
+
+      <div class="footer"></div>
+      <div id="snackbar"><%= locals.hash %> kopiert!</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/scripts/fin-quiz.js"></script>
+  </body>
+</html>

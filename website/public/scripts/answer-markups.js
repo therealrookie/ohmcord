@@ -72,7 +72,7 @@ function addZeroToSingleDigit(digit) {
 // When an inputField is clicked/focused it is saved as the currentInput
 function setSelectedInput() {
   const inputField = document.activeElement;
-  if (inputField.type === "text") {
+  if (inputField.type === "text" && inputField.className === "answer-text-input") {
     currentInput != undefined ? currentInput.classList.remove("focus") : null;
     currentInput = inputField;
     inputField.classList.add("focus");

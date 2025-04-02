@@ -3,6 +3,8 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder
 const { addBrainstorm, addBrainstormMessage, getBrainstormMessages } = require("../../../../database/dbBrainstormFunctions");
 const { createHashRoute } = require("../../../utils/utilsFunctions");
 const path = require("path");
+const https = require("https");
+const fs = require("fs");
 
 // Extract important brainstorm-data, save it to the database
 async function saveBrainStormData(interaction) {
@@ -153,14 +155,58 @@ async function addContributionToCanvas(ws, contributionId, brainstormId, userIde
 
 // Send the canvas-image to the channel
 async function sendBrainstormCanvas(client, hashRoute, channelId) {
-  const uploadDir = path.join(process.cwd(), "website/public/uploads");
-  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+  //const uploadDir = path.join(process.cwd(), "website/public/uploads");
+  //const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+
+  const filePath = await saveCanvasScreenshot(hashRoute);
 
   const channel = await client.channels.fetch(channelId);
   await channel.send({
     content: "Here's the brainstorm canvas:",
-    files: [filePath],
+    files: ["https://api.apiflash.com/v1/urltoimage/cache/wkzz9x22gw.jpeg?access_key=bc3e9711cb104410acafbcda2e2a4fcb", filePath],
   });
+}
+
+function saveImage(response, hashRoute) {
+  return new Promise((resolve, reject) => {
+    const uploadDir = path.join(process.cwd(), "uploads");
+    const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+
+    console.log("Paths: ", uploadDir, filePath);
+
+    // Ensure the directory exists
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    const fileStream = fs.createWriteStream(filePath);
+    response.pipe(fileStream);
+
+    fileStream.on("finish", () => resolve(filePath));
+    fileStream.on("error", (err) => reject(err));
+  });
+}
+
+async function saveCanvasScreenshot(hashRoute) {
+  try {
+    https.get(
+      "https://api.apiflash.com/v1/urltoimage?" +
+        new URLSearchParams({
+          access_key: process.env.API_FLASH_KEY,
+          url: `${process.env.URL}/${hashRoute}`,
+          element: "#canvas",
+        }).toString(),
+      async (response) => {
+        console.log("API FLASH RESPONSE: ", response);
+
+        const filePath = await saveImage(response, hashRoute);
+        return filePath;
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
 
 module.exports = { handleWebsocket, saveBrainStormData, startBrainstormEmbed, openContributionModal, addContributionToCanvas, sendBrainstormCanvas };
