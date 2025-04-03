@@ -46,9 +46,14 @@ function startBot() {
 
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
-    await interaction.deferReply(); // Delay reply
 
     const command = interaction.client.commands.get(interaction.commandName);
+
+    if (command === "quiz") {
+      await interaction.deferReply({ ephemeral: true }); // Delay reply
+    } else {
+      await interaction.deferReply(); // Delay reply
+    }
 
     if (!command) {
       console.error(`No command matching ${interaction.commandName} was found.`);

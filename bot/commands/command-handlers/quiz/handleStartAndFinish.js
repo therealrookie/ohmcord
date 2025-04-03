@@ -37,7 +37,7 @@ async function startQuizEmbed(client, interaction, quizData, questions) {
     .setTitle(quizData.quiz_title)
     .setDescription(`**@${interaction.user.globalName}** started a quiz.`)
     .addFields({ name: "Questions:", value: `${questions.length}` }, { name: "Visibility:", value: determineVisibility(quizData.visibility) });
-  const startButton = new ButtonBuilder().setCustomId("quiz_question_button_0").setLabel("Start Quiz").setStyle(ButtonStyle.Primary);
+  const startButton = new ButtonBuilder().setCustomId("quiz_question_button_0").setLabel("Start Quiz").setStyle(ButtonStyle.Success);
 
   const actionRowQuizStart = new ActionRowBuilder().addComponents(startButton);
 
@@ -104,7 +104,7 @@ async function updateQuizStats(interaction, quizData, questions) {
     .setTitle(`${quizData.quiz_title}-Stats`)
     .setDescription(`Stats of your Quiz`)
     .addFields(quizStats);
-  const publishButton = new ButtonBuilder().setCustomId("publish_quiz_stats").setLabel("Finish & Publish Quiz").setStyle(ButtonStyle.Primary);
+  const publishButton = new ButtonBuilder().setCustomId("publish_quiz_stats").setLabel("Finish & Publish Quiz").setStyle(ButtonStyle.Danger);
 
   const actionRowPublishStats = new ActionRowBuilder().addComponents(publishButton);
 

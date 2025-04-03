@@ -84,17 +84,19 @@ async function createAnswerReplyMessage(quizId, currentQuestion, userId, givenAn
 }
 
 function buildNextQuestionActionRow(questionIndex, totalQuestions) {
-  let customId, label;
+  let customId, label, buttonStyle;
 
   if (questionIndex === totalQuestions) {
     customId = "finish_button";
     label = "Finish quiz";
+    buttonStyle = ButtonStyle.Success;
   } else {
     customId = `quiz_question_button_${questionIndex}`;
     label = "Next Question";
+    buttonStyle = ButtonStyle.Primary;
   }
 
-  const nextQuestion = new ButtonBuilder().setCustomId(customId).setLabel(label).setStyle(ButtonStyle.Primary);
+  const nextQuestion = new ButtonBuilder().setCustomId(customId).setLabel(label).setStyle(buttonStyle);
 
   return new ActionRowBuilder().addComponents(nextQuestion);
 }

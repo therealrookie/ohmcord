@@ -82,7 +82,7 @@ brainstormRouter.post("/set-position", async (req, res) => {
 
 function saveImage(response, hashRoute) {
   return new Promise((resolve, reject) => {
-    const uploadDir = path.join(__dirname, "../public/uploads");
+    const uploadDir = path.join(process.cwd(), "uploads");
     const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
 
     console.log("Paths: ", uploadDir, filePath);
