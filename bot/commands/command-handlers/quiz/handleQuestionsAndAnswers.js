@@ -119,7 +119,7 @@ async function checkAnswerMessage(interaction, buttonInteraction, quizData, ques
 
   await buttonInteraction.reply({ content: message, components: [actionRow], ephemeral: true });
 
-  await updateQuizStats(interaction, quizData, questions);
+  //await updateQuizStats(interaction, quizData, questions);
 }
 
 module.exports = {
