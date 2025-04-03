@@ -115,9 +115,9 @@ async function updateQuizStats(interaction, quizData, questions) {
 
   const publishButton = new ButtonBuilder().setCustomId("publish_quiz_stats").setLabel("Finish & Publish Quiz").setStyle(ButtonStyle.Danger);
 
-  const actionRowPublishStats = new ActionRowBuilder().addComponents(publishButton);
+  //const actionRowPublishStats = new ActionRowBuilder().addComponents(publishButton);
 
-  const channel = await client.channels.fetch(interaction.channelId);
+  //const channel = await client.channels.fetch(interaction.channelId);
   await interaction.editReply({
     content: "Drücke hier um das Quiz zu beenden und die Ergebnisse zu veröffentlichen",
     components: [actionRowQuizStart],
