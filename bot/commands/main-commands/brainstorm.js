@@ -17,6 +17,8 @@ const {
 } = require("../../../database/dbBrainstormFunctions");
 
 async function handleBrainstormCommand(interaction) {
+  await interaction.deferReply(); // Delay reply
+
   const client = interaction.client;
 
   console.log("WebSocket URL: ", process.env.WS_URL);

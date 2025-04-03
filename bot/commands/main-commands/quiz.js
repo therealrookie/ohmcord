@@ -5,6 +5,8 @@ const { startQuiz, publishQuizStatsEmbed, sendPersonalStatsEmbed, finishQuizMess
 const { sendNextQuestionEmbed, checkAnswerMessage } = require("../command-handlers/quiz/handleQuestionsAndAnswers");
 
 async function handleQuiz(interaction) {
+  await interaction.deferReply({ ephemeral: true }); // Delay reply
+
   const client = interaction.client;
   const hashRoute = interaction.options.get("code").value; // Get Hashroute-code from command-input-field
   const quizData = await getQuizByHashUrl(hashRoute); // Get quizData from database

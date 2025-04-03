@@ -49,12 +49,6 @@ function startBot() {
 
     const command = interaction.client.commands.get(interaction.commandName);
 
-    if (command === "quiz") {
-      await interaction.deferReply({ ephemeral: true }); // Delay reply
-    } else {
-      await interaction.deferReply(); // Delay reply
-    }
-
     if (!command) {
       console.error(`No command matching ${interaction.commandName} was found.`);
       return;

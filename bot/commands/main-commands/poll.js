@@ -3,6 +3,8 @@ const { SlashCommandBuilder } = require("discord.js");
 const { getPollByHashRoute, getPollAnswers } = require("../../../database/dbPollFunctions");
 
 async function handlePoll(interaction) {
+  await interaction.deferReply(); // Delay reply
+
   const pollData = await getPollByHashRoute(interaction.options.get("code").value);
   const answersData = await getPollAnswers(pollData.poll_id);
 

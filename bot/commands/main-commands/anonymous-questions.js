@@ -15,7 +15,7 @@ const {
 } = require("../command-handlers/anonymous_questions/handleAnonymousQuestions");
 
 async function handleAnonymousQuestions(interaction) {
-  //await interaction.deferReply(); // Delay reply
+  await interaction.deferReply(); // Delay reply
 
   const client = interaction.client;
 

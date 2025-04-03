@@ -10,8 +10,6 @@ const {
 
 // Response to the command, sends quiz-stats (only for the "command-executer") and quiz-start-embed
 async function startQuiz(client, interaction, quizData, questions) {
-  //await interaction.deferReply({ ephemeral: true });
-
   await clearQuizData(quizData.quiz_id);
 
   await startQuizEmbed(client, interaction, quizData, questions);
