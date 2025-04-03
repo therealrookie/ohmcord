@@ -97,6 +97,8 @@ async function getQuizStats(questions) {
 
 // Updates the embed containing all the quiz stats, contains a button that publishes the stats
 async function updateQuizStats(interaction, quizData, questions) {
+  /*
+  
   const quizStats = await getQuizStats(questions);
 
   const quizStatsEmbed = new EmbedBuilder()
@@ -109,6 +111,18 @@ async function updateQuizStats(interaction, quizData, questions) {
   const actionRowPublishStats = new ActionRowBuilder().addComponents(publishButton);
 
   await interaction.editReply({ embeds: [quizStatsEmbed], components: [actionRowPublishStats], ephemeral: true });
+*/
+
+  const publishButton = new ButtonBuilder().setCustomId("publish_quiz_stats").setLabel("Finish & Publish Quiz").setStyle(ButtonStyle.Danger);
+
+  const actionRowPublishStats = new ActionRowBuilder().addComponents(publishButton);
+
+  const channel = await client.channels.fetch(interaction.channelId);
+  await interaction.editReply({
+    content: "Drücke hier um das Quiz zu beenden und die Ergebnisse zu veröffentlichen",
+    components: [actionRowQuizStart],
+    ephemeral: true,
+  });
 }
 
 // Send public embed for quiz-stats, button to show personal stats
