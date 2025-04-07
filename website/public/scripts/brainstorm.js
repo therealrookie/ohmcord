@@ -81,7 +81,7 @@ socket.onmessage = async function (event) {
 
   console.log("WS MESSAGE: ", message);
 
-  if (!validBrainstormId && !discordSource) return;
+  if (!validBrainstormId || !discordSource) return;
 
   contributions = await getContributions();
 

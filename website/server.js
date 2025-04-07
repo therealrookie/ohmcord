@@ -81,7 +81,7 @@ async function handleBrainstormMessage(data) {
     if (data.type === "image-request") {
       data.source = `server-website`;
       data.type = "image";
-      data.image = await getImageUrl(data.hashRoute);
+      await getImageUrl(data.hashRoute);
     }
 
     wsAnswer(data);

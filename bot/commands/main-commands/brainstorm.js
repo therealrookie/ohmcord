@@ -41,13 +41,12 @@ async function handleBrainstormCommand(interaction) {
   ws.on("message", async (message) => {
     const parsedMessage = JSON.parse(message);
     const validBrainstormId = parseInt(parsedMessage.brainstormId) === parseInt(brainstormId);
-    const isContribution = parsedMessage.type === "contribution";
     const validSource = parsedMessage.source === "server-website";
 
     console.log("ParsedMessage: ", parsedMessage, validBrainstormId, validSource, imageSent);
 
     if (validBrainstormId && validSource && parsedMessage.type === "image" && !imageSent) {
-      console.log("ParsedMessage: ", parsedMessage.image);
+      console.log("ParsedMessage: ", parsedMessage);
       await sendBrainstormCanvas(client, hashRoute, interaction.channelId);
       imageSent = true;
     } else if (validBrainstormId && validSource && parsedMessage.type === "contribution") {
