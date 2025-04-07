@@ -97,6 +97,8 @@ async function getImageUrl(hashRoute) {
           element: "#canvas",
         }).toString(),
       async (response) => {
+        console.log("API FLASH URL: ", `${process.env.URL}/${hashRoute}`);
+        console.log("API FLASH RESPONSE: ", response);
         const filePath = await saveImage(response, hashRoute);
         return filePath;
       }
