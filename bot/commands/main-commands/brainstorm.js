@@ -74,7 +74,7 @@ async function handleBrainstormCommand(interaction) {
         JSON.stringify({
           source: "discord",
           type: "image-request",
-          brainstorm: brainstormId,
+          brainstormId: brainstormId,
           hashRoute: hashRoute,
         })
       );
