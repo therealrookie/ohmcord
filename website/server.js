@@ -93,14 +93,18 @@ async function getImageUrl(hashRoute) {
       "https://api.apiflash.com/v1/urltoimage?" +
         new URLSearchParams({
           access_key: process.env.API_FLASH_KEY,
-          url: `${process.env.URL}/${hashRoute}`,
+          url: `${process.env.URL}/brainstorm/${hashRoute}`,
           element: "#canvas",
         }).toString(),
       async (response) => {
-        console.log("API FLASH URL: ", `${process.env.URL}/${hashRoute}`);
         console.log("API FLASH RESPONSE: ", response);
+
+        const filePath = response.pipe(fs.createWriteStream("screenshot.jpeg"));
+        console.log("getImageUrl - filepath: ", filePath);
+        /*
         const filePath = await saveImage(response, hashRoute);
         return filePath;
+        */
       }
     );
   } catch (error) {
