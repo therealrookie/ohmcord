@@ -55,7 +55,7 @@ p {
   width: 100%;
 }
 
-.header a {
+a {
   text-decoration: none;
   color: var(--white);
 }
@@ -96,52 +96,19 @@ p {
   scroll-snap-align: start;
 }
 
-.tool-container h1 {
-  opacity: 1;
-  font-size: 2.5em;
-  transform: translateY(50px);
-  transition: transform 0.5s ease, opacity 0.3s ease;
-}
-
-.tool-container:hover h1 {
-  opacity: 1;
-  transform: translateY(0px);
-}
-
-.tool-container p,
-.tool-container input,
-.tool-container a {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.5s ease, transform 0.5s ease, display 0.5s ease;
-}
-
-.tool-container:hover p,
-.tool-container:hover input,
-.tool-container:hover a {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.tool-container input {
-  margin: 10px;
-  width: 100px;
-  height: 30px;
-  border: none;
-  border-radius: 3px;
-}
-
-.tool-container a {
-  margin: 10px;
-  padding: 10px;
-  text-decoration: none;
+.column-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 3px;
-  height: 30px;
-  background-color: var(--white);
-  color: var(--black);
+  justify-content: space-evenly;
+}
+
+.column {
+  max-width: 40%;
+  margin: 0 0 0 50px;
+}
+
+img {
+  max-width: 75%;
+  border-radius: 8px;
 }
 
 :focus {
@@ -237,19 +204,6 @@ p {
   padding: 0px 20px;
   height: 10vh;
   background-color: var(--black);
-}
-
-.discord-button {
-  padding: 10px;
-  border-radius: 5px;
-  color: var(--white);
-  background-color: var(--discord-blue);
-  text-decoration: none;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.discord-button:hover {
-  background-color: var(--discord-dark-blue);
 }
 
 /* width */

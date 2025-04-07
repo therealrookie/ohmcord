@@ -11,54 +11,118 @@
       <div class="header">
         <a href="/"><img class="logo" src="/assets/OhmcordLogo.png" /></a>
         <h1>Hilfe</h1>
-        <h3></h3>
+        <h3>/help</h3>
       </div>
 
       <div id="tools-container">
         <div id="quiz-container" class="tool-container">
-          <h1>Quiz</h1>
-          <div></div>
-          <p>
-            Erstelle ein neues Quiz oder bearbeite ein bestehendes mit Eingabe des 6 stelligen Codes. <br />
-            Starte das Quiz in discord mit dem command <i>/quiz</i> und dem 6 stelligen Code.
-          </p>
-          <div id="quiz-actions">
-            <a href="/create-quiz">Create Quiz</a>
-            <input id="quiz-input" type="text" />
+          <div class="column-container">
+            <div class="column">
+              <h1>Quiz</h1>
+              <h2><a href="/create-quiz">/create-quiz</a></h2>
+              <h3>1. Titel bestimmen</h3>
+              <img src="/assets/screenshots/enter_quiz_title.PNG" alt="" />
+              <h3>2. Sichtbarkeit der Ergebnisse festlegen</h3>
+              <img src="/assets/screenshots/choose_quiz_visibility.PNG" alt="" />
+              <h3>3. Quiz erstellen</h3>
+              <img src="/assets/screenshots/create_quiz_button.PNG" alt="" />
+            </div>
+            <div class="column">
+              <h2>/quiz/....</h2>
+              <h3>4. Frage formulieren</h3>
+              <img src="/assets/screenshots/create_quiz_question.PNG" alt="" />
+              <h3>5. Zwei bis fünf Antworten hinzufügen</h3>
+              <img src="/assets/screenshots/add_quiz_answers.PNG" alt="" />
+              <h3>6. Weitere Fragen hinzufügen und speichern</h3>
+              <img src="/assets/screenshots/save_quiz.PNG" alt="" />
+              <h2>/quiz/fin/....</h2>
+              <h3>7. Ergebnisse kontrollieren und Code kopieren</h3>
+              <img src="/assets/screenshots/copy_quiz_code.PNG" alt="" />
+            </div>
+            <div class="column">
+              <h2>Discord</h2>
+              <h3>8. Command /quiz ausführen</h3>
+              <img src="/assets/screenshots/discord_quiz_command.PNG" alt="" />
+              <h3>9. Starten und beenden des Quiz'</h3>
+              <img src="/assets/screenshots/discord_quiz_embed.PNG" alt="" />
+              <h3>10. Persönliche Statistik einsehen</h3>
+              <img src="/assets/screenshots/discord_quiz_end.PNG" alt="" />
+            </div>
           </div>
         </div>
         <div id="brainstorm-container" class="tool-container">
           <h1>Brainstorm</h1>
-          <p>
-            Starte eine Brainstorm-Session in discord mit dem command <i>/brainstorm</i>. <br />
-            Oder kopiere den 6 Stelligen Code einer bestehenden Session in das untere Feld um dir die Ergebnisse anzusehen.
-          </p>
-          <input id="brainstorm-session-input" type="text" />
+          <div class="column-container">
+            <div class="column">
+              <h2>Discord</h2>
+              <h3>1. Command /brainstorm ausführen</h3>
+              <p>Thema und Zeitlimit (in Minuten) eingeben</p>
+              <img src="/assets/screenshots/brainstorm_command.PNG" alt="" />
+              <h3>2. Beiträge hinzufügen und zu Webansicht wechseln</h3>
+              <img src="/assets/screenshots/brainstorm_new.PNG" alt="" />
+              <h3>3. Beiträge bewerten</h3>
+              <img src="/assets/screenshots/brainstorm_contributions.PNG" alt="" />
+            </div>
+            <div class="column">
+              <h2>/brainstorm/....</h2>
+              <h3>4. Canvas kann in der Webansicht betrachtet werden</h3>
+              <img src="/assets/screenshots/brainstorm_canvas_example.PNG" alt="" />
+              <h3>5. Anzeige Restzeit und Beitrag hinzufügen</h3>
+              <img src="/assets/screenshots/brainstorm_canvas_timelimit.PNG" alt="" />
+              <h3>6. Canvas kann nach Ablauf der Zeit heruntergeladen werden</h3>
+              <img src="/assets/screenshots/brainstorm_canvas_download.PNG" alt="" />
+            </div>
+          </div>
         </div>
         <div id="question-container" class="tool-container">
           <h1>Anonyme Fragen</h1>
-          <p>
-            Starte eine anonyme Fragerunde in discord mit dem command <i>/anonymous-question</i>. <br />
-            Oder kopiere den 6 Stelligen Code einer bestehenden Session in das untere Feld um dir die Ergebnisse anzusehen.
-          </p>
-          <input id="question-session-input" type="text" />
+          <div class="column-container">
+            <div class="column">
+              <h2>Discord</h2>
+              <h3>1. Command /anonymous-question ausführen</h3>
+              <img src="/assets/screenshots/anon_questions_discord_command.PNG" alt="" />
+              <h3>2. Fragen hinzufügen und zu Webansicht wechseln</h3>
+              <img src="/assets/screenshots/anon_questions_new.PNG" alt="" />
+              <h3>3. Frage beantworten</h3>
+              <img src="/assets/screenshots/anon_questions_discord_question.PNG" alt="" />
+            </div>
+            <div class="column">
+              <h2>/anonymous-questions/....</h2>
+              <h3>4. Fragen können in der Webansicht betrachtet und beantwortet werden</h3>
+              <img src="/assets/screenshots/anon_questions_website_question.PNG" alt="" />
+              <h3>5. Hinzufügen neuer Fragen über die Website</h3>
+              <img src="/assets/screenshots/anon_questions_website_new_question.PNG" alt="" />
+            </div>
+          </div>
         </div>
 
         <div id="poll-container" class="tool-container">
           <h1>Umfrage</h1>
-          <p>
-            Erstelle eine neue Umfrage über den Button. <br />
-            Starte die Umfrage in discord mit dem command <i>/poll</i> und dem 6 stelligen Code.
-          </p>
-          <a href="/poll">Create Poll</a>
-        </div>
-        <div id="installation-container" class="tool-container">
-          <h1>Umfrage</h1>
-          <p>
-            Erstelle eine neue Umfrage über den Button. <br />
-            Starte die Umfrage in discord mit dem command <i>/poll</i> und dem 6 stelligen Code.
-          </p>
-          <a href="/poll">Create Poll</a>
+          <div class="column-container">
+            <div class="column">
+              <h2>/poll</h2>
+              <h3>1. Formuliere Frage und Antwortmöglichkeiten</h3>
+              <img src="/assets/screenshots/poll_question_and_answers.PNG" alt="" />
+              <h3>2. Tippe selbst oder nutze vorgegebene Antworten</h3>
+              <img src="/assets/screenshots/poll_examples.PNG" alt="" />
+              <h3>3. Stelle Dauer und "Mehrere-Auswählen" ein und speichere die Umfrage</h3>
+              <img src="/assets/screenshots/poll_settings_and_save.PNG" alt="" />
+            </div>
+            <div class="column">
+              <h2>/poll/....</h2>
+              <h3>4. Überprüfe deine Umfrage</h3>
+              <img src="/assets/screenshots/poll_finished.PNG" alt="" />
+              <h3>5. Kopiere den Code durch klicken</h3>
+              <img src="/assets/screenshots/poll_copy_code.PNG" alt="" />
+            </div>
+            <div class="column">
+              <h2>Discord</h2>
+              <h3>4. Führe den Code /poll aus und füge den Code ein</h3>
+              <img src="/assets/screenshots/poll_command.PNG" alt="" />
+              <h3>5. Deine Umfrage wird im Chat geteilt</h3>
+              <img src="/assets/screenshots/poll_finished_poll.PNG" alt="" />
+            </div>
+          </div>
         </div>
       </div>
     </div>

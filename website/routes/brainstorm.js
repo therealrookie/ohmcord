@@ -104,12 +104,17 @@ brainstormRouter.get("/download-screenshot/:hashroute", async (req, res) => {
   try {
     const hashRoute = req.params.hashroute;
 
-    const file = path.join(__dirname, `../public/uploads/brainstorm-${hashRoute}.jpeg`);
+    console.log("ROUTE: /brainstorm/download-screenshot/hashroute", hashRoute);
+
+    const uploadDir = path.join(process.cwd(), "uploads");
+    const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+
+    //const file = path.join(__dirname, `../public/uploads/brainstorm-${hashRoute}.jpeg`);
     //const file = path.join(__dirname, `../public/assets/OhmcordLogo.png`);
 
-    console.log("FILEPATH: ", file);
+    console.log("FILEPATH: ", filePath);
 
-    res.download(file);
+    res.download(filePath);
   } catch (error) {
     console.log("Error inside /download-canvas : ", error);
     res.status(500).json({ error: "Failed to get the data from the server." });
