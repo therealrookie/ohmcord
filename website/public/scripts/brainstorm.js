@@ -78,19 +78,18 @@ socket.onmessage = async function (event) {
   console.log(event);
   const message = JSON.parse(event.data);
   const validBrainstormId = parseInt(message.brainstormId) === parseInt(brainstormId);
-  const isContribution = message.type === "contribution";
-  const isScore = message.type === "score";
-
   const discordSource = message.source === "server-discord";
+
+  if (!validBrainstormId && !discordSource) return;
 
   contributions = await getContributions();
 
-  if (validBrainstormId && isContribution && discordSource) {
+  if (message.type === "contribution") {
     // message: {source, type, brainstormId, contributionId, contribution}
     const contribution = { id: message.contributionId, content: message.contribution, score: 0, xpos: null, ypos: null };
 
     await addContributionToCanvas(contribution);
-  } else if (validBrainstormId && isScore && discordSource) {
+  } else if (message.type === "score") {
     // {source, type, brainstormId, contribution: {id, score}}
     determineWeightRange();
 
