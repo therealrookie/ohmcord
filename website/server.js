@@ -99,8 +99,11 @@ async function getImageUrl(hashRoute) {
       async (response) => {
         console.log("API FLASH RESPONSE: ", response);
 
-        const filePath = response.pipe(fs.createWriteStream("screenshot.jpeg"));
-        console.log("getImageUrl - filepath: ", filePath);
+        const uploadDir = path.join(process.cwd(), "uploads");
+        const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+
+        const imageSave = response.pipe(fs.createWriteStream(filePath));
+        console.log("getImageUrl - filepath: ", imageSave, filePath);
         /*
         const filePath = await saveImage(response, hashRoute);
         return filePath;
