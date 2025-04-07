@@ -75,10 +75,11 @@ socket.onerror = function (event) {
 };
 
 socket.onmessage = async function (event) {
-  console.log(event);
   const message = JSON.parse(event.data);
   const validBrainstormId = parseInt(message.brainstormId) === parseInt(brainstormId);
   const discordSource = message.source === "server-discord";
+
+  console.log("WS MESSAGE: ", message);
 
   if (!validBrainstormId && !discordSource) return;
 

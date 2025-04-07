@@ -74,6 +74,7 @@ const { pollRouter } = require("./routes/poll");
 const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
 async function handleBrainstormMessage(data) {
+  console.log("WEBSOCKET SERVER: ", data);
   if (!data.source?.startsWith("server")) {
     data.source = `server-${data.source}`; // server-discord or server-website
 
