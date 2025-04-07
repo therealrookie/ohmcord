@@ -89,6 +89,7 @@ async function handleBrainstormMessage(data) {
 }
 
 async function getImageUrl(hashRoute) {
+  console.log("GET IMAGE URL FUNCTION ");
   try {
     https.get(
       "https://api.apiflash.com/v1/urltoimage?" +
@@ -98,7 +99,8 @@ async function getImageUrl(hashRoute) {
           element: "#canvas",
         }).toString(),
       async (response) => {
-        //console.log("API FLASH RESPONSE: ", response);
+        console.log("API FLASH RESPONSE: ", response);
+        console.log("API FLASH URL: ", `${process.env.URL}/brainstorm/${hashRoute}`);
 
         const uploadDir = path.join(process.cwd(), "uploads");
         const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
