@@ -74,7 +74,7 @@ const { pollRouter } = require("./routes/poll");
 const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
 async function handleBrainstormMessage(data) {
-  if (!data.source?.startsWith("server")) {
+  if (!data.source.includes("server")) {
     data.source = `server-${data.source}`; // server-discord or server-website
 
     console.log("WEBSOCKET SERVER: ", data);
@@ -91,6 +91,8 @@ async function handleBrainstormMessage(data) {
 
 async function getImageUrl(hashRoute) {
   console.log("GET IMAGE URL FUNCTION ", hashRoute);
+  console.log("API FLASH URL: ", `${process.env.URL}/brainstorm/${hashRoute}`);
+
   try {
     https.get(
       "https://api.apiflash.com/v1/urltoimage?" +
@@ -100,8 +102,9 @@ async function getImageUrl(hashRoute) {
           element: "#canvas",
         }).toString(),
       async (response) => {
-        console.log("API FLASH RESPONSE: ", response);
         console.log("API FLASH URL: ", `${process.env.URL}/brainstorm/${hashRoute}`);
+
+        console.log("API FLASH RESPONSE: ", response);
 
         const uploadDir = path.join(process.cwd(), "uploads");
         const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);

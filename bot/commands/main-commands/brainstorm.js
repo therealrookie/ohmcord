@@ -50,7 +50,7 @@ async function handleBrainstormCommand(interaction) {
       await sendBrainstormCanvas(client, hashRoute, interaction.channelId);
       imageSent = true;
     } else if (validBrainstormId && validSource && parsedMessage.type === "contribution") {
-      console.log("New WS message: ", message);
+      //console.log("New WS message: ", parsedMessage);
       await handleNewContribution(parsedMessage.contribution);
     }
   });
