@@ -2,6 +2,7 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder
 
 const { addBrainstorm, addBrainstormMessage, getBrainstormMessages } = require("../../../../database/dbBrainstormFunctions");
 const { createHashRoute } = require("../../../utils/utilsFunctions");
+const path = require("path");
 
 // Extract important brainstorm-data, save it to the database
 async function saveBrainStormData(interaction) {
@@ -155,11 +156,12 @@ async function sendBrainstormCanvas(client, hashRoute, channelId) {
   //const uploadDir = path.join(process.cwd(), "website/public/uploads");
   //const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
 
-  const filePath = path.join(process.cwd(), `uploads/brainstorm-${hashRoute}.jpeg`);
+  const uploadDir = path.join(process.cwd(), "uploads");
+  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
 
   //const filePath = await saveCanvasScreenshot(hashRoute);
 
-  console.log("FILEPATH: ", filePath);
+  console.log("HERE FILEPATH: ", filePath);
 
   const channel = await client.channels.fetch(channelId);
   await channel.send({
