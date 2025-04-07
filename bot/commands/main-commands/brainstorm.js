@@ -43,7 +43,7 @@ async function handleBrainstormCommand(interaction) {
     const validBrainstormId = parseInt(parsedMessage.brainstormId) === parseInt(brainstormId);
     const validSource = parsedMessage.source === "server-website";
 
-    console.log("ParsedMessage: ", parsedMessage, validBrainstormId, validSource, imageSent);
+    //console.log("ParsedMessage: ", parsedMessage, validBrainstormId, validSource, imageSent);
 
     if (validBrainstormId && validSource && parsedMessage.type === "image" && !imageSent) {
       console.log("ParsedMessage: ", parsedMessage);
@@ -67,8 +67,6 @@ async function handleBrainstormCommand(interaction) {
 
   setTimeout(async () => {
     if (!imageSent) {
-      console.log(`Time limit reached! Sending image for brainstorm ${theme}...`);
-
       ws.send(
         JSON.stringify({
           source: "discord",

@@ -74,9 +74,10 @@ const { pollRouter } = require("./routes/poll");
 const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
 async function handleBrainstormMessage(data) {
-  console.log("WEBSOCKET SERVER: ", data);
   if (!data.source?.startsWith("server")) {
     data.source = `server-${data.source}`; // server-discord or server-website
+
+    console.log("WEBSOCKET SERVER: ", data);
 
     if (data.type === "image-request") {
       data.source = `server-website`;
@@ -89,7 +90,7 @@ async function handleBrainstormMessage(data) {
 }
 
 async function getImageUrl(hashRoute) {
-  console.log("GET IMAGE URL FUNCTION ");
+  console.log("GET IMAGE URL FUNCTION ", hashRoute);
   try {
     https.get(
       "https://api.apiflash.com/v1/urltoimage?" +
