@@ -82,13 +82,58 @@ async function handleBrainstormMessage(data) {
     if (data.type === "image-request") {
       data.source = `server-website`;
       data.type = "image";
-      await getImageUrl(data.hashRoute);
+      try {
+        await getImageUrl(data.hashRoute);
+      } catch (e) {
+        console.error("Image fetch failed:", e.message);
+      }
     }
 
     wsAnswer(data);
   }
 }
 
+async function getImageUrl(hashRoute) {
+  console.log("GET IMAGE URL FUNCTION ", hashRoute);
+  console.log("API FLASH URL: ", `${process.env.URL}/brainstorm/${hashRoute}`);
+
+  const url =
+    "https://api.apiflash.com/v1/urltoimage?" +
+    new URLSearchParams({
+      access_key: process.env.API_FLASH_KEY,
+      url: `${process.env.URL}/brainstorm/${hashRoute}`,
+      element: "#canvas",
+    }).toString();
+
+  const uploadDir = path.join(process.cwd(), "uploads");
+  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (response) => {
+        if (response.statusCode !== 200) {
+          reject(new Error(`API Flash returned status ${response.statusCode}`));
+          return;
+        }
+
+        const fileStream = fs.createWriteStream(filePath);
+        response.pipe(fileStream);
+
+        fileStream.on("finish", () => {
+          fileStream.close(() => {
+            console.log("✅ Image saved:", filePath);
+            resolve(filePath);
+          });
+        });
+      })
+      .on("error", (err) => {
+        console.error("❌ HTTPS Request failed:", err.message);
+        reject(err);
+      });
+  });
+}
+
+/*
 async function getImageUrl(hashRoute) {
   console.log("GET IMAGE URL FUNCTION ", hashRoute);
   console.log("API FLASH URL: ", `${process.env.URL}/brainstorm/${hashRoute}`);
@@ -111,10 +156,7 @@ async function getImageUrl(hashRoute) {
 
         const imageSave = response.pipe(fs.createWriteStream(filePath));
         console.log("getImageUrl - filepath: ", imageSave, filePath);
-        /*
-        const filePath = await saveImage(response, hashRoute);
-        return filePath;
-        */
+
       }
     );
   } catch (error) {
@@ -122,6 +164,7 @@ async function getImageUrl(hashRoute) {
     return null;
   }
 }
+*/
 
 function saveImage(response, hashRoute) {
   return new Promise((resolve, reject) => {
