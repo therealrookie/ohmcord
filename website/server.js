@@ -97,7 +97,7 @@ async function getImageUrl(hashRoute) {
           element: "#canvas",
         }).toString(),
       async (response) => {
-        console.log("API FLASH RESPONSE: ", response);
+        //console.log("API FLASH RESPONSE: ", response);
 
         const uploadDir = path.join(process.cwd(), "uploads");
         const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
