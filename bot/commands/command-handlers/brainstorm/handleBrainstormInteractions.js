@@ -164,7 +164,6 @@ async function sendBrainstormCanvas(client, hashRoute, interaction) {
   const actionRow = new ActionRowBuilder().addComponents(linkButton);
 
   await interaction.editReply({
-    content: `**Thema:** ** ** *${theme}* \n **Zeitlimit:** ** ** *${timeLimit / 60000} Minute${timeLimit > 1 ? "n" : ""}* \n`,
     files: [filePath],
     components: actionRow,
   });
