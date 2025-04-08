@@ -83,7 +83,7 @@ brainstormRouter.post("/set-position", async (req, res) => {
 function saveImage(response, hashRoute) {
   return new Promise((resolve, reject) => {
     const uploadDir = path.join(process.cwd(), "uploads");
-    const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+    const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
     console.log("Paths: ", uploadDir, filePath);
 
@@ -107,7 +107,7 @@ brainstormRouter.get("/download-screenshot/:hashroute", async (req, res) => {
     console.log("ROUTE: /brainstorm/download-screenshot/hashroute", hashRoute);
 
     const uploadDir = path.join(process.cwd(), "uploads");
-    const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+    const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
     //const file = path.join(__dirname, `../public/uploads/brainstorm-${hashRoute}.jpeg`);
     //const file = path.join(__dirname, `../public/assets/OhmcordLogo.png`);

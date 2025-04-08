@@ -152,7 +152,26 @@ async function addContributionToCanvas(ws, contributionId, brainstormId, userIde
 }
 
 // Send the canvas-image to the channel
-async function sendBrainstormCanvas(client, hashRoute, channelId) {
+async function sendBrainstormCanvas(client, hashRoute, interaction) {
+  const uploadDir = path.join(process.cwd(), "uploads");
+  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
+
+  const linkButton = new ButtonBuilder()
+    .setLabel("Brainstorm Canvas")
+    .setURL(`${process.env.URL}/brainstorm/${hashRoute}`)
+    .setStyle(ButtonStyle.Link);
+
+  const actionRow = new ActionRowBuilder().addComponents(linkButton);
+
+  await interaction.editReply({
+    content: `**Thema:** ** ** *${theme}* \n **Zeitlimit:** ** ** *${timeLimit / 60000} Minute${timeLimit > 1 ? "n" : ""}* \n`,
+    files: [filePath],
+    components: actionRow,
+  });
+}
+
+// Send the canvas-image to the channel
+async function sendBrainstormCanvas2(client, hashRoute, channelId) {
   //const uploadDir = path.join(process.cwd(), "website/public/uploads");
   //const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
 

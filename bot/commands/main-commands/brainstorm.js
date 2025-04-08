@@ -47,7 +47,9 @@ async function handleBrainstormCommand(interaction) {
 
     if (validBrainstormId && validSource && parsedMessage.type === "image" && !imageSent) {
       console.log("ParsedMessage: ", parsedMessage);
-      await sendBrainstormCanvas(client, hashRoute, interaction.channelId);
+      await sendBrainstormCanvas(client, hashRoute, interaction);
+
+      //await sendBrainstormCanvas(client, hashRoute, interaction.channelId);
       imageSent = true;
     } else if (validBrainstormId && validSource && parsedMessage.type === "contribution") {
       //console.log("New WS message: ", parsedMessage);
