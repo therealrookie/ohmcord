@@ -157,7 +157,7 @@ async function sendBrainstormCanvas(client, hashRoute, channelId) {
   //const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
 
   const uploadDir = path.join(process.cwd(), "uploads");
-  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
   //const filePath = await saveCanvasScreenshot(hashRoute);
 
@@ -165,7 +165,7 @@ async function sendBrainstormCanvas(client, hashRoute, channelId) {
 
   const channel = await client.channels.fetch(channelId);
   await channel.send({
-    content: `Here's the brainstorm canvas: ${filePath}`,
+    content: `Here's the brainstorm canvas:`,
     files: [filePath],
 
     //files: [],

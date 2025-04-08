@@ -103,10 +103,13 @@ async function getImageUrl(hashRoute) {
       access_key: process.env.API_FLASH_KEY,
       url: `${process.env.URL}/brainstorm/${hashRoute}`,
       element: "#canvas",
+      width: 3840,
+      height: 2160,
+      format: "png",
     }).toString();
 
   const uploadDir = path.join(process.cwd(), "uploads");
-  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
+  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
   return new Promise((resolve, reject) => {
     https

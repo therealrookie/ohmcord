@@ -84,7 +84,7 @@ async function downloadCanvas() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `brainstorm-${hashRoute}.jpeg`;
+    a.download = `brainstorm-${hashRoute}.png`;
     document.body.appendChild(a);
     a.click();
     a.remove();
