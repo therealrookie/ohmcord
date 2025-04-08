@@ -82,7 +82,7 @@ async function handleBrainstormCommand(interaction) {
 
   // Handle interaction with "add contribution"-button
   client.on("interactionCreate", async (buttonInteraction) => {
-    if (!buttonInteraction.isButton()) return;
+    if (!buttonInteraction.isButton() || imageSent) return;
 
     if (buttonInteraction.customId === "contribute_button") {
       await openContributionModal(buttonInteraction, theme);

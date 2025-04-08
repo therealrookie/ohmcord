@@ -156,32 +156,11 @@ async function sendBrainstormCanvas(client, hashRoute, interaction) {
   const uploadDir = path.join(process.cwd(), "uploads");
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
-  const linkButton = new ButtonBuilder()
-    .setLabel("Brainstorm Canvas")
-    .setURL(`${process.env.URL}/brainstorm/${hashRoute}`)
-    .setStyle(ButtonStyle.Link);
-
-  const actionRow = new ActionRowBuilder().addComponents(linkButton);
-
-  await interaction.editReply({
-    files: [filePath],
-    components: actionRow,
-  });
-}
-
-// Send the canvas-image to the channel
-async function sendBrainstormCanvas2(client, hashRoute, channelId) {
-  //const uploadDir = path.join(process.cwd(), "website/public/uploads");
-  //const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
-
-  const uploadDir = path.join(process.cwd(), "uploads");
-  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
-
   //const filePath = await saveCanvasScreenshot(hashRoute);
 
   console.log("HERE FILEPATH: ", filePath);
 
-  const channel = await client.channels.fetch(channelId);
+  const channel = await client.channels.fetch(interaction.channelId);
   await channel.send({
     content: `Here's the brainstorm canvas:`,
     files: [filePath],
