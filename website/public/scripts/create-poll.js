@@ -9,7 +9,6 @@ const closeEmojiMenu = () => {
 };
 
 const handleEmojiClick = (event, emojiContainer) => {
-  console.log("HERE");
   emojiContainer.innerHTML = event.detail.unicode;
   closeEmojiMenu();
 };
@@ -30,26 +29,7 @@ function openEmojiMenu(emojiContainer) {
 
   return false;
 }
-/*
 
-function openEmojiMenu(emojiContainer) {
-  console.log(emojiContainer);
-
-  background.style.visibility = "visible";
-  picker.style.visibility = "visible";
-
-  picker.removeEventListener("emoji-click", handleEmojiClick);
-
-  picker.onclick = (event) => {
-    console.log(event);
-    handleEmojiClick(event, emojiContainer);
-  };
-
-  picker.addEventListener("emoji-click", (event) => handleEmojiClick(event, emojiContainer));
-  background.addEventListener("click", closeEmojiMenu);
-  return false;
-}
-  */
 function addAnswer(text, emoji) {
   const answerIndex = questionForm.children.length - 1;
 
@@ -168,7 +148,7 @@ function getQuestionData() {
   const duration = durationElement.getAttribute("data-value");
 
   if (question === "") {
-    alert("Question can not be empty!");
+    alert("Frage kann nicht leer sein!");
     return;
   }
   return { question, multipleAnswers, duration };
@@ -225,8 +205,6 @@ function getDuration() {
   });
 }
 
-//getDuration();
-
 function getAnswers() {
   let answers = [];
   const answerContainers = Array.from(questionForm.getElementsByClassName("answer-container"));
@@ -241,7 +219,7 @@ function getAnswers() {
     answers.push({ emoji, answer });
   });
   if (answerContainers.length !== answers.length) {
-    alert("Answer can not be empty!");
+    alert("Frage kann nicht leer sein!");
     return;
   }
   return answers;

@@ -3,12 +3,12 @@ document.getElementById("create-quiz-btn").addEventListener("click", async () =>
   const visibility = document.querySelector('input[name="visibility"]:checked')?.value;
 
   if (!title) {
-    alert("Please enter a quiz title.");
+    alert("Bitte gib einen Quiz Titel ein.");
     return;
   }
 
   if (!visibility) {
-    alert("Please select a visibility option.");
+    alert("'Sichtbarkeit der Ergebnisse' darf nicht leer sein.");
     return;
   }
 

@@ -31,19 +31,6 @@ socket.onclose = function (event) {
   console.log("WebSocket Closed (client)");
 };
 
-/*
-function handleFormSubmit(event) {
-  event.preventDefault();
-
-  const inputField = document.getElementById("ask-question");
-  const question = inputField.value;
-
-  newQuestion(question);
-
-  inputField.value = "";
-}
-  */
-
 const questionInput = document.getElementById("ask-question");
 
 // Add event listener for 'Enter' key
@@ -124,7 +111,7 @@ async function addQuestionNote(message) {
 function addInputField(parent, button, questionId) {
   const input = document.createElement("input");
   input.type = "text";
-  input.placeholder = "Type your answer...";
+  input.placeholder = "Antwort...";
 
   // Add event listener for 'Enter' key
   input.addEventListener("keypress", (e) => {
@@ -164,9 +151,7 @@ async function addAnswers(questionId) {
 }
 
 function addNewAnswer(data) {
-  console.log("DATA: ", data);
   const questionNote = document.getElementById(data.questionId);
-  console.log("QUESTIONNOTE: ", questionNote, data.questionId);
   const answerList = questionNote.querySelector("ol");
   console.log(answerList);
 
@@ -180,7 +165,6 @@ async function getAnswers(questionId) {
   try {
     const response = await fetch(`/anonymous-questions/get-answers/${questionId}`);
     const answers = await response.json();
-    console.log("ANSWERS: ", answers);
 
     return answers;
   } catch (error) {

@@ -8,10 +8,7 @@ pollRouter.post("/save-poll", async (req, res) => {
 
     const { question, answers } = req.body;
 
-    console.log("SAVE POLL: ", req.body);
-
     const result = await addPoll(question, answers);
-    console.log("POLL DATA: : ", result);
 
     res.status(200).json(result);
   } catch (error) {

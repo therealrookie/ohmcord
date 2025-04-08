@@ -16,7 +16,7 @@ async function saveQuestionSessionData(interaction) {
   const topic = interaction.options.get("topic").value;
 
   if (topic.length > 256) {
-    interaction.editReply({ content: "This topic is too long, choose less characters. \n Max length of topic is 256 characters.", ephemeral: true });
+    interaction.editReply({ content: "Dein Thema ist zu lang. \n Die maximale Länge beträgt 256 Zeichen.", ephemeral: true });
   }
 
   const hashRoute = createHashRoute(`${topic} + ${Date.now()}`);
@@ -47,19 +47,16 @@ async function sendAddQuestionEmbed(interaction, questionSessionData) {
   const questionSessionEmbed = new EmbedBuilder()
     .setColor(0x191923)
     .setTitle(topic)
-    //.setURL(`${process.env.URL}/anonymous-questions/${hashRoute}`)
     .setDescription(`A new anonymous question session has begun about the topic:\n **${topic}**.`);
 
-  const questionButton = new ButtonBuilder()
-    .setCustomId(`question_button_${questionSessionId}`)
-    .setLabel("Ask question")
-    .setStyle(ButtonStyle.Primary);
+  const questionButton = new ButtonBuilder().setCustomId(`question_button_${questionSessionId}`).setLabel("Frag etwas").setStyle(ButtonStyle.Primary);
 
   const linkButton = new ButtonBuilder().setLabel("Website").setURL(`${process.env.URL}/anonymous-questions/${hashRoute}`).setStyle(ButtonStyle.Link);
 
   const actionRow = new ActionRowBuilder().addComponents(questionButton).addComponents(linkButton);
 
-  await interaction.editReply({ embeds: [questionSessionEmbed], components: [actionRow] });
+  // [questionSessionEmbed]
+  await interaction.editReply({ content: topic, components: [actionRow] });
 }
 
 // Create an embed for an asked question
@@ -70,7 +67,7 @@ async function createQuestionEmbed(client, interaction, parsedMessage) {
     .setTitle(parsedMessage.question);
 
   // Create a button for users to contribute ideas
-  const answerButton = new ButtonBuilder().setCustomId(`answer_button_${questionId}`).setLabel("Add answer").setStyle(ButtonStyle.Success);
+  const answerButton = new ButtonBuilder().setCustomId(`answer_button_${questionId}`).setLabel("Antwort hinzufügen").setStyle(ButtonStyle.Success);
 
   // Action row to hold the button
   const actionRow = new ActionRowBuilder().addComponents(answerButton);
@@ -99,10 +96,9 @@ async function editQuestionEmbed(client, interaction, parsedMessage) {
   const message = await channel.messages.fetch(questionDiscordMessageId);
 
   const answerText = createAnswerField(answers);
-  console.log("LENGTH: ", answerText.length);
 
   const updatedQuestionEmbed = new EmbedBuilder().setColor(0xf39237).setTitle(question).addFields({
-    name: "Answers",
+    //name: "Answers",
     value: answerText,
   });
 
@@ -148,13 +144,13 @@ async function openNewQuestionModal(buttonInteraction, topic) {
 
   const modal = new ModalBuilder()
     .setCustomId(`questions_modal_${questionSessionId}`)
-    .setTitle(`Topic: ${topic.length > 38 ? topic.slice(0, 35) + "..." : topic}`);
+    .setTitle(`${topic.length > 38 ? topic.slice(0, 42) + "..." : topic}`);
 
   const ideaInput = new TextInputBuilder()
     .setCustomId("question_input")
-    .setLabel("Your Question")
+    .setLabel("Frage etwas:")
     .setStyle(TextInputStyle.Short)
-    .setPlaceholder("Ask an anonymous question")
+    .setPlaceholder("Deine Frage...")
     .setRequired(true);
 
   const modalActionRow = new ActionRowBuilder().addComponents(ideaInput);
@@ -174,9 +170,9 @@ async function openNewAnswerModal(buttonInteraction) {
 
   const answerInput = new TextInputBuilder()
     .setCustomId(`answer_input_${questionId}`)
-    .setLabel("Your Answer")
+    .setLabel("Eine Antwort hinzufügen:")
     .setStyle(TextInputStyle.Short)
-    .setPlaceholder("Enter answer here...")
+    .setPlaceholder("Deine Antwort...")
     .setRequired(true);
 
   const modalActionRow = new ActionRowBuilder().addComponents(answerInput);

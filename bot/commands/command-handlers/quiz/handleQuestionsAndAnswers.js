@@ -75,11 +75,11 @@ async function createAnswerReplyMessage(quizId, currentQuestion, userId, givenAn
   if (givenAnswer.isCorrect) {
     await updateCorrectAnswers(quizId, userId);
     await setQuestionAttemptsById(currentQuestion.questionId, true);
-    return `Your Answer **${givenAnswer.quizAnswer}** is correct! Congratulations! \n ${"Description: "}`;
+    return `Deine Antwort **${givenAnswer.quizAnswer}** ist richtig! Glückwunsch!`;
   } else {
     await setQuestionAttemptsById(currentQuestion.questionId, false);
     const correctAnswer = currentQuestion.answers.find((answer) => answer.isCorrect)?.quizAnswer;
-    return `Your Answer **${givenAnswer.quizAnswer}** is not correct! The correct answer is **${correctAnswer}**! \n ${"Description: "}`;
+    return `Deine Antwort **${givenAnswer.quizAnswer}** ist nicht richtig! Die richtige Antwort ist **${correctAnswer}**.`;
   }
 }
 
@@ -88,11 +88,11 @@ function buildNextQuestionActionRow(questionIndex, totalQuestions) {
 
   if (questionIndex === totalQuestions) {
     customId = "finish_button";
-    label = "Finish quiz";
+    label = "Quiz beenden";
     buttonStyle = ButtonStyle.Success;
   } else {
     customId = `quiz_question_button_${questionIndex}`;
-    label = "Next Question";
+    label = "Nächste Frage";
     buttonStyle = ButtonStyle.Primary;
   }
 

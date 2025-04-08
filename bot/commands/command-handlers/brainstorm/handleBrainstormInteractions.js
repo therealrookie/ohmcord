@@ -102,21 +102,6 @@ async function sendAdditionalMessage(contributions, interaction, brainstormData)
 async function startBrainstormEmbed(interaction, brainstormData, contributions) {
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
 
-  /*
-  const brainstormEmbed = new EmbedBuilder()
-    .setColor(0x00ff00)
-    .setTitle("Brainstorm")
-    .setDescription(`A new brainstorming session has begun with the theme **${theme}**.`)
-    .addFields(
-      { name: "Theme", value: theme, inline: true },
-      { name: "Time Limit", value: `${timeLimit} minutes`, inline: true },
-      { name: "ID: ", value: hashRoute, inline: true }
-      //{ name: "Contributions", value: contributionField }
-    );
-  //.setFooter({ text: "Click the + button to contribute your ideas!" });
-
-  await interaction.editReply({ embeds: [brainstormEmbed] });
-  */
   await sendAdditionalMessage(contributions, interaction, brainstormData);
 }
 
@@ -126,10 +111,10 @@ async function openContributionModal(buttonInteraction, theme) {
 
   const ideaInput = new TextInputBuilder()
     .setCustomId("idea_input")
-    .setLabel("Your Idea")
+    .setLabel("Neuer Beitrag:")
     .setStyle(TextInputStyle.Short)
     .setMaxLength(69)
-    .setPlaceholder("Enter a single-line idea")
+    .setPlaceholder("Dein Beitrag...")
     .setRequired(true);
 
   const modalActionRow = new ActionRowBuilder().addComponents(ideaInput);
@@ -156,63 +141,10 @@ async function sendBrainstormCanvas(client, hashRoute, interaction) {
   const uploadDir = path.join(process.cwd(), "uploads");
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
-  //const filePath = await saveCanvasScreenshot(hashRoute);
-
-  console.log("HERE FILEPATH: ", filePath);
-
   const channel = await client.channels.fetch(interaction.channelId);
   await channel.send({
-    content: `Here's the brainstorm canvas:`,
     files: [filePath],
-
-    //files: [],
   });
 }
-
-/*
-
-function saveImage(response, hashRoute) {
-  return new Promise((resolve, reject) => {
-    const uploadDir = path.join(process.cwd(), "uploads");
-    const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.jpeg`);
-
-    console.log("Paths: ", uploadDir, filePath);
-
-    // Ensure the directory exists
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    const fileStream = fs.createWriteStream(filePath);
-    response.pipe(fileStream);
-
-    fileStream.on("finish", () => resolve(filePath));
-    fileStream.on("error", (err) => reject(err));
-  });
-}
-
-async function saveCanvasScreenshot(hashRoute) {
-  try {
-    https.get(
-      "https://api.apiflash.com/v1/urltoimage?" +
-        new URLSearchParams({
-          access_key: process.env.API_FLASH_KEY,
-          url: `${process.env.URL}/${hashRoute}`,
-          element: "#canvas",
-        }).toString(),
-      async (response) => {
-        console.log("API FLASH RESPONSE: ", response);
-
-        const filePath = await saveImage(response, hashRoute);
-        return filePath;
-      }
-    );
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-}
-
-*/
 
 module.exports = { handleWebsocket, saveBrainStormData, startBrainstormEmbed, openContributionModal, addContributionToCanvas, sendBrainstormCanvas };

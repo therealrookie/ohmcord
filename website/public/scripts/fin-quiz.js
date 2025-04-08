@@ -39,7 +39,6 @@ function createQuestionElements(question) {
 }
 
 function displayQuestions() {
-  console.log("Here: ", questions);
   questions.forEach((question) => {
     createQuestionElements(question);
   });

@@ -20,11 +20,11 @@ async function startQuiz(client, interaction, quizData, questions) {
 function determineVisibility(index) {
   switch (index) {
     case 0:
-      return "No results will be published.";
+      return "Niemand ist sichtbar.";
     case 1:
-      return "Only results of places #1 - #3 will be published.";
+      return "Nur Plätze 1 - 3 sichtbar.";
     case 2:
-      return "All results will be published.";
+      return "Alle Teilnehmer sichtbar.";
   }
 }
 
@@ -33,8 +33,11 @@ async function startQuizEmbed(client, interaction, quizData, questions) {
   const startQuizEmbed = new EmbedBuilder()
     .setColor(0x1b263b)
     .setTitle(quizData.quiz_title)
-    .setDescription(`**@${interaction.user.globalName}** started a quiz.`)
-    .addFields({ name: "Questions:", value: `${questions.length}` }, { name: "Visibility:", value: determineVisibility(quizData.visibility) });
+    .setDescription(`**@${interaction.user.globalName}** hat ein Quiz gestartet.`)
+    .addFields(
+      { name: "Anzahl der Fragen:", value: `${questions.length}` },
+      { name: "Sichtbarkeit:", value: determineVisibility(quizData.visibility) }
+    );
   const startButton = new ButtonBuilder().setCustomId("quiz_question_button_0").setLabel("Start Quiz").setStyle(ButtonStyle.Success);
 
   const actionRowQuizStart = new ActionRowBuilder().addComponents(startButton);
@@ -65,8 +68,8 @@ function getQuestionStatFields(questionStatsData) {
     if (index === questionStatsData.length - 1) finished = attempts; // Sets value for finished at the last question
 
     return {
-      name: `Question ${index + 1}:`,
-      value: `**${attempts}** Attempt${attempts === 1 ? "" : "s"} - **${correct}** Correct - **${attempts - correct}** Not correct`,
+      name: `Frage ${index + 1}:`,
+      value: `**${attempts}** Versuche${attempts === 1 ? "" : "s"} - **${correct}** Richtig - **${attempts - correct}** Falsch`,
     };
   });
 
@@ -75,8 +78,8 @@ function getQuestionStatFields(questionStatsData) {
 
 // Returns a String describing how many users started and finished the quiz.
 function createStartedFinishedString(started, finished) {
-  return `**${started}** user${started === 1 ? "" : "s"} started the quiz. \n 
-      **${finished}** user${finished === 1 ? "" : "s"} finished the quiz.`;
+  return `**${started}** User ha${started === 1 ? "t" : "ben"} das Quiz gestartet. \n 
+      **${finished}** User ha${started === 1 ? "t" : "ben"} das Quiz beendet.`;
 }
 
 // Returns the complete array of fields for all the quiz stats
@@ -111,7 +114,7 @@ async function updateQuizStats(interaction, quizData, questions) {
   await interaction.editReply({ embeds: [quizStatsEmbed], components: [actionRowPublishStats], ephemeral: true });
 */
 
-  const publishButton = new ButtonBuilder().setCustomId("publish_quiz_stats").setLabel("Finish & Publish Quiz").setStyle(ButtonStyle.Danger);
+  const publishButton = new ButtonBuilder().setCustomId("publish_quiz_stats").setLabel("Quiz beenden").setStyle(ButtonStyle.Danger);
 
   const actionRowPublishStats = new ActionRowBuilder().addComponents(publishButton);
 
@@ -130,10 +133,13 @@ async function publishQuizStatsEmbed(buttonInteraction, questions, quizData) {
   const quizStatsEmbed = new EmbedBuilder()
     .setColor(0x1b263b)
     .setTitle(`${quizData.quiz_title}-Stats`)
-    .setDescription(`Final stats of your Quiz`)
+    .setDescription(`Finale Ergebnisse des Quiz`)
     .addFields(quizStats);
 
-  const personalStatsButton = new ButtonBuilder().setCustomId("see_personal_stats").setLabel("See personal stats").setStyle(ButtonStyle.Primary);
+  const personalStatsButton = new ButtonBuilder()
+    .setCustomId("see_personal_stats")
+    .setLabel("Zu den persönlichen Ergebnissen")
+    .setStyle(ButtonStyle.Primary);
 
   const actionRowPersonalStats = new ActionRowBuilder().addComponents(personalStatsButton);
 
@@ -144,21 +150,19 @@ async function publishQuizStatsEmbed(buttonInteraction, questions, quizData) {
 function getPersonalStatStrings(participantData, index, totalParticipants, totalQuestions) {
   const { minutes, seconds } = getTimeMinsAndSecs(participantData.end_time_ms - participantData.start_time_ms);
 
-  const name = `You are rank ${index + 1} of ${totalParticipants}`;
+  const name = `Du bist Platz ${index + 1} von ${totalParticipants}`;
 
-  const value = `You managed to get **${participantData.correct_answers}** answer${
-    participantData.correct_answers === 1 ? "" : "s"
-  } of **${totalQuestions}** question${totalQuestions === 1 ? "" : "s"} right. \n 
-  You finished the quiz in a total of ${minutes} minute${minutes === 1 ? "" : "s"} and ${seconds} second${seconds === 1 ? "" : "s"}`;
+  const value = `Du hast insgesamt **${participantData.correct_answers}** Frage${
+    participantData.correct_answers === 1 ? "" : "n"
+  } von **${totalQuestions}** Frage${totalQuestions === 1 ? "" : "n"} richtig beantwortet. \n 
+  Du hast das Quiz in insgesamt ${minutes} Minute${minutes === 1 ? "" : "n"} und ${seconds} Sekunde${seconds === 1 ? "" : "n"} abgeschlossen.`;
 
   return { name: name, value: value };
 }
 
 // Returns the field for the Personal rank, time and correctly answered questions
 async function getPersonalStats(discordUserId, quizId, totalQuestions) {
-  console.log("QUIZID: ", quizId);
   const rankedParticipants = await getQuizParticipantsRanking(quizId);
-  console.log("Ranked participants: ", rankedParticipants);
 
   return rankedParticipants.map((participantData, index) => {
     if (participantData.participant_discord_id === discordUserId) {
@@ -174,8 +178,8 @@ async function getRankField(client, participantData, index) {
 
   return {
     name: `#${index + 1}`,
-    value: `**${user.globalName}** ${participantData.correct_answers} correct answers \n
-     time:  ${minutes} minute${minutes === 1 ? "" : "s"} and ${seconds} second${seconds === 1 ? "" : "s"}`,
+    value: `**${user.globalName}** ${participantData.correct_answers} richtige Antworten \n
+     Zeit:  ${minutes} Minute${minutes === 1 ? "" : "n"} und ${seconds} Sekunde${seconds === 1 ? "" : "n"}`,
   };
 }
 
@@ -243,11 +247,11 @@ async function finishQuizMessage(buttonInteraction, quizData, totalQuestions) {
   const quizParticipantData = await getQuizParticipantData(quizData.quiz_id, buttonInteraction.user.id);
   const { minutes, seconds } = getTimeMinsAndSecs(quizParticipantData.end_time_ms - quizParticipantData.start_time_ms);
 
-  const text = `Congrats **@${buttonInteraction.user.globalName}**! You finished the quiz! \n
-     **${quizParticipantData.correct_answers}** correct answer${
-    quizParticipantData.correct_answers === 1 ? "" : "s"
-  } of **${totalQuestions}** question${totalQuestions === 1 ? "" : "s"}.
-    Your time: ${minutes} minute${minutes === 1 ? "" : "s"} and ${seconds} second${seconds === 1 ? "" : "s"}`;
+  const text = `Glückwunsch **@${buttonInteraction.user.globalName}**! Du hast das Quiz erfolgreich beendet! \n
+     Du hast **${quizParticipantData.correct_answers}** richtige Antwort${
+    quizParticipantData.correct_answers === 1 ? "" : "n"
+  } von **${totalQuestions}** Fragen${totalQuestions === 1 ? "" : "n"}.
+    Deine Zeit: ${minutes} Minute${minutes === 1 ? "" : "n"} und ${seconds} Sekunde${seconds === 1 ? "" : "n"}`;
   await buttonInteraction.reply({ content: text, ephemeral: true });
 }
 

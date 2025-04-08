@@ -45,7 +45,7 @@ module.exports = {
     .setName("quiz")
     .setDescription("Starte ein Quiz.")
     .addStringOption((option) =>
-      option.setName("code").setDescription("Füge hier den Code des Quiz ein, das du auf der Website erstellt hast.").setRequired(true)
+      option.setName("code").setDescription(`Füge hier den Code des Quiz ein, das du auf ${process.env.URL} erstellt hast.`).setRequired(true)
     ),
 
   async execute(interaction) {

@@ -31,12 +31,12 @@ quizRouter.get("/:url", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deines Quizzes...", url: process.env.URL });
+    res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deines Quiz...", url: process.env.URL });
   }
 });
 
 function quizVisibility(index) {
-  if (index === 0) return "Nimand ist sichtbar";
+  if (index === 0) return "Niemand ist sichtbar";
   else if (index === 1) return "Nur Plätze 1-3 sichtbar";
   else if (index === 2) return "Alle Teilnehmer sichtbar";
 }
@@ -54,19 +54,17 @@ quizRouter.get("/fin/:url", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deines Quizzes...", url: process.env.URL });
+    res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deines Quiz...", url: process.env.URL });
   }
 });
 
 quizRouter.post("/", async (req, res) => {
   try {
     const { title, visibility } = req.body;
-    console.log("QuizDATA (post: /quiz) : ", title, visibility);
 
     const hashUrl = createHashRoute(title + visibility + Date.now());
 
     const quizData = await addQuiz(title, visibility, hashUrl);
-    console.log("QuizDATA: : ", quizData);
 
     res.status(200).json({ hashUrl: quizData.url });
   } catch (error) {
@@ -75,7 +73,6 @@ quizRouter.post("/", async (req, res) => {
 });
 
 quizRouter.post("/update-settings", async (req, res) => {
-  console.log("Router BODY: ", req.body);
   try {
     await updateQuizSettings(req.body);
   } catch (error) {
@@ -99,10 +96,7 @@ quizRouter.post("/save-answers", async (req, res) => {
   try {
     const { answers, quizQuestionId } = req.body;
 
-    console.log("SAVE QUESTION: ", req.body);
-
     const result = await addQuizAnswers(quizQuestionId, answers);
-    console.log("QuizDATA: : ", result);
 
     res.status(200);
   } catch (error) {
@@ -126,10 +120,7 @@ quizRouter.put("/update-question", async (req, res) => {
   try {
     const { questionId, question } = req.body;
 
-    console.log("UPDATE QUESTION: ", questionId, question);
-
     const result = await updateQuizQuestion(questionId, question);
-    console.log("QuizDATA: ", result);
 
     res.status(200).send("Question updated sucessfully.");
   } catch (error) {
@@ -142,10 +133,7 @@ quizRouter.put("/update-answers", async (req, res) => {
   try {
     const { questionId, answers, checkboxes } = req.body;
 
-    console.log("UPDATE ANSWER: ", req.body);
-
     const result = await updateQuizAnswers(questionId, answers, checkboxes);
-    console.log("AnswerDATA: : ", result);
 
     res.status(200).send("Answers updated sucessfully.");
   } catch (error) {

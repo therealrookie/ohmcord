@@ -35,7 +35,7 @@ module.exports = {
     .setName("poll")
     .setDescription("Starte eine Umfrage.")
     .addStringOption((option) =>
-      option.setName("code").setDescription("Füge hier den Code der Umfrage ein, die du auf ohmcord.com/poll erstellt hast.").setRequired(true)
+      option.setName("code").setDescription(`Füge hier den Code der Umfrage ein, die du auf ${process.env.URL}/poll erstellt hast.`).setRequired(true)
     ),
   async execute(interaction) {
     await handlePoll(interaction);

@@ -2,8 +2,6 @@ const { Client, Collection, Events, GatewayIntentBits, IntentsBitField } = requi
 const fs = require("node:fs");
 const path = require("node:path");
 
-//const eventHandler = require("./handlers/eventHandler");
-
 require("dotenv").config();
 
 function startBot() {
@@ -28,7 +26,6 @@ function startBot() {
     for (const file of commandFiles) {
       const filePath = path.join(commandsPath, file);
       const command = require(filePath);
-      // Set a new item in the Collection with the key as the command name and the value as the exported module
 
       if ("data" in command && "execute" in command) {
         client.commands.set(command.data.name, command);
@@ -41,8 +38,6 @@ function startBot() {
   client.once(Events.ClientReady, (readyClient) => {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
   });
-
-  //eventHandler(client);
 
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
@@ -58,11 +53,6 @@ function startBot() {
       await command.execute(interaction);
     } catch (error) {
       console.error(error);
-      if (interaction.replied || interaction.deferred) {
-        //await interaction.followUp({ content: "There was an error while executing this command!", flags: MessageFlags.Ephemeral });
-      } else {
-        //await interaction.reply({ content: "There was an error while executing this command!", flags: MessageFlags.Ephemeral });
-      }
     }
   });
 

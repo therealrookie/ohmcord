@@ -2,11 +2,6 @@ const express = require("express");
 const questionRouter = express.Router();
 const { getQuestionSession, getAnonymousQuestions, getAnonymousAnswers } = require("../../database/dbAnonymousQuestionFunctions");
 
-/*
-const { WebSocket } = require("ws");
-const ws = new WebSocket(`${process.env.WS_URL}`);
-*/
-
 questionRouter.get("/:url", async (req, res) => {
   try {
     const questionSession = await getQuestionSession(req.params.url);
@@ -45,32 +40,5 @@ questionRouter.get("/get-answers/:id", async (req, res) => {
 questionRouter.param("url", async (req, res, next, url) => {
   next();
 });
-
-/*
-async function handleQuestionMessage(message, ws, wss) {
-  console.log("MESSAGE: ", message);
-  const { questionSessionId, question, question_id } = message;
-
-  // Broadcast the new question to all connected clients
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify({ type: "new-question", data: { questionSessionId, question, question_id } }));
-    }
-  });
-}
-
-async function handleAnswerMessage(message, ws, wss) {
-  console.log("MESSAGE: ", message);
-  const { answer_id, question_id, answer } = message;
-
-  // Broadcast the new question to all connected clients
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify({ type: "new-answer", data: { answer_id, question_id, answer } }));
-    }
-  });
-}
-
-*/
 
 module.exports = { questionRouter };

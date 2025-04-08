@@ -133,7 +133,7 @@ module.exports = {
       option.setName("theme").setDescription("Bestimme ein Thema der Brainstorm-Session.").setRequired(true).setMaxLength(100)
     )
     .addIntegerOption((option) =>
-      option.setName("time_limit").setDescription("Zeitlimit für die Brainstorm-Session").setRequired(true).setMaxValue(999)
+      option.setName("time_limit").setDescription("Zeitlimit für die Brainstorm-Session in Minuten").setRequired(true).setMaxValue(999)
     ),
   async execute(interaction) {
     await handleBrainstormCommand(interaction);

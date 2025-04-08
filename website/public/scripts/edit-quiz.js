@@ -113,7 +113,6 @@ function createAnswerContainer(answerIndex, answerId) {
   newDeleteAnswerButton.innerHTML = "&#10006;";
   newDeleteAnswerButton.classList.add("delete-answer-button");
   newDeleteAnswerButton.onclick = async (event) => {
-    console.log("HERE");
     newAnswerContainer.remove();
     await deleteAnswer(answerId);
     updateAddAnswerButton();
@@ -236,7 +235,7 @@ function checkForValidQuiz() {
     }
 
     if (!hasCorrectAnswer) {
-      showToast("Jede Frage muss mindestens eine richtige Antwort haben");
+      showToast("Jede Frage muss eine richtige Antwort haben");
       isValid = false;
     }
   }
@@ -249,11 +248,8 @@ async function saveAndFinish() {
   const validQuiz = checkForValidQuiz();
 
   if (validQuiz) {
-    console.log("Quiz is valid!");
     window.location.href = `/quiz/fin/${quizHashUrl}`;
   }
-
-  console.log(questions);
 }
 
 async function nextQuestion() {
