@@ -98,7 +98,7 @@ async function editQuestionEmbed(client, interaction, parsedMessage) {
   const answerText = createAnswerField(answers);
 
   const updatedQuestionEmbed = new EmbedBuilder().setColor(0xf39237).setTitle(question).addFields({
-    //name: "Answers",
+    name: "Answers",
     value: answerText,
   });
 
