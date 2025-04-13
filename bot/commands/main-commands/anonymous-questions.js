@@ -15,8 +15,6 @@ const {
 } = require("../command-handlers/anonymous_questions/handleAnonymousQuestions");
 
 async function handleAnonymousQuestions(interaction) {
-  await interaction.deferReply(); // Delay reply
-
   const client = interaction.client;
 
   // Get / store important data for an anonymous-question-session
@@ -69,6 +67,8 @@ module.exports = {
     .setDescription("Starte eine anonyme Frage-Runde.")
     .addStringOption((option) => option.setName("topic").setDescription("Bestimme ein Thema der Anonymen-Frage-Runde.").setRequired(true)),
   async execute(interaction) {
+    await interaction.deferReply(); // Delay reply
+
     await handleAnonymousQuestions(interaction);
   },
 };
