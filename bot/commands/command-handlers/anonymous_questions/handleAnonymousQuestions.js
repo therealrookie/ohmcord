@@ -140,6 +140,8 @@ async function sendAnswer(ws, modalInteraction, questionSessionId) {
 
 // Open a question-modal for the user to enter a question
 async function openNewQuestionModal(buttonInteraction, topic) {
+  await buttonInteraction.deferUpdate();
+
   const questionSessionId = parseInt(buttonInteraction.customId.replace("question_button_", ""));
 
   const modal = new ModalBuilder()
@@ -161,6 +163,8 @@ async function openNewQuestionModal(buttonInteraction, topic) {
 
 // Open an answer-modal for the user to enter an answer
 async function openNewAnswerModal(buttonInteraction) {
+  await buttonInteraction.deferUpdate();
+
   const questionId = parseInt(buttonInteraction.customId.replace("answer_button_", ""));
   const question = await getQuestionById(questionId);
 
