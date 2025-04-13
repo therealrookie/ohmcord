@@ -21,8 +21,6 @@ async function handleBrainstormCommand(interaction) {
 
   const client = interaction.client;
 
-  console.log("WebSocket URL: ", process.env.WS_URL);
-
   let imageSent = false; // Flag to indicate if the canvas has already been sent to the channel
   const contributions = []; // Store all the contributions in a temporary array
 

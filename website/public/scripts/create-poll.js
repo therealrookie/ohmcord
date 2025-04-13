@@ -31,6 +31,12 @@ function openEmojiMenu(emojiContainer) {
 }
 
 function addAnswer(text, emoji) {
+  const addAnswerContainers = document.getElementsByClassName("answer-container");
+
+  const answerContainerArray = Array.from(addAnswerContainers);
+
+  if (answerContainerArray.length >= 10) return;
+
   const answerIndex = questionForm.children.length - 1;
 
   updateAddAnswerButton();
@@ -124,7 +130,6 @@ async function createPoll() {
 }
 
 async function savePoll(question, answers) {
-  console.log("HERE: ", question, answers);
   try {
     const response = await fetch("/poll/save-poll/", {
       method: "POST",

@@ -249,8 +249,8 @@ async function finishQuizMessage(buttonInteraction, quizData, totalQuestions) {
 
   const text = `Glückwunsch **@${buttonInteraction.user.globalName}**! Du hast das Quiz erfolgreich beendet! \n
      Du hast **${quizParticipantData.correct_answers}** richtige Antwort${
-    quizParticipantData.correct_answers === 1 ? "" : "n"
-  } von **${totalQuestions}** Fragen${totalQuestions === 1 ? "" : "n"}.
+    quizParticipantData.correct_answers === 1 ? "" : "en"
+  } von **${totalQuestions}** Frage${totalQuestions === 1 ? "" : "n"}. \n
     Deine Zeit: ${minutes} Minute${minutes === 1 ? "" : "n"} und ${seconds} Sekunde${seconds === 1 ? "" : "n"}`;
   await buttonInteraction.reply({ content: text, ephemeral: true });
 }

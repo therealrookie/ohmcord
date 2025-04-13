@@ -8,8 +8,6 @@ async function handlePoll(interaction) {
   const pollData = await getPollByHashRoute(interaction.options.get("code").value);
   const answersData = await getPollAnswers(pollData.poll_id);
 
-  console.log("POLL: ", pollData, answersData);
-
   function getEmoji(code) {
     if (code === "") return "";
     else if (code.includes(",")) return String.fromCodePoint(code.split(",")[0], code.split(",")[1]);

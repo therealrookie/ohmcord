@@ -83,7 +83,9 @@ async function sendAdditionalMessage(contributions, interaction, brainstormData)
 
     if (i === 0) {
       await interaction.editReply({
-        content: `**Thema:** ** ** *${theme}* \n **Zeitlimit:** ** ** *${timeLimit / 60000} Minute${timeLimit > 1 ? "n" : ""}* \n`,
+        content: `**Thema:** ** ** *${theme}* \n **Zeitlimit:** ** ** *${timeLimit / 60000} Minute${
+          timeLimit > 1 ? "n" : ""
+        }* \n **Bewerten:** 1.Klick +1, 2.Klick 0, 3.Klick -1`,
         components: messageActionRows,
       });
     } else if (messages[messageIndex]) {
