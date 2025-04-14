@@ -92,6 +92,14 @@ async function createQuestionEmbed(client, interaction, parsedMessage) {
   const channel = await client.channels.fetch(interaction.channelId);
   const questionDiscordMessage = await channel.send({ embeds: [questionEmbed], components: [actionRow] });
   await addQuestionMessageId(questionId, questionDiscordMessage.id);
+
+  const collector = questionDiscordMessage.createMessageComponentCollector({
+    componentType: ComponentType.Button,
+  });
+
+  collector.on("collect", async (interaction) => {
+    await openNewAnswerModal(interaction);
+  });
 }
 
 function createAnswerField(answers) {
