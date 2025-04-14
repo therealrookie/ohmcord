@@ -14,9 +14,9 @@ function setupWSS(server) {
     console.log("New WebSocket connection established.", path);
 
     if (path === "/brainstorm") {
-      handleBrainstormConnection(ws);
+      handleBrainstormConnection(ws, wss);
     } else if (path === "/questions") {
-      handleQuestionsConnection(ws);
+      handleQuestionsConnection(ws, wss);
     } else {
       ws.close(4000, "Invalid WebSocket route");
     }
@@ -26,7 +26,21 @@ function setupWSS(server) {
   });
 }
 
-async function handleBrainstormMessage(data) {
+function handleBrainstormConnection(ws, wss) {
+  ws.on("message", async (message) => {
+    const data = JSON.parse(message);
+    await handleBrainstormMessage(data, wss);
+  });
+}
+
+function handleQuestionsConnection(ws, wss) {
+  ws.on("message", async (message) => {
+    const data = JSON.parse(message);
+    await handleQuestionMessage(data, wss);
+  });
+}
+
+async function handleBrainstormMessage(data, wss) {
   if (!data.source.includes("server")) {
     data.source = `server-${data.source}`; // server-discord or server-website
 
@@ -42,8 +56,28 @@ async function handleBrainstormMessage(data) {
       }
     }
 
-    wsAnswer(data);
+    wsAnswer(data, wss);
   }
+}
+
+async function handleQuestionMessage(data, wss) {
+  if (!data.source?.startsWith("server")) {
+    data.source = `server-${data.source}`; // server-discord or server-website
+    console.log("DATA: ", data);
+    if (data.type === "question") {
+      questionId = await addAnonymousQuestion(data.questionSessionId, data.question);
+      data.questionId = questionId;
+    }
+    wsAnswer(data, wss);
+  }
+}
+
+function wsAnswer(message, wss) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  });
 }
 
 async function getImageUrl(hashRoute) {
@@ -86,40 +120,6 @@ async function getImageUrl(hashRoute) {
         console.error("❌ HTTPS Request failed:", err.message);
         reject(err);
       });
-  });
-}
-
-function handleBrainstormConnection(ws) {
-  ws.on("message", async (message) => {
-    const data = JSON.parse(message);
-    await handleBrainstormMessage(data);
-  });
-}
-
-async function handleQuestionMessage(data) {
-  if (!data.source?.startsWith("server")) {
-    data.source = `server-${data.source}`; // server-discord or server-website
-    console.log("DATA: ", data);
-    if (data.type === "question") {
-      questionId = await addAnonymousQuestion(data.questionSessionId, data.question);
-      data.questionId = questionId;
-    }
-    wsAnswer(data);
-  }
-}
-
-function handleQuestionsConnection(ws) {
-  ws.on("message", async (message) => {
-    const data = JSON.parse(message);
-    await handleQuestionMessage(data);
-  });
-}
-
-function wsAnswer(message) {
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify(message));
-    }
   });
 }
 
