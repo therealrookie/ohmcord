@@ -2,6 +2,7 @@ const { brainstormRouter } = require("./routes/brainstorm");
 const { questionRouter } = require("./routes/anonymous-questions");
 const { quizRouter } = require("./routes/quiz");
 const { pollRouter } = require("./routes/poll");
+const { setupWSS } = require("./websockets");
 
 const PORT = process.env.PORT || 3000;
 
