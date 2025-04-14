@@ -6,7 +6,7 @@ const fs = require("fs");
 
 const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
 
-async function setupWSS(server) {
+function setupWSS(server) {
   var wss = new WebSocket.Server({ server });
 
   wss.on("connection", (ws, req) => {

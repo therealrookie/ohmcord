@@ -14,7 +14,7 @@ var app = express();
 app.use(express.json());
 var server = http.createServer(app);
 
-await setupWSS(server);
+setupWSS(server);
 
 function startServer() {
   // Set EJS as the templating engine

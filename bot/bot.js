@@ -14,9 +14,13 @@ function startBot(client) {
   });
 
   client.on(Events.InteractionCreate, async (interaction) => {
+    /*
     if (interaction.isChatInputCommand()) {
       await handleCommandInteraction(interaction);
-    } else if (interaction.isModalSubmit()) {
+    } else 
+    */
+
+    if (interaction.isModalSubmit()) {
       await handleModalInteraction(interaction);
     } else return;
   });
