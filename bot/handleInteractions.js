@@ -1,4 +1,6 @@
-async function handleModalInteraction(interaction) {}
+async function handleModalInteraction(interaction) {
+  //
+}
 
 async function handleCommandInteraction(interaction) {
   const command = interaction.client.commands.get(interaction.commandName);
