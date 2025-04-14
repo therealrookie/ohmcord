@@ -4,7 +4,8 @@ const path = require("node:path");
 
 require("dotenv").config();
 
-function startBot() {
+function startBot(client) {
+  /*
   const client = new Client({
     intents: [
       IntentsBitField.Flags.Guilds,
@@ -14,6 +15,7 @@ function startBot() {
       GatewayIntentBits.Guilds,
     ],
   });
+  */
 
   client.commands = new Collection();
 
@@ -39,7 +41,15 @@ function startBot() {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
   });
 
+  async function handleModalInteraction(interaction) {}
+
   client.on(Events.InteractionCreate, async (interaction) => {
+    /*
+    if (interaction.isModalSubmit()) {
+      await handleModalInteraction(interaction);
+    }
+      */
+
     if (!interaction.isChatInputCommand()) return;
 
     const command = interaction.client.commands.get(interaction.commandName);
@@ -56,7 +66,7 @@ function startBot() {
     }
   });
 
-  client.login(process.env.TOKEN);
+  //client.login(process.env.TOKEN);
 }
 
 module.exports = { startBot };

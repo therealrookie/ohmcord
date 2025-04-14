@@ -1,4 +1,5 @@
 /*
+// Connection for local connection
 const Pool = require("pg").Pool;
 
 const pgpool = new Pool({
@@ -13,6 +14,8 @@ const pgpool = new Pool({
 module.exports = pgpool;
 
 */
+
+// Connection for render.com connection
 const { Pool } = require("pg");
 
 const pgpool = new Pool({

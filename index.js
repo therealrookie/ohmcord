@@ -1,8 +1,16 @@
 const { startBot } = require("./bot/bot");
 const { startServer } = require("./website/server");
 
+const { Client, GatewayIntentBits, IntentsBitField } = require("discord.js");
+
+const discordClient = new Client({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers],
+});
+
+discordClient.login(process.env.TOKEN);
+
 // Start Discord bot
-startBot();
+startBot(discordClient);
 
 // Start web server
-startServer();
+startServer(discordClient);
