@@ -1,5 +1,5 @@
 const { startBot } = require("./bot/bot");
-const { startServer } = require("./website/server");
+const { startServer } = require("./server/server");
 
 const { Client, GatewayIntentBits, IntentsBitField } = require("discord.js");
 

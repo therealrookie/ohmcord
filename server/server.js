@@ -139,10 +139,10 @@ wss.on("connection", (ws, req) => {
 function startServer() {
   // Set EJS as the templating engine
   app.set("view engine", "ejs");
-  app.set("views", path.join(__dirname, "/views")); // Set views folder
+  app.set("views", path.join(process.cwd(), "/website/views")); // Set views folder
 
   // Serve static files (CSS, JS, images, etc.)
-  app.use(express.static(path.join(__dirname, "public")));
+  app.use(express.static(path.join(process.cwd(), "/website/public")));
 
   // Route to render index.ejs
   app.get("/", (req, res) => {
