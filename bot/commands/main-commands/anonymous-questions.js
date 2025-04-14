@@ -42,16 +42,6 @@ async function handleAnonymousQuestions(interaction) {
     }
   });
 
-  // Handle button interactions opening modals for a new question or answer
-  client.on("interactionCreate", async (buttonInteraction) => {
-    if (!buttonInteraction.isButton()) return;
-    if (buttonInteraction.customId.includes("question_button_") && !buttonInteraction.customId.includes("quiz")) {
-      //await openNewQuestionModal(buttonInteraction, topic);
-    } else if (buttonInteraction.customId.includes("answer_button_")) {
-      await openNewAnswerModal(buttonInteraction);
-    } else return;
-  });
-
   // Handle modal submissions for new questions and answers
   client.on("interactionCreate", async (modalInteraction) => {
     if (!modalInteraction.isModalSubmit()) return;
@@ -72,3 +62,15 @@ module.exports = {
     await handleAnonymousQuestions(interaction);
   },
 };
+
+/*
+  // Handle button interactions opening modals for a new question or answer
+  client.on("interactionCreate", async (buttonInteraction) => {
+    if (!buttonInteraction.isButton()) return;
+    if (buttonInteraction.customId.includes("question_button_") && !buttonInteraction.customId.includes("quiz")) {
+      //await openNewQuestionModal(buttonInteraction, topic);
+    } else if (buttonInteraction.customId.includes("answer_button_")) {
+      //await openNewAnswerModal(buttonInteraction);
+    } else return;
+  });
+  */
