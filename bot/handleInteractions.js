@@ -15,4 +15,4 @@ async function handleCommandInteraction(interaction) {
   }
 }
 
-module.exports = { handleModalInteraction };
+module.exports = { handleModalInteraction, handleCommandInteraction };

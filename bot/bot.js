@@ -1,7 +1,7 @@
 const { Client, Collection, Events, GatewayIntentBits, IntentsBitField } = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
-const { handleModalInteraction, handleCommandInteraction } = require("handleInteractions.js");
+const { handleModalInteraction, handleCommandInteraction } = require("./handleInteractions");
 
 require("dotenv").config();
 
