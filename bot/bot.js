@@ -1,6 +1,7 @@
 const { Client, Collection, Events, GatewayIntentBits, IntentsBitField } = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
+const { handleModalInteraction, handleCommandInteraction } = require("handleInteractions.js");
 
 require("dotenv").config();
 
@@ -41,28 +42,13 @@ function startBot(client) {
     console.log(`Ready! Logged in as ${readyClient.user.tag}`);
   });
 
-  async function handleModalInteraction(interaction) {}
-
   client.on(Events.InteractionCreate, async (interaction) => {
-    /*
     if (interaction.isModalSubmit()) {
       await handleModalInteraction(interaction);
     }
-      */
 
-    if (!interaction.isChatInputCommand()) return;
-
-    const command = interaction.client.commands.get(interaction.commandName);
-
-    if (!command) {
-      console.error(`No command matching ${interaction.commandName} was found.`);
-      return;
-    }
-
-    try {
-      await command.execute(interaction);
-    } catch (error) {
-      console.error(error);
+    if (interaction.isChatInputCommand()) {
+      await handleCommandInteraction(interaction);
     }
   });
 
