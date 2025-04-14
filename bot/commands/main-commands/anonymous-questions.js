@@ -46,7 +46,7 @@ async function handleAnonymousQuestions(interaction) {
   client.on("interactionCreate", async (buttonInteraction) => {
     if (!buttonInteraction.isButton()) return;
     if (buttonInteraction.customId.includes("question_button_") && !buttonInteraction.customId.includes("quiz")) {
-      await openNewQuestionModal(buttonInteraction, topic);
+      //await openNewQuestionModal(buttonInteraction, topic);
     } else if (buttonInteraction.customId.includes("answer_button_")) {
       await openNewAnswerModal(buttonInteraction);
     } else return;

@@ -1,4 +1,13 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
+const {
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  ComponentType,
+} = require("discord.js");
 
 const {
   addQuestionSession,
@@ -56,7 +65,15 @@ async function sendAddQuestionEmbed(interaction, questionSessionData) {
   const actionRow = new ActionRowBuilder().addComponents(questionButton).addComponents(linkButton);
 
   // [questionSessionEmbed]
-  await interaction.editReply({ content: topic, components: [actionRow] });
+  const reply = await interaction.editReply({ content: topic, components: [actionRow] });
+
+  const collector = reply.createMessageComponentCollector({
+    componentType: ComponentType.Button,
+  });
+
+  collector.on("collect", async (interaction) => {
+    await openNewQuestionModal(interaction, topic);
+  });
 }
 
 // Create an embed for an asked question
@@ -98,7 +115,7 @@ async function editQuestionEmbed(client, interaction, parsedMessage) {
   const answerText = createAnswerField(answers);
 
   const updatedQuestionEmbed = new EmbedBuilder().setColor(0xf39237).setTitle(question).addFields({
-    name: "__________________________________",
+    name: "_ _ _ _ _ _ _ _ _ _ _",
     value: answerText,
   });
 
