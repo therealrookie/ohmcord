@@ -16,9 +16,9 @@ const {
   getQuestionMessageId,
   getQuestionById,
   addAnonymousAnswer,
-} = require("../../../database/dbAnonymousQuestionFunctions");
+} = require("../../database/dbAnonymousQuestionFunctions");
 
-const { createHashRoute } = require("../../utils/utils-functions");
+const { createHashRoute } = require("../utils/utils-functions");
 
 // Gets and saves important question-session-data
 async function saveQuestionSessionData(interaction) {

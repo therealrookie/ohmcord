@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 
-const { getQuizByHashUrl, getAllQuizQuestions } = require("../../../database/dbQuizFunctions");
+const { getQuizByHashUrl, getAllQuizQuestions } = require("../../database/dbQuizFunctions");
 const { startQuiz, publishQuizStatsEmbed, sendPersonalStatsEmbed, finishQuizMessage } = require("../command-utils/handleStartAndFinish");
 const { sendNextQuestionEmbed, checkAnswerMessage } = require("../command-utils/handleQuestionsAndAnswers");
 

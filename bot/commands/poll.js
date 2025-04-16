@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 
-const { getPollByHashRoute, getPollAnswers } = require("../../../database/dbPollFunctions");
+const { getPollByHashRoute, getPollAnswers } = require("../../database/dbPollFunctions");
 
 async function handlePoll(interaction) {
   await interaction.deferReply(); // Delays reply
