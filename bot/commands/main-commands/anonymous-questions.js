@@ -5,32 +5,30 @@ const { WebSocket } = require("ws");
 const {
   saveQuestionSessionData,
   handleWebsocket,
-  sendAddQuestionEmbed,
+  sendAddQuestionMessage,
   createQuestionEmbed,
   editQuestionEmbed,
   sendQuestion,
   sendAnswer,
-  openNewQuestionModal,
-  openNewAnswerModal,
-} = require("../command-handlers/anonymous_questions/handleAnonymousQuestions");
+} = require("../command-utils/handleAnonymousQuestions");
 
 async function handleAnonymousQuestions(interaction) {
-  await interaction.deferReply(); // Delay reply
+  await interaction.deferReply(); // Delays reply
 
   const client = interaction.client;
 
-  // Get / store important data for an anonymous-question-session
+  // Gets / stores important data for an anonymous-question-session
   const questionSessionData = await saveQuestionSessionData(interaction);
   const { topic, hashRoute, questionSessionId } = questionSessionData;
 
-  // Open a new websocket to send and listen to messages from the website
+  // Opens a new websocket to send and listen to messages from the website
   const ws = new WebSocket(`${process.env.WS_URL}/questions`);
   await handleWebsocket(ws, topic);
 
-  // Send an embed with a button for the user to ask a question
-  await sendAddQuestionEmbed(interaction, questionSessionData);
+  // Sends the initial message with a button for the user to ask a question
+  await sendAddQuestionMessage(interaction, questionSessionData);
 
-  // Listen on ws-messages coming from the website
+  // Listens on ws-messages coming from the website
   ws.on("message", async (message) => {
     const parsedMessage = JSON.parse(message);
     const validQuestionSession = parseInt(parsedMessage.questionSessionId) === parseInt(questionSessionId);
@@ -42,7 +40,7 @@ async function handleAnonymousQuestions(interaction) {
     }
   });
 
-  // Handle modal submissions for new questions and answers
+  // Handles modal submissions for new questions and answers
   client.on("interactionCreate", async (modalInteraction) => {
     if (!modalInteraction.isModalSubmit()) return;
     if (modalInteraction.customId.includes("questions_modal_")) {
@@ -53,6 +51,7 @@ async function handleAnonymousQuestions(interaction) {
   });
 }
 
+// Exports the anonymous-question-command Object
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("anonymous-question")
@@ -62,15 +61,3 @@ module.exports = {
     await handleAnonymousQuestions(interaction);
   },
 };
-
-/*
-  // Handle button interactions opening modals for a new question or answer
-  client.on("interactionCreate", async (buttonInteraction) => {
-    if (!buttonInteraction.isButton()) return;
-    if (buttonInteraction.customId.includes("question_button_") && !buttonInteraction.customId.includes("quiz")) {
-      //await openNewQuestionModal(buttonInteraction, topic);
-    } else if (buttonInteraction.customId.includes("answer_button_")) {
-      //await openNewAnswerModal(buttonInteraction);
-    } else return;
-  });
-  */

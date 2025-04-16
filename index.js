@@ -1,8 +1,10 @@
+require("dotenv").config();
 const { startBot } = require("./bot/bot");
 const { startServer } = require("./server/server");
 
-const { Client, GatewayIntentBits, IntentsBitField } = require("discord.js");
+const { Client, GatewayIntentBits } = require("discord.js");
 
+// Instanciate Discord Client
 const discordClient = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers],
 });

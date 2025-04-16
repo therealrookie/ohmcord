@@ -1,10 +1,10 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 
-const { addBrainstorm, addBrainstormMessage, getBrainstormMessages } = require("../../../../database/dbBrainstormFunctions");
-const { createHashRoute } = require("../../../utils/utilsFunctions");
+const { addBrainstorm, addBrainstormMessage, getBrainstormMessages } = require("../../../database/dbBrainstormFunctions");
+const { createHashRoute } = require("../../utils/utils-functions");
 const path = require("path");
 
-// Extract important brainstorm-data, save it to the database
+// Extracts important brainstorm-data and saves it to the database
 async function saveBrainStormData(interaction) {
   const theme = interaction.options.get("theme").value;
   const timeLimit = interaction.options.get("time_limit").value * 60000;
@@ -15,7 +15,7 @@ async function saveBrainStormData(interaction) {
   return { brainstormId, theme, timeLimit, hashRoute };
 }
 
-// Check if the Websocket connection is established
+// Checks if the Websocket connection is established
 async function handleWebsocket(ws, theme) {
   ws.on("open", () => {
     console.log(`WebSocket connection established (brainstorm: ${theme})`);
@@ -30,6 +30,7 @@ async function handleWebsocket(ws, theme) {
   });
 }
 
+// Exports Actionrow with "+"-Button and Canvas-Link-Button
 function createLastRow(hashRoute) {
   const contributeButton = new ButtonBuilder().setCustomId("contribute_button").setLabel("+").setStyle(ButtonStyle.Success);
   const linkButton = new ButtonBuilder()
@@ -41,6 +42,7 @@ function createLastRow(hashRoute) {
   return actionRow;
 }
 
+// Creates Actionrows filled with buttons for each contribution
 function createContributionActionRows(contributions, hashRoute) {
   let actionRows = [];
 
@@ -65,9 +67,15 @@ function createContributionActionRows(contributions, hashRoute) {
   return actionRows;
 }
 
-//await channel.send({ embeds: [startQuizEmbed], components: [actionRowQuizStart] });
+// Returns the String of the brainstorm message
+function createBsMessage(theme, timeLimit) {
+  return `**Thema:** ** ** *${theme}* \n **Zeitlimit:** ** ** *${timeLimit / 60000} Minute${
+    timeLimit > 1 ? "n" : ""
+  }* \n **Bewerten:** 1.Klick +1, 2.Klick 0, 3.Klick -1`;
+}
 
-async function sendAdditionalMessage(contributions, interaction, brainstormData) {
+// Sends messages for all contributions
+async function startBrainstormMessage(interaction, brainstormData, contributions) {
   const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
   const actionRows = createContributionActionRows(contributions, hashRoute);
 
@@ -82,10 +90,9 @@ async function sendAdditionalMessage(contributions, interaction, brainstormData)
     const channel = await interaction.client.channels.fetch(interaction.channelId);
 
     if (i === 0) {
+      const message = createBsMessage(theme, timeLimit);
       await interaction.editReply({
-        content: `**Thema:** ** ** *${theme}* \n **Zeitlimit:** ** ** *${timeLimit / 60000} Minute${
-          timeLimit > 1 ? "n" : ""
-        }* \n **Bewerten:** 1.Klick +1, 2.Klick 0, 3.Klick -1`,
+        content: message,
         components: messageActionRows,
       });
     } else if (messages[messageIndex]) {
@@ -100,14 +107,7 @@ async function sendAdditionalMessage(contributions, interaction, brainstormData)
   }
 }
 
-// Create and send the brainstorm- embed to the channel with general information, listed contributions & contribution-button
-async function startBrainstormEmbed(interaction, brainstormData, contributions) {
-  const { brainstormId, theme, timeLimit, hashRoute } = brainstormData;
-
-  await sendAdditionalMessage(contributions, interaction, brainstormData);
-}
-
-// Create and open the contribution-modal
+// Opens the contribution-modal
 async function openContributionModal(buttonInteraction, theme) {
   const modal = new ModalBuilder().setCustomId("brainstorm_modal").setTitle(`Brainstorm: ${theme.length > 33 ? theme.slice(0, 30) + "..." : theme}`);
 
@@ -125,7 +125,7 @@ async function openContributionModal(buttonInteraction, theme) {
   await buttonInteraction.showModal(modal);
 }
 
-// Send a ws-message to the website to add it to the canvas
+// Sends a ws-message to the website to add it to the canvas
 async function addContributionToCanvas(ws, contributionId, brainstormId, userIdea) {
   ws.send(
     JSON.stringify({
@@ -138,7 +138,7 @@ async function addContributionToCanvas(ws, contributionId, brainstormId, userIde
   );
 }
 
-// Send the canvas-image to the channel
+// Sends the canvas-image to the channel
 async function sendBrainstormCanvas(client, hashRoute, interaction) {
   const uploadDir = path.join(process.cwd(), "uploads");
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
@@ -149,4 +149,11 @@ async function sendBrainstormCanvas(client, hashRoute, interaction) {
   });
 }
 
-module.exports = { handleWebsocket, saveBrainStormData, startBrainstormEmbed, openContributionModal, addContributionToCanvas, sendBrainstormCanvas };
+module.exports = {
+  handleWebsocket,
+  saveBrainStormData,
+  startBrainstormMessage,
+  openContributionModal,
+  addContributionToCanvas,
+  sendBrainstormCanvas,
+};

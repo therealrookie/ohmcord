@@ -1,14 +1,16 @@
 const pgpool = require("./db");
 
-async function addQuestionSession(topic, hashUrl) {
+// Adds topic, hashRoute into question_sessions
+async function addQuestionSession(topic, hashRoute) {
   try {
-    const questionSession = await pgpool.query("INSERT INTO public.question_sessions (topic, url) VALUES($1, $2) RETURNING *", [topic, hashUrl]);
+    const questionSession = await pgpool.query("INSERT INTO public.question_sessions (topic, url) VALUES($1, $2) RETURNING *", [topic, hashRoute]);
     return questionSession.rows[0].question_session_id;
   } catch (err) {
     return err.message;
   }
 }
 
+// Adds questions into question_contributions
 async function addAnonymousQuestion(id, question) {
   try {
     const newQuestion = await pgpool.query("INSERT INTO public.question_contributions (question_session_id, question) VALUES($1, $2) RETURNING *", [
@@ -21,6 +23,7 @@ async function addAnonymousQuestion(id, question) {
   }
 }
 
+// Adds Discord Message ID to existing question entry
 async function addQuestionMessageId(questionId, discordMessageId) {
   try {
     const question = await pgpool.query("UPDATE public.question_contributions SET discord_message_id = $1 WHERE question_id = $2 RETURNING *", [
@@ -33,6 +36,7 @@ async function addQuestionMessageId(questionId, discordMessageId) {
   }
 }
 
+// Returns the Discord Message ID by the questionId
 async function getQuestionMessageId(questionId) {
   try {
     const questionMessageId = await pgpool.query("SELECT discord_message_id FROM public.question_contributions WHERE question_id = $1", [questionId]);
@@ -43,6 +47,7 @@ async function getQuestionMessageId(questionId) {
   }
 }
 
+// Returns the question (String) by its questionId
 async function getQuestionById(questionId) {
   try {
     const question = await pgpool.query("SELECT question FROM public.question_contributions WHERE question_id = $1", [questionId]);
@@ -53,18 +58,20 @@ async function getQuestionById(questionId) {
   }
 }
 
-async function getQuestionSession(hashUrl) {
+// Returns all question session data by its hashRoute
+async function getQuestionSession(hashRoute) {
   try {
-    const questionSession = await pgpool.query("SELECT * FROM public.question_sessions WHERE url = $1", [hashUrl]);
+    const questionSession = await pgpool.query("SELECT * FROM public.question_sessions WHERE url = $1", [hashRoute]);
     return questionSession.rows[0];
   } catch (err) {
     throw new Error("Failed to fetch question_sessions data");
   }
 }
 
-async function getAnonymousQuestions(id) {
+// Returns data of all questions of a question session by its ID
+async function getAnonymousQuestions(questionSessionId) {
   try {
-    const questions = await pgpool.query("SELECT * FROM public.question_contributions WHERE question_session_id = $1", [id]);
+    const questions = await pgpool.query("SELECT * FROM public.question_contributions WHERE question_session_id = $1", [questionSessionId]);
     return questions.rows;
   } catch (error) {
     console.log(error);
@@ -72,6 +79,7 @@ async function getAnonymousQuestions(id) {
   }
 }
 
+// Adds an answer to a question
 async function addAnonymousAnswer(questionId, answer) {
   try {
     const newAnswer = await pgpool.query("INSERT INTO public.question_answers (question_id, answer) VALUES($1, $2) RETURNING *", [
@@ -84,6 +92,7 @@ async function addAnonymousAnswer(questionId, answer) {
   }
 }
 
+// Gets all answers of a question by its ID
 async function getAnonymousAnswers(questionId) {
   try {
     const questions = await pgpool.query("SELECT * FROM public.question_answers WHERE question_id = $1", [questionId]);

@@ -16,7 +16,7 @@ const {
   deleteQuestion,
 } = require("../../database/dbQuizFunctions");
 
-const { createHashRoute } = require("../../bot/utils/utilsFunctions");
+const { createHashRoute } = require("../../bot/utils/utils-functions");
 
 quizRouter.get("/:url", async (req, res) => {
   try {

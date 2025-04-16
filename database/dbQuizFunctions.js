@@ -1,11 +1,12 @@
 const pgpool = require("./db");
 
-async function addQuiz(title, visibility, hashUrl) {
+// Adds title, visibility and hashRoute to quiz-table
+async function addQuiz(title, visibility, hashRoute) {
   try {
     const newQuiz = await pgpool.query("INSERT INTO public.quiz (quiz_title, visibility, url) VALUES($1, $2, $3) RETURNING *", [
       title,
       visibility,
-      hashUrl,
+      hashRoute,
     ]);
     return newQuiz.rows[0];
   } catch (err) {
@@ -13,9 +14,10 @@ async function addQuiz(title, visibility, hashUrl) {
   }
 }
 
-async function getQuizByHashUrl(hashUrl) {
+// Gets quiz-data by its hashRoute
+async function getQuizByHashUrl(hashRoute) {
   try {
-    const quiz = await pgpool.query("SELECT * FROM public.quiz WHERE url = $1", [hashUrl]);
+    const quiz = await pgpool.query("SELECT * FROM public.quiz WHERE url = $1", [hashRoute]);
     return quiz.rows[0];
   } catch (error) {
     console.log(error);
@@ -23,6 +25,7 @@ async function getQuizByHashUrl(hashUrl) {
   }
 }
 
+// Adds a question to quiz_questions
 async function createQuizQuestion(quizId, question) {
   try {
     const newQuiz = await pgpool.query(
@@ -35,6 +38,7 @@ async function createQuizQuestion(quizId, question) {
   }
 }
 
+// Adds an answer to quiz_answers
 async function createAnswer(quizQuestionId) {
   try {
     const response = await pgpool.query("INSERT INTO public.quiz_answers (quiz_question_id) VALUES($1) RETURNING quiz_answer_id", [quizQuestionId]);
@@ -44,16 +48,17 @@ async function createAnswer(quizQuestionId) {
   }
 }
 
+// Changes the is_correct value of an answer by its ID
 async function updateCorrectAnswer(answerId, isChecked) {
   try {
     const response = await pgpool.query("UPDATE public.quiz_answers SET is_correct = $1 WHERE quiz_answer_id = $2", [isChecked, answerId]);
-    console.log("RESPONSE: ", response);
     return response;
   } catch (error) {
     return error.message;
   }
 }
 
+// Updates the text of an answer
 async function updateAnswerText(answerId, text) {
   try {
     const response = await pgpool.query("UPDATE public.quiz_answers SET quiz_answer = $1 WHERE quiz_answer_id = $2", [text, answerId]);
@@ -63,6 +68,7 @@ async function updateAnswerText(answerId, text) {
   }
 }
 
+// Deltetes an answer
 async function deleteAnswer(answerId) {
   try {
     const response = await pgpool.query("DELETE FROM public.quiz_answers WHERE quiz_answer_id = $1", [answerId]);
@@ -72,6 +78,7 @@ async function deleteAnswer(answerId) {
   }
 }
 
+// Deletes a question and its answers
 async function deleteQuestion(questionId) {
   const client = await pgpool.connect();
 
@@ -91,20 +98,13 @@ async function deleteQuestion(questionId) {
   } finally {
     client.release();
   }
-
-  try {
-    const response = await pgpool.query("DELETE FROM quiz_answers WHERE quiz_answer_id = $1", [answerId]);
-    return response;
-  } catch (error) {
-    return error.message;
-  }
 }
 
+// Adds multiple Answers
 async function addQuizAnswers(quizQuestionId, answers) {
   try {
     answers.forEach(async (answer) => {
       const { answerString, isCorrect } = answer;
-      console.log("ANSWER: ", answer);
 
       await pgpool.query("INSERT INTO public.quiz_answers (quiz_question_id, quiz_answer, is_correct) VALUES($1, $2, $3)", [
         quizQuestionId,
@@ -118,9 +118,9 @@ async function addQuizAnswers(quizQuestionId, answers) {
   }
 }
 
+// Returns all questions of a quiz by its ID
 async function getAllQuizQuestions(quizId) {
   try {
-    // Fetch all questions and their associated answers using a JOIN query
     const result = await pgpool.query(
       `
         SELECT 
@@ -137,10 +137,7 @@ async function getAllQuizQuestions(quizId) {
       [quizId]
     );
 
-    // Group answers under their respective questions
     const questionMap = {};
-
-    console.log("RESULT 1 : ", result);
 
     result.rows.forEach((row) => {
       if (!questionMap[row.quiz_question_id]) {
@@ -150,7 +147,7 @@ async function getAllQuizQuestions(quizId) {
           answers: [],
         };
       }
-      // Push the answer if it exists (handles cases where there may not be an answer)
+      // Pushes the answer if it exists (handles cases where there may not be an answer)
       questionMap[row.quiz_question_id].answers.push({
         answerId: row.quiz_answer_id,
         quizAnswer: row.quiz_answer,
@@ -158,10 +155,8 @@ async function getAllQuizQuestions(quizId) {
       });
     });
 
-    // Convert the questionMap object into an array
+    // Converts the questionMap object into an array
     const questionArray = Object.values(questionMap);
-
-    console.log("RESULT 2 : ", questionArray);
 
     return questionArray;
   } catch (error) {
@@ -170,6 +165,7 @@ async function getAllQuizQuestions(quizId) {
   }
 }
 
+//
 async function updateQuizQuestion(questionId, question) {
   try {
     const questionData = await pgpool.query("UPDATE public.quiz_questions SET quiz_question = $1 WHERE quiz_question_id = $2 RETURNING *", [
@@ -321,14 +317,12 @@ async function setQuestionAttemptsById(questionId, isCorrect) {
          RETURNING attempts, correct`,
       [questionId, isCorrect]
     );
-    console.log(response);
   } catch (error) {
     console.log(error);
   }
 }
 
 async function clearQuizData(quizId) {
-  console.log("CLEAR!!");
   const client = await pgpool.connect();
   try {
     await client.query("BEGIN");
@@ -350,7 +344,6 @@ async function clearQuizData(quizId) {
 }
 
 async function updateQuizSettings(body) {
-  console.log("BODY: ", body);
   try {
     const { quizId, column, value } = body;
     const response = await pgpool.query(`UPDATE public.quiz SET ${column} = $1 WHERE quiz_id = $2 RETURNING *`, [value, quizId]);

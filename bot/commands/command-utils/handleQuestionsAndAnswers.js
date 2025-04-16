@@ -5,8 +5,7 @@ const {
   setUserQuestionStatus,
   setQuestionAttemptsById,
   updateCorrectAnswers,
-} = require("../../../../database/dbQuizFunctions");
-const { updateQuizStats } = require("./handleStartAndFinish");
+} = require("../../../database/dbQuizFunctions");
 
 // Returns the Fields, Buttons and the questionsString for a given answer
 function createAnswers(questions, questionIndex) {
@@ -30,7 +29,7 @@ function createAnswers(questions, questionIndex) {
   return { answerButtons, answerFields, questionString };
 }
 
-// Returns Discord-userId, the index of the current question and the index of which question the user is currently answering
+// Returns userdata by Questionbutton-Interaction
 async function getUserQuestionData(quizId, buttonInteraction) {
   const userId = buttonInteraction.user.id;
   const questionIndex = parseInt(buttonInteraction.customId.replace("quiz_question_button_", ""));
@@ -61,6 +60,7 @@ async function sendNextQuestionEmbed(buttonInteraction, quizData, questions) {
   await buttonInteraction.reply({ embeds: [questionEmbed], components: [actionRow], ephemeral: true });
 }
 
+// Returns userdata by Answerbutton-Interaction
 async function getUserAnswerData(quizId, buttonInteraction) {
   const subString = buttonInteraction.customId.replace("quiz_answer_", "");
   const arr = subString.split("_");
@@ -70,6 +70,7 @@ async function getUserAnswerData(quizId, buttonInteraction) {
   return { userId: userId, userQuestionStatus: userQuestionStatus, givenAnswerIndex: parseInt(arr[0]), questionIndex: parseInt(arr[1]) };
 }
 
+// Returns String for correct or wrong answer
 async function createAnswerReplyMessage(quizId, currentQuestion, userId, givenAnswerIndex) {
   const givenAnswer = currentQuestion.answers[givenAnswerIndex];
   if (givenAnswer.isCorrect) {
@@ -83,6 +84,7 @@ async function createAnswerReplyMessage(quizId, currentQuestion, userId, givenAn
   }
 }
 
+// Returns Actionrow for [finish-quiz] or [next-question]
 function buildNextQuestionActionRow(questionIndex, totalQuestions) {
   let customId, label, buttonStyle;
 
@@ -101,15 +103,15 @@ function buildNextQuestionActionRow(questionIndex, totalQuestions) {
   return new ActionRowBuilder().addComponents(nextQuestion);
 }
 
-// Sends a reply message to an answered question with some additional information
-async function checkAnswerMessage(interaction, buttonInteraction, quizData, questions) {
+// Sends a reply message after an answer-button was pressed
+async function checkAnswerMessage(buttonInteraction, quizData, questions) {
   const { userId, userQuestionStatus, givenAnswerIndex, questionIndex } = await getUserAnswerData(quizData.quiz_id, buttonInteraction);
   console.log({ userId, userQuestionStatus, givenAnswerIndex, questionIndex });
 
   if (userQuestionStatus < questionIndex) {
     await setUserQuestionStatus(quizData.quiz_id, userId, questionIndex);
   } else {
-    return; // This button was already pressed, prevent message from being sent twice
+    return; // Button was already pressed
   }
 
   const message = await createAnswerReplyMessage(quizData.quiz_id, questions[questionIndex - 1], buttonInteraction.user.id, givenAnswerIndex);
@@ -118,8 +120,6 @@ async function checkAnswerMessage(interaction, buttonInteraction, quizData, ques
   console.log(message, actionRow);
 
   await buttonInteraction.reply({ content: message, components: [actionRow], ephemeral: true });
-
-  //await updateQuizStats(interaction, quizData, questions);
 }
 
 module.exports = {

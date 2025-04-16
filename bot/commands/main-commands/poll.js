@@ -3,11 +3,12 @@ const { SlashCommandBuilder } = require("discord.js");
 const { getPollByHashRoute, getPollAnswers } = require("../../../database/dbPollFunctions");
 
 async function handlePoll(interaction) {
-  await interaction.deferReply(); // Delay reply
+  await interaction.deferReply(); // Delays reply
 
   const pollData = await getPollByHashRoute(interaction.options.get("code").value);
   const answersData = await getPollAnswers(pollData.poll_id);
 
+  // Handles emojicodes correctly
   function getEmoji(code) {
     if (code === "") return "";
     else if (code.includes(",")) return String.fromCodePoint(code.split(",")[0], code.split(",")[1]);
@@ -18,6 +19,7 @@ async function handlePoll(interaction) {
     return { text: answer.answer, emoji: getEmoji(answer.emoji) };
   });
 
+  // Replys with the poll
   await interaction.editReply({
     poll: {
       question: { text: pollData.question },
@@ -28,6 +30,7 @@ async function handlePoll(interaction) {
   });
 }
 
+// Exports the poll-command Object
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("poll")
@@ -38,11 +41,4 @@ module.exports = {
   async execute(interaction) {
     await handlePoll(interaction);
   },
-
-  data: new SlashCommandBuilder()
-    .setName("poll")
-    .setDescription("Starte eine Umfrage.")
-    .addStringOption((option) => option.setName("code").setDescription(`Hier Code einfügen.`)),
-
-  hello: 1 + 1,
 };

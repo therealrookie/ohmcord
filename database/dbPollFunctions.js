@@ -1,11 +1,10 @@
-const { createHashRoute } = require("../bot/utils/utilsFunctions");
+const { createHashRoute } = require("../bot/utils/utils-functions");
 const pgpool = require("./db");
 
+// Returns Poll Data by its Hash Route / 6 digit code
 async function getPollByHashRoute(hashRoute) {
-  console.log("GET POLL", hashRoute);
   try {
     const quiz = await pgpool.query("SELECT * FROM public.polls WHERE hash_route = $1", [hashRoute]);
-    console.log("GET POLL", quiz.rows[0]);
 
     return quiz.rows[0];
   } catch (error) {
@@ -14,12 +13,10 @@ async function getPollByHashRoute(hashRoute) {
   }
 }
 
+// Returns all the answers of a poll by its ID
 async function getPollAnswers(pollId) {
-  console.log("GET POLL ANSWERS: ", pollId);
-
   try {
     const quiz = await pgpool.query("SELECT * FROM public.poll_answers WHERE poll_id = $1", [pollId]);
-    console.log("GET POLL ANSWERS: ", quiz.rows);
 
     return quiz.rows;
   } catch (error) {
@@ -28,6 +25,7 @@ async function getPollAnswers(pollId) {
   }
 }
 
+// Inserts poll and answer data into their tables
 async function addPoll(questionObj, answers) {
   const client = await pgpool.connect();
 
@@ -43,7 +41,6 @@ async function addPoll(questionObj, answers) {
     );
 
     const pollId = newQuestion.rows[0].poll_id;
-    console.log("POLL ID: ", newQuestion.rows[0].poll_id);
 
     const insertValues = answers.map((answer, index) => `(${pollId}, $${index * 2 + 1}, $${index * 2 + 2})`).join(", ");
     const insertParams = answers.flatMap((answer) => [answer.emoji, answer.answer]);

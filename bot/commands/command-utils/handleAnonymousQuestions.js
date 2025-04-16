@@ -16,11 +16,11 @@ const {
   getQuestionMessageId,
   getQuestionById,
   addAnonymousAnswer,
-} = require("../../../../database/dbAnonymousQuestionFunctions");
+} = require("../../../database/dbAnonymousQuestionFunctions");
 
-const { createHashRoute } = require("../../../utils/utilsFunctions");
+const { createHashRoute } = require("../../utils/utils-functions");
 
-// Funnction to get and save important question-session-data
+// Gets and saves important question-session-data
 async function saveQuestionSessionData(interaction) {
   const topic = interaction.options.get("topic").value;
 
@@ -35,7 +35,7 @@ async function saveQuestionSessionData(interaction) {
   return { topic, hashRoute, questionSessionId };
 }
 
-// Check if the Websocket connection is established
+// Checks if the Websocket connection is established
 async function handleWebsocket(ws, topic) {
   ws.on("open", () => {
     console.log(`WebSocket connection established (Anonymous questions: ${topic})`);
@@ -49,14 +49,9 @@ async function handleWebsocket(ws, topic) {
   });
 }
 
-// Send an embed for the user to ask a question
-async function sendAddQuestionEmbed(interaction, questionSessionData) {
+// Sends an embed for the user to ask a question
+async function sendAddQuestionMessage(interaction, questionSessionData) {
   const { topic, hashRoute, questionSessionId } = questionSessionData;
-
-  const questionSessionEmbed = new EmbedBuilder()
-    .setColor(0x191923)
-    .setTitle(topic)
-    .setDescription(`A new anonymous question session has begun about the topic:\n **${topic}**.`);
 
   const questionButton = new ButtonBuilder().setCustomId(`question_button_${questionSessionId}`).setLabel("Frag etwas").setStyle(ButtonStyle.Primary);
 
@@ -64,7 +59,6 @@ async function sendAddQuestionEmbed(interaction, questionSessionData) {
 
   const actionRow = new ActionRowBuilder().addComponents(questionButton).addComponents(linkButton);
 
-  // [questionSessionEmbed]
   const reply = await interaction.editReply({ content: topic, components: [actionRow] });
 
   const collector = reply.createMessageComponentCollector({
@@ -78,15 +72,11 @@ async function sendAddQuestionEmbed(interaction, questionSessionData) {
 
 // Create an embed for an asked question
 async function createQuestionEmbed(client, interaction, parsedMessage) {
-  const questionId = parsedMessage.questionId; //await addAnonymousQuestion(parsedMessage.questionSessionId, parsedMessage.question);
-  const questionEmbed = new EmbedBuilder()
-    .setColor(0xf39237) // Set the color of the embed
-    .setTitle(parsedMessage.question);
+  const questionId = parsedMessage.questionId;
+  const questionEmbed = new EmbedBuilder().setColor(0xf39237).setTitle(parsedMessage.question);
 
-  // Create a button for users to contribute ideas
   const answerButton = new ButtonBuilder().setCustomId(`answer_button_${questionId}`).setLabel("Antwort hinzufügen").setStyle(ButtonStyle.Success);
 
-  // Action row to hold the button
   const actionRow = new ActionRowBuilder().addComponents(answerButton);
 
   const channel = await client.channels.fetch(interaction.channelId);
@@ -109,7 +99,7 @@ function createAnswerField(answers) {
   else return answerText;
 }
 
-// Edit the question-embed, when a new answer was added
+// Edits the question-embed, when a new answer was added
 async function editQuestionEmbed(client, interaction, parsedMessage) {
   const questionId = parsedMessage.questionId;
   await addAnonymousAnswer(questionId, parsedMessage.answer);
@@ -143,10 +133,10 @@ async function sendQuestion(ws, modalInteraction) {
       question: question,
     })
   );
-  await modalInteraction.deferUpdate(); // Acknowledge the interaction without sending a message
+  await modalInteraction.deferUpdate(); // Acknowledges the interaction without sending a message
 }
 
-// Send a new answer to the website
+// Sends a new answer to the website
 async function sendAnswer(ws, modalInteraction, questionSessionId) {
   const questionId = parseInt(modalInteraction.customId.replace("answer_modal_", ""));
   const answer = modalInteraction.fields.getTextInputValue(`answer_input_${questionId}`);
@@ -160,13 +150,11 @@ async function sendAnswer(ws, modalInteraction, questionSessionId) {
       answer: answer,
     })
   );
-  await modalInteraction.deferUpdate();
+  await modalInteraction.deferUpdate(); // Acknowledges the interaction without sending a message
 }
 
-// Open a question-modal for the user to enter a question
+// Opens a question-modal for the user to enter a question
 async function openNewQuestionModal(buttonInteraction, topic) {
-  //await buttonInteraction.deferUpdate();
-
   const questionSessionId = parseInt(buttonInteraction.customId.replace("question_button_", ""));
 
   const modal = new ModalBuilder()
@@ -186,10 +174,8 @@ async function openNewQuestionModal(buttonInteraction, topic) {
   await buttonInteraction.showModal(modal);
 }
 
-// Open an answer-modal for the user to enter an answer
+// Opens an answer-modal for the user to enter an answer
 async function openNewAnswerModal(buttonInteraction) {
-  //await buttonInteraction.deferUpdate();
-
   const questionId = parseInt(buttonInteraction.customId.replace("answer_button_", ""));
   const question = await getQuestionById(questionId);
 
@@ -213,7 +199,7 @@ async function openNewAnswerModal(buttonInteraction) {
 module.exports = {
   saveQuestionSessionData,
   handleWebsocket,
-  sendAddQuestionEmbed,
+  sendAddQuestionMessage,
   createQuestionEmbed,
   editQuestionEmbed,
   sendQuestion,

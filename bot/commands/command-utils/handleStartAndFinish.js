@@ -1,22 +1,23 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
-const { getTimeMinsAndSecs } = require("../../../utils/utilsFunctions");
+const { getTimeMinsAndSecs } = require("../../utils/utils-functions");
 const {
   getQuestionAttemptsById,
   getQuizParticipantsRanking,
   getQuizParticipantData,
   addQuizEndtime,
   clearQuizData,
-} = require("../../../../database/dbQuizFunctions");
+} = require("../../../database/dbQuizFunctions");
 
-// Response to the command, sends quiz-stats (only for the "command-executer") and quiz-start-embed
+// Clears previous participant data, sends message to end quiz and embed for users to start quiz
 async function startQuiz(client, interaction, quizData, questions) {
   await clearQuizData(quizData.quiz_id);
 
   await startQuizEmbed(client, interaction, quizData, questions);
 
-  await updateQuizStats(interaction, quizData, questions);
+  await sendEndQuizButton(interaction);
 }
 
+// Returns the visibility option (String)
 function determineVisibility(index) {
   switch (index) {
     case 0:
@@ -57,7 +58,7 @@ async function getQuestionStatsData(questions) {
   return questionStatsData;
 }
 
-// Creates an array with a field for every questions (attempts, correct and not correct answers)
+// Creates an array with a field for every question (attempts, correct and not correct answers)
 function getQuestionStatFields(questionStatsData) {
   let started, finished;
 
@@ -96,29 +97,12 @@ async function getQuizStats(questions) {
   return questionStats;
 }
 
-// Updates the embed containing all the quiz stats, contains a button that publishes the stats
-async function updateQuizStats(interaction, quizData, questions) {
-  /*
-  
-  const quizStats = await getQuizStats(questions);
-
-  const quizStatsEmbed = new EmbedBuilder()
-    .setColor(0x1b263b)
-    .setTitle(`${quizData.quiz_title}-Stats`)
-    .setDescription(`Stats of your Quiz`)
-    .addFields(quizStats);
-  const publishButton = new ButtonBuilder().setCustomId("publish_quiz_stats").setLabel("Finish & Publish Quiz").setStyle(ButtonStyle.Danger);
-
-  const actionRowPublishStats = new ActionRowBuilder().addComponents(publishButton);
-
-  await interaction.editReply({ embeds: [quizStatsEmbed], components: [actionRowPublishStats], ephemeral: true });
-*/
-
+// Sends ephemeral message with the button to end the quiz and publish the stats
+async function sendEndQuizButton(interaction) {
   const publishButton = new ButtonBuilder().setCustomId("publish_quiz_stats").setLabel("Quiz beenden").setStyle(ButtonStyle.Danger);
 
   const actionRowPublishStats = new ActionRowBuilder().addComponents(publishButton);
 
-  //const channel = await client.channels.fetch(interaction.channelId);
   await interaction.editReply({
     content: "Drücke hier um das Quiz zu beenden und die Ergebnisse zu veröffentlichen",
     components: [actionRowPublishStats],
@@ -126,7 +110,7 @@ async function updateQuizStats(interaction, quizData, questions) {
   });
 }
 
-// Send public embed for quiz-stats, button to show personal stats
+// Sends public embed for quiz-stats, button to show personal stats
 async function publishQuizStatsEmbed(buttonInteraction, questions, quizData) {
   let quizStats = await getQuizStats(questions);
 
@@ -171,7 +155,7 @@ async function getPersonalStats(discordUserId, quizId, totalQuestions) {
   });
 }
 
-// Create a single field with name: rank, value: userName, correctAnswers and time
+// Creates a single field with name: rank, value: userName, correctAnswers and time
 async function getRankField(client, participantData, index) {
   const user = await client.users.fetch(participantData.participant_discord_id);
   const { minutes, seconds } = getTimeMinsAndSecs(participantData.end_time_ms - participantData.start_time_ms);
@@ -219,7 +203,7 @@ async function getAllRanks(client, quizId) {
   return fields;
 }
 
-// Send ephemeral embed message with personal rank
+// Sends an ephemeral embed message with personal rank
 async function sendPersonalStatsEmbed(client, buttonInteraction, quizData, totalQuestions) {
   let personalStats;
 
@@ -240,7 +224,7 @@ async function sendPersonalStatsEmbed(client, buttonInteraction, quizData, total
   await buttonInteraction.reply({ embeds: [personalStatsEmbed], ephemeral: true });
 }
 
-// Send a message after the user finishes the quiz
+// Sends a message after the user finishes the quiz
 async function finishQuizMessage(buttonInteraction, quizData, totalQuestions) {
   await addQuizEndtime(quizData.quiz_id, buttonInteraction.user.id, Date.now());
 
@@ -258,7 +242,6 @@ async function finishQuizMessage(buttonInteraction, quizData, totalQuestions) {
 module.exports = {
   startQuiz,
   startQuizEmbed,
-  updateQuizStats,
   publishQuizStatsEmbed,
   sendPersonalStatsEmbed,
   finishQuizMessage,

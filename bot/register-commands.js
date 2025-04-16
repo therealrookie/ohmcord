@@ -1,7 +1,9 @@
-const { Collection, Events } = require("discord.js");
+const { Collection } = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
 
+// Registers commands from main-commands folder
+// https://discordjs.guide/creating-your-bot/command-deployment.html#guild-commands
 function registerCommands(client) {
   client.commands = new Collection();
 

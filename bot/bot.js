@@ -1,12 +1,9 @@
-const { Collection, Events } = require("discord.js");
-const fs = require("node:fs");
-const path = require("node:path");
+const { Events } = require("discord.js");
 const { handleModalInteraction, handleCommandInteraction } = require("./handleInteractions");
 const { registerCommands } = require("./register-commands");
 
-require("dotenv").config();
-
 function startBot(client) {
+  // Registers commands from main-commands folder
   registerCommands(client);
 
   client.once(Events.ClientReady, (readyClient) => {
