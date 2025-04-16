@@ -21,6 +21,16 @@ brainstormRouter.get("/:url", async (req, res) => {
   }
 });
 
+/*
+brainstormRouter.get("/:hashroute", async (req, res) => {
+  const brainstormData = await getBrainstorm(req.params.hashroute);
+
+  res.render("brainstorm", {
+    theme: brainstormData.theme,
+  });
+});
+*/
+
 brainstormRouter.get("/contributions/:id", async (req, res) => {
   try {
     const id = req.params.id;

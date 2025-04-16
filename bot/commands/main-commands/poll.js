@@ -38,4 +38,11 @@ module.exports = {
   async execute(interaction) {
     await handlePoll(interaction);
   },
+
+  data: new SlashCommandBuilder()
+    .setName("poll")
+    .setDescription("Starte eine Umfrage.")
+    .addStringOption((option) => option.setName("code").setDescription(`Hier Code einfügen.`)),
+
+  hello: 1 + 1,
 };
