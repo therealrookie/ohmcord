@@ -10,7 +10,6 @@ const localpool = new Pool({
 });
 
 // Connection for render.com connection
-const { Pool } = require("pg");
 
 const pgpool = new Pool({
   connectionString: process.env.DATABASE_URL,
