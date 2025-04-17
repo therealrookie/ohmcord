@@ -29,6 +29,8 @@ function takeScreenshot(hashRoute) {
   const uploadDir = path.join(process.cwd(), "uploads");
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
+  const apiFlashUrl = createApiFlashUrl(hashRoute);
+
   return new Promise((resolve, reject) => {
     https.get(apiFlashUrl, (response) => {
       //if (response.statusCode !== 200) reject();
@@ -38,9 +40,7 @@ function takeScreenshot(hashRoute) {
 
       fileStream.end();
       fileStream.on("error", reject);
-      fileStream.on("finish", () => {
-        resolve();
-      });
+      fileStream.on("finish", resolve);
     });
   });
 
