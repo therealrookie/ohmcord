@@ -58,12 +58,13 @@ async function handleBrainstormMessage(data) {
     console.log("WEBSOCKET SERVER: ", data);
 
     if (data.type === "image-request") {
-      data.source = `server-website`;
-      data.type = "image";
       try {
         await takeScreenshot(data.hashRoute);
+        data.source = `server-website`;
+        data.type = "image";
       } catch (e) {
         console.error("Image fetch failed:", e.message);
+        return;
       }
     }
 

@@ -25,15 +25,15 @@ function createApiFlashUrl(hashRoute) {
 // Takes a screenshot of the Brainstorm Canvas
 // https://apiflash.com/documentation
 // https://stackoverflow.com/questions/39880832/how-to-return-a-promise-when-writestream-finishes
-async function takeScreenshot(hashRoute) {
-  const apiFlashUrl = createApiFlashUrl(hashRoute);
-
+function takeScreenshot(hashRoute) {
   const uploadDir = path.join(process.cwd(), "uploads");
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
   return new Promise((resolve, reject) => {
+    const apiFlashUrl = createApiFlashUrl(hashRoute);
+
     https
-      .get(apiFlashUrl, (response) => {
+      .get(apiFlashUrl, async (response) => {
         if (response.statusCode !== 200) {
           reject(new Error(`API Flash returned status ${response.statusCode}`));
           return;
