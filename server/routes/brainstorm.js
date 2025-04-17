@@ -1,6 +1,6 @@
 const express = require("express");
 const brainstormRouter = express.Router();
-const { getBrainstorm, getBrainstormContributions, setPosition } = require("../../database/dbBrainstormFunctions");
+const { getBrainstorm, getBrainstormContributions, setPosition } = require("../../database/db-brainstorm");
 const path = require("path");
 
 brainstormRouter.get("/:url", async (req, res) => {

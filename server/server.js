@@ -3,7 +3,7 @@ const { questionRouter } = require("./routes/anonymous-questions");
 const { quizRouter } = require("./routes/quiz");
 const { pollRouter } = require("./routes/poll");
 const { setupWSS } = require("./websockets");
-const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
+const { addAnonymousQuestion } = require("../database/db-anon-questions");
 
 const PORT = process.env.PORT || 3000;
 

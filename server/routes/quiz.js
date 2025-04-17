@@ -7,7 +7,7 @@ const {
   addQuizAnswers,
   getAllQuizQuestions,
   updateQuizQuestion,
-  updateQuizAnswers,
+  //updateQuizAnswers,
   updateQuizSettings,
   createAnswer,
   updateCorrectAnswer,

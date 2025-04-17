@@ -1,6 +1,6 @@
 const express = require("express");
 const questionRouter = express.Router();
-const { getQuestionSession, getAnonymousQuestions, getAnonymousAnswers } = require("../../database/dbAnonymousQuestionFunctions");
+const { getQuestionSession, getAnonymousQuestions, getAnonymousAnswers } = require("../../database/db-anon-questions");
 
 questionRouter.get("/:url", async (req, res) => {
   try {

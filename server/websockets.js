@@ -4,7 +4,7 @@ const https = require("https");
 const fs = require("fs");
 //const path = require("path");
 
-const { addAnonymousQuestion } = require("../database/dbAnonymousQuestionFunctions");
+const { addAnonymousQuestion } = require("../database/db-anon-questions");
 
 function setupWSS(server) {}
 

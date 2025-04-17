@@ -1,6 +1,6 @@
 const express = require("express");
 const pollRouter = express.Router();
-const { getPollByHashRoute, getPollAnswers, addPoll } = require("../../database/dbPollFunctions");
+const { getPollByHashRoute, getPollAnswers, addPoll } = require("../../database/db-poll");
 
 pollRouter.post("/save-poll", async (req, res) => {
   try {
