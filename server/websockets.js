@@ -23,24 +23,46 @@ function createApiFlashUrl(hashRoute) {
 }
 
 // Takes a screenshot of the Brainstorm Canvas
+// https://apiflash.com/documentation
+
 async function takeScreenshot(hashRoute) {
   const apiFlashUrl = createApiFlashUrl();
 
   const uploadDir = path.join(process.cwd(), "uploads");
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
+  return new Promise((resolve, reject) => {
+    https.get(apiFlashUrl, (response) => {
+      //if (response.statusCode !== 200) reject();
+
+      const fileStream = fs.createWriteStream(filePath);
+      response.pipe(fileStream);
+
+      fileStream.end();
+      fileStream.on("error", reject);
+      fileStream.on("finish", () => {
+        resolve();
+      });
+    });
+  });
+
+  /*
   try {
     https.get(apiFlashUrl, (response) => {
       if (response.statusCode !== 200) throw new Error("Screenshot failed!");
 
       const fileStream = fs.createWriteStream(filePath);
       response.pipe(fileStream);
+
+      fileStream.on("finish", () => {
+        console.log("Screenshot upload finished!");
+      });
     });
   } catch (error) {
     console.error(error);
   }
 
-  /*
+  
   return new Promise((resolve, reject) => {
     https
       .get(apiFlashUrl, (response) => {
