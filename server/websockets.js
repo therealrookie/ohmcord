@@ -32,6 +32,25 @@ async function takeScreenshot(hashRoute) {
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
   return new Promise((resolve, reject) => {
+    https
+      .get(apiFlashUrl, (response) => {
+        const fileStream = fs.createWriteStream(filePath);
+        response.pipe(fileStream);
+
+        fileStream.on("finish", () => {
+          fileStream.close(() => {
+            console.log("Image saved:", filePath);
+            resolve(filePath);
+          });
+        });
+      })
+      .on("error", (error) => {
+        console.error("HTTPS Request failed:", error.message);
+        reject(error);
+      });
+  });
+
+  return new Promise((resolve, reject) => {
     https.get(apiFlashUrl, (response) => {
       //if (response.statusCode !== 200) reject();
 
