@@ -10,7 +10,7 @@ const {
   sendBrainstormCanvas,
 } = require("../command-utils/handleBrainstormInteractions");
 
-const { addBrainstormContribution, updateBrainstormContributionScoring, updateContributionScore } = require("../../database/dbBrainstormFunctions");
+const { addBrainstormContribution, updateBrainstormContributionScoring, updateContributionScore } = require("../../database/db-brainstorm");
 
 async function handleBrainstormCommand(interaction) {
   await interaction.deferReply(); // Delays reply

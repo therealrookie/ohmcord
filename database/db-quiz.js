@@ -118,6 +118,32 @@ async function addQuizAnswers(quizQuestionId, answers) {
   }
 }
 
+// Turns rows into an array of question-objects
+// [{questionId, questionString, answers: [answerId, quizAnswer, isCorrect]}, {...}]
+function parseQuestionsResult(rows) {
+  const questions = {};
+
+  rows.forEach((row) => {
+    if (!questions[row.quiz_question_id]) {
+      questions[row.quiz_question_id] = {
+        questionId: row.quiz_question_id,
+        questionString: row.quiz_question,
+        answers: [],
+      };
+    }
+
+    // Pushes the answer if it exists (handles cases where there may not be an answer)
+    questions[row.quiz_question_id].answers.push({
+      answerId: row.quiz_answer_id,
+      quizAnswer: row.quiz_answer,
+      isCorrect: row.is_correct,
+    });
+  });
+
+  // Converts the questions object into an array
+  return Object.values(questions);
+}
+
 // Returns all questions of a quiz by its ID
 async function getAllQuizQuestions(quizId) {
   try {
@@ -137,35 +163,15 @@ async function getAllQuizQuestions(quizId) {
       [quizId]
     );
 
-    const questionMap = {};
-
-    result.rows.forEach((row) => {
-      if (!questionMap[row.quiz_question_id]) {
-        questionMap[row.quiz_question_id] = {
-          questionId: row.quiz_question_id,
-          questionString: row.quiz_question,
-          answers: [],
-        };
-      }
-      // Pushes the answer if it exists (handles cases where there may not be an answer)
-      questionMap[row.quiz_question_id].answers.push({
-        answerId: row.quiz_answer_id,
-        quizAnswer: row.quiz_answer,
-        isCorrect: row.is_correct,
-      });
-    });
-
-    // Converts the questionMap object into an array
-    const questionArray = Object.values(questionMap);
-
-    return questionArray;
+    const questionsAndAnswers = parseQuestionsResult(result.rows);
+    return questionsAndAnswers;
   } catch (error) {
     console.error("Error fetching quiz questions and answers:", error.message);
     throw new Error("Failed to fetch quiz questions and answers.");
   }
 }
 
-//
+// Update question (String) by its ID
 async function updateQuizQuestion(questionId, question) {
   try {
     const questionData = await pgpool.query("UPDATE public.quiz_questions SET quiz_question = $1 WHERE quiz_question_id = $2 RETURNING *", [
@@ -179,6 +185,8 @@ async function updateQuizQuestion(questionId, question) {
   }
 }
 
+// Update Answers of a Quiz (String, ) by its
+/*
 async function updateQuizAnswers(questionId, answers, checkboxes) {
   const client = await pgpool.connect();
 
@@ -204,7 +212,9 @@ async function updateQuizAnswers(questionId, answers, checkboxes) {
     client.release();
   }
 }
+  */
 
+// Adds Participant data into quiz_participant
 async function addQuizParticipant(data) {
   try {
     const { quizId, userId, startTimeMs, questionStatus } = data;
@@ -221,6 +231,7 @@ async function addQuizParticipant(data) {
   }
 }
 
+// Returns the question-status of a user by its ID
 async function getUserQuestionStatus(quizId, userId) {
   try {
     const response = await pgpool.query(`SELECT question_status FROM public.quiz_participants WHERE quiz_id = $1 AND participant_discord_id = $2`, [
@@ -234,6 +245,7 @@ async function getUserQuestionStatus(quizId, userId) {
   }
 }
 
+// Sets the question-status of a user
 async function setUserQuestionStatus(quizId, userId, status) {
   try {
     const response = await pgpool.query(
@@ -246,7 +258,8 @@ async function setUserQuestionStatus(quizId, userId, status) {
     return -1;
   }
 }
-// ...
+
+// Increases the correct answer-count of a User by 1
 async function updateCorrectAnswers(quizId, userId) {
   try {
     await pgpool.query(
@@ -258,6 +271,7 @@ async function updateCorrectAnswers(quizId, userId) {
   }
 }
 
+// Adds the End-time in ms of user, when he finishes the quiz
 async function addQuizEndtime(quizId, userId, endTimeMs) {
   try {
     await pgpool.query("UPDATE public.quiz_participants SET end_time_ms = $1 WHERE quiz_id = $2 AND participant_discord_id = $3", [
@@ -270,6 +284,8 @@ async function addQuizEndtime(quizId, userId, endTimeMs) {
   }
 }
 
+// Returns the data of a user, participating a quiz
+// {quiz_id, participant_discord_id, start_time_ms, correct_answers, question_status}
 async function getQuizParticipantData(quizId, userId) {
   try {
     const response = await pgpool.query("SELECT * FROM public.quiz_participants WHERE quiz_id = $1 AND participant_discord_id = $2", [
@@ -282,6 +298,7 @@ async function getQuizParticipantData(quizId, userId) {
   }
 }
 
+// Returns all participants of a quiz ranked by correct_answers and time they took for the quiz
 async function getQuizParticipantsRanking(quizId) {
   try {
     const response = await pgpool.query(
@@ -297,6 +314,7 @@ async function getQuizParticipantsRanking(quizId) {
   }
 }
 
+// Returns {attempts, correct} of all questions of a quiz
 async function getQuestionAttemptsById(questionId) {
   try {
     const response = await pgpool.query("SELECT attempts, correct FROM public.quiz_questions WHERE quiz_question_id = $1", [questionId]);
@@ -306,8 +324,8 @@ async function getQuestionAttemptsById(questionId) {
   }
 }
 
+// Increases the attempts by 1 and correct by 1 if isCorrect === true
 async function setQuestionAttemptsById(questionId, isCorrect) {
-  console.log("NEW ATTEMPT", questionId, isCorrect);
   try {
     const response = await pgpool.query(
       `UPDATE public.quiz_questions
@@ -322,6 +340,7 @@ async function setQuestionAttemptsById(questionId, isCorrect) {
   }
 }
 
+// Deletes participant data and resets attempts
 async function clearQuizData(quizId) {
   const client = await pgpool.connect();
   try {
@@ -343,6 +362,7 @@ async function clearQuizData(quizId) {
   }
 }
 
+// Updates the title or visibility of quiz
 async function updateQuizSettings(body) {
   try {
     const { quizId, column, value } = body;
@@ -360,7 +380,7 @@ module.exports = {
   addQuizAnswers,
   getAllQuizQuestions,
   updateQuizQuestion,
-  updateQuizAnswers,
+  //updateQuizAnswers,
   addQuizParticipant,
   getUserQuestionStatus,
   setUserQuestionStatus,

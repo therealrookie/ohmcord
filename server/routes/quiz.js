@@ -14,7 +14,7 @@ const {
   updateAnswerText,
   deleteAnswer,
   deleteQuestion,
-} = require("../../database/dbQuizFunctions");
+} = require("../../database/db-quiz");
 
 const { createHashRoute } = require("../../bot/utils/utils-functions");
 
@@ -166,6 +166,7 @@ quizRouter.put("/update-correct-answer", async (req, res) => {
   }
 });
 
+/*
 quizRouter.put("/update-answer-text", async (req, res) => {
   try {
     const { answerId, text } = req.body;
@@ -177,6 +178,7 @@ quizRouter.put("/update-answer-text", async (req, res) => {
     res.status(500).send("Couldn't update answers.");
   }
 });
+*/
 
 quizRouter.delete("/answer", async (req, res) => {
   try {

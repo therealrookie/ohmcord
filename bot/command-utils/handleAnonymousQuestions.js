@@ -16,7 +16,7 @@ const {
   getQuestionMessageId,
   getQuestionById,
   addAnonymousAnswer,
-} = require("../../database/dbAnonymousQuestionFunctions");
+} = require("../../database/db-anon-questions");
 
 const { createHashRoute } = require("../utils/utils-functions");
 

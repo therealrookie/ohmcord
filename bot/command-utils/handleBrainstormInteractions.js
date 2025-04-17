@@ -1,6 +1,6 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 
-const { addBrainstorm, addBrainstormMessage, getBrainstormMessages } = require("../../database/dbBrainstormFunctions");
+const { addBrainstorm, addBrainstormMessage, getBrainstormMessages } = require("../../database/db-brainstorm");
 const { createHashRoute } = require("../utils/utils-functions");
 const path = require("path");
 

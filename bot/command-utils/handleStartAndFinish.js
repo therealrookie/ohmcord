@@ -6,7 +6,7 @@ const {
   getQuizParticipantData,
   addQuizEndtime,
   clearQuizData,
-} = require("../../database/dbQuizFunctions");
+} = require("../../database/db-quiz");
 
 // Clears previous participant data, sends message to end quiz and embed for users to start quiz
 async function startQuiz(client, interaction, quizData, questions) {

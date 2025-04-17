@@ -332,6 +332,7 @@ async function updateQuestionText(questionString, questionId) {
   }
 }
 
+/*
 async function updateAnswerInDataBase(questionId, answers, checkboxes) {
   try {
     const response = await fetch("/quiz/update-answers", {
@@ -348,6 +349,7 @@ async function updateAnswerInDataBase(questionId, answers, checkboxes) {
     return false;
   }
 }
+  */
 
 async function createAnswer(questionId) {
   try {
