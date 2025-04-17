@@ -2,7 +2,7 @@ const { brainstormRouter } = require("./routes/brainstorm");
 const { questionRouter } = require("./routes/anonymous-questions");
 const { quizRouter } = require("./routes/quiz");
 const { pollRouter } = require("./routes/poll");
-const { setupWSS } = require("./websockets");
+const { setupWSS, takeScreenshot } = require("./websockets");
 const { addAnonymousQuestion } = require("../database/db-anon-questions");
 
 const PORT = process.env.PORT || 3000;
@@ -61,7 +61,7 @@ async function handleBrainstormMessage(data) {
       data.source = `server-website`;
       data.type = "image";
       try {
-        await getImageUrl(data.hashRoute);
+        await takeScreenshot(data.hashRoute);
       } catch (e) {
         console.error("Image fetch failed:", e.message);
       }
@@ -88,49 +88,6 @@ function wsAnswer(message) {
     if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(message));
     }
-  });
-}
-
-async function getImageUrl(hashRoute) {
-  console.log("GET IMAGE URL FUNCTION ", hashRoute);
-  console.log("API FLASH URL: ", `${process.env.URL}/brainstorm/${hashRoute}`);
-
-  const url =
-    "https://api.apiflash.com/v1/urltoimage?" +
-    new URLSearchParams({
-      access_key: process.env.API_FLASH_KEY,
-      url: `${process.env.URL}/brainstorm/${hashRoute}`,
-      element: "#canvas",
-      width: 3840,
-      height: 2160,
-      format: "png",
-    }).toString();
-
-  const uploadDir = path.join(process.cwd(), "uploads");
-  const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
-
-  return new Promise((resolve, reject) => {
-    https
-      .get(url, (response) => {
-        if (response.statusCode !== 200) {
-          reject(new Error(`API Flash returned status ${response.statusCode}`));
-          return;
-        }
-
-        const fileStream = fs.createWriteStream(filePath);
-        response.pipe(fileStream);
-
-        fileStream.on("finish", () => {
-          fileStream.close(() => {
-            console.log("✅ Image saved:", filePath);
-            resolve(filePath);
-          });
-        });
-      })
-      .on("error", (err) => {
-        console.error("❌ HTTPS Request failed:", err.message);
-        reject(err);
-      });
   });
 }
 

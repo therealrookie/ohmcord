@@ -185,35 +185,6 @@ async function updateQuizQuestion(questionId, question) {
   }
 }
 
-// Update Answers of a Quiz (String, ) by its
-/*
-async function updateQuizAnswers(questionId, answers, checkboxes) {
-  const client = await pgpool.connect();
-
-  try {
-    await client.query("BEGIN");
-
-    await client.query("DELETE FROM public.quiz_answers WHERE quiz_question_id = $1", [questionId]);
-
-    const insertValues = answers.map((answer, index) => `(${questionId}, $${index * 2 + 1}, $${index * 2 + 2})`).join(", ");
-    const insertParams = answers.flatMap((answer, index) => [answer, checkboxes[index]]);
-
-    if (answers.length > 0) {
-      await client.query(`INSERT INTO public.quiz_answers (quiz_question_id, quiz_answer, is_correct) VALUES ${insertValues}`, insertParams);
-    }
-
-    await client.query("COMMIT");
-    return "Answers updated successfully.";
-  } catch (error) {
-    await client.query("ROLLBACK");
-    console.error("Error updating quiz answers:", error);
-    throw new Error("Failed to update quiz answers");
-  } finally {
-    client.release();
-  }
-}
-  */
-
 // Adds Participant data into quiz_participant
 async function addQuizParticipant(data) {
   try {
@@ -380,7 +351,6 @@ module.exports = {
   addQuizAnswers,
   getAllQuizQuestions,
   updateQuizQuestion,
-  //updateQuizAnswers,
   addQuizParticipant,
   getUserQuestionStatus,
   setUserQuestionStatus,
