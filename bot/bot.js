@@ -1,6 +1,6 @@
 const { Events } = require("discord.js");
-const { handleModalInteraction, handleCommandInteraction } = require("./handleInteractions");
-const { registerCommands } = require("./register-commands");
+const { handleModalInteraction, handleCommandInteraction } = require("./utils/handle-interactions");
+const { registerCommands } = require("./utils/register-commands");
 
 function startBot(client) {
   // Registers commands from main-commands folder

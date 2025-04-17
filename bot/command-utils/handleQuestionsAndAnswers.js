@@ -5,7 +5,7 @@ const {
   setUserQuestionStatus,
   setQuestionAttemptsById,
   updateCorrectAnswers,
-} = require("../../../database/dbQuizFunctions");
+} = require("../../database/dbQuizFunctions");
 
 // Returns the Fields, Buttons and the questionsString for a given answer
 function createAnswers(questions, questionIndex) {
