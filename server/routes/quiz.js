@@ -129,6 +129,7 @@ quizRouter.put("/update-question", async (req, res) => {
   }
 });
 
+/*
 quizRouter.put("/update-answers", async (req, res) => {
   try {
     const { questionId, answers, checkboxes } = req.body;
@@ -141,6 +142,7 @@ quizRouter.put("/update-answers", async (req, res) => {
     res.status(500).send("Couldn't update answers.");
   }
 });
+*/
 
 quizRouter.post("/create-answer", async (req, res) => {
   try {
@@ -166,7 +168,6 @@ quizRouter.put("/update-correct-answer", async (req, res) => {
   }
 });
 
-/*
 quizRouter.put("/update-answer-text", async (req, res) => {
   try {
     const { answerId, text } = req.body;
@@ -178,7 +179,6 @@ quizRouter.put("/update-answer-text", async (req, res) => {
     res.status(500).send("Couldn't update answers.");
   }
 });
-*/
 
 quizRouter.delete("/answer", async (req, res) => {
   try {
