@@ -34,6 +34,30 @@ async function takeScreenshot(hashRoute) {
   return new Promise((resolve, reject) => {
     https
       .get(apiFlashUrl, (response) => {
+        if (response.statusCode !== 200) {
+          reject(new Error(`API Flash returned status ${response.statusCode}`));
+          return;
+        }
+
+        const fileStream = fs.createWriteStream(filePath);
+        response.pipe(fileStream);
+
+        fileStream.on("finish", () => {
+          fileStream.close(() => {
+            console.log("Image saved:", filePath);
+            resolve(filePath);
+          });
+        });
+      })
+      .on("error", (error) => {
+        console.error("HTTPS Request failed:", error.message);
+        reject(error);
+      });
+  });
+
+  return new Promise((resolve, reject) => {
+    https
+      .get(apiFlashUrl, (response) => {
         console.log("API FLASH RES: ", response);
 
         //if (response.statusCode !== 200) reject();
