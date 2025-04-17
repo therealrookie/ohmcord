@@ -26,14 +26,31 @@ function createApiFlashUrl(hashRoute) {
 // https://apiflash.com/documentation
 
 async function takeScreenshot(hashRoute) {
-  const apiFlashUrl = createApiFlashUrl();
+  const apiFlashUrl = createApiFlashUrl(hashRoute);
 
   const uploadDir = path.join(process.cwd(), "uploads");
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
   return new Promise((resolve, reject) => {
+    https.get(apiFlashUrl, (response) => {
+      //if (response.statusCode !== 200) reject();
+
+      const fileStream = fs.createWriteStream(filePath);
+      response.pipe(fileStream);
+
+      fileStream.end();
+      fileStream.on("error", reject);
+      fileStream.on("finish", () => {
+        resolve();
+      });
+    });
+  });
+
+  return new Promise((resolve, reject) => {
     https
       .get(apiFlashUrl, (response) => {
+        console.log("API FLASH RES: ", response);
+
         const fileStream = fs.createWriteStream(filePath);
         response.pipe(fileStream);
 
