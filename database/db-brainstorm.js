@@ -97,7 +97,7 @@ async function getContributionPositions(contIds) {
   }
 }
 
-// Updates the position on the canvas of a contribution
+// Inserts or updates the position on the canvas of a contribution
 async function setPosition(contId, xPos, yPos) {
   try {
     const query = `

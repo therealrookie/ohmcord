@@ -7,7 +7,6 @@ const {
   addQuizAnswers,
   getAllQuizQuestions,
   updateQuizQuestion,
-  //updateQuizAnswers,
   updateQuizSettings,
   createAnswer,
   updateCorrectAnswer,
@@ -18,6 +17,7 @@ const {
 
 const { createHashRoute } = require("../../bot/utils/utils-functions");
 
+// Render edit-quiz.ejs file
 quizRouter.get("/:url", async (req, res) => {
   try {
     const quizData = await getQuizByHashUrl(req.params.url);
@@ -35,12 +35,14 @@ quizRouter.get("/:url", async (req, res) => {
   }
 });
 
+// Determines the visibility of the quiz by its visibilityIndex
 function quizVisibility(index) {
   if (index === 0) return "Niemand ist sichtbar";
   else if (index === 1) return "Nur Plätze 1-3 sichtbar";
   else if (index === 2) return "Alle Teilnehmer sichtbar";
 }
 
+// Renders the fin-quiz.ejs file
 quizRouter.get("/fin/:url", async (req, res) => {
   try {
     const quizData = await getQuizByHashUrl(req.params.url);
@@ -58,6 +60,7 @@ quizRouter.get("/fin/:url", async (req, res) => {
   }
 });
 
+// Adds / Creates new quiz in the database
 quizRouter.post("/", async (req, res) => {
   try {
     const { title, visibility } = req.body;
@@ -72,6 +75,7 @@ quizRouter.post("/", async (req, res) => {
   }
 });
 
+// Updates quiz settings (title and visibility)
 quizRouter.post("/update-settings", async (req, res) => {
   try {
     await updateQuizSettings(req.body);
@@ -80,6 +84,7 @@ quizRouter.post("/update-settings", async (req, res) => {
   }
 });
 
+// Adds a new question to the database
 quizRouter.post("/create-question", async (req, res) => {
   try {
     const { quizId, question } = req.body;
@@ -92,6 +97,8 @@ quizRouter.post("/create-question", async (req, res) => {
   }
 });
 
+//
+/*
 quizRouter.post("/save-answers", async (req, res) => {
   try {
     const { answers, quizQuestionId } = req.body;
@@ -104,10 +111,13 @@ quizRouter.post("/save-answers", async (req, res) => {
     res.status(500).send("Couldn't get Brainstorm contributions.");
   }
 });
+*/
 
-quizRouter.get(`/get-questions/:quizid`, async (req, res) => {
+// Gets all questions and answers from the database
+// [{questionId, questionString, answers: [answerId, quizAnswer, isCorrect]}, {...}]
+quizRouter.get(`/get-questions/:quizId`, async (req, res) => {
   try {
-    const quizId = req.params.quizid;
+    const quizId = req.params.quizId;
     const allQuestions = await getAllQuizQuestions(quizId);
     res.status(200).send(allQuestions);
   } catch (error) {
@@ -116,6 +126,7 @@ quizRouter.get(`/get-questions/:quizid`, async (req, res) => {
   }
 });
 
+// Updates the question (String)
 quizRouter.put("/update-question", async (req, res) => {
   try {
     const { questionId, question } = req.body;
@@ -129,21 +140,7 @@ quizRouter.put("/update-question", async (req, res) => {
   }
 });
 
-/*
-quizRouter.put("/update-answers", async (req, res) => {
-  try {
-    const { questionId, answers, checkboxes } = req.body;
-
-    const result = await updateQuizAnswers(questionId, answers, checkboxes);
-
-    res.status(200).send("Answers updated sucessfully.");
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Couldn't update answers.");
-  }
-});
-*/
-
+// Creates an empty answer for a questionId
 quizRouter.post("/create-answer", async (req, res) => {
   try {
     const { questionId } = req.body;
@@ -156,6 +153,7 @@ quizRouter.post("/create-answer", async (req, res) => {
   }
 });
 
+// Updates the is_correct flag of an answer in the database
 quizRouter.put("/update-correct-answer", async (req, res) => {
   try {
     const { answerId, isChecked } = req.body;
@@ -168,6 +166,7 @@ quizRouter.put("/update-correct-answer", async (req, res) => {
   }
 });
 
+// Updates the answer (String)
 quizRouter.put("/update-answer-text", async (req, res) => {
   try {
     const { answerId, text } = req.body;
@@ -180,6 +179,7 @@ quizRouter.put("/update-answer-text", async (req, res) => {
   }
 });
 
+// Deletes an answer
 quizRouter.delete("/answer", async (req, res) => {
   try {
     const { answerId } = req.body;
@@ -192,6 +192,7 @@ quizRouter.delete("/answer", async (req, res) => {
   }
 });
 
+// Deletes a question and its answers
 quizRouter.delete("/question", async (req, res) => {
   try {
     const { questionId } = req.body;
@@ -202,10 +203,6 @@ quizRouter.delete("/question", async (req, res) => {
     console.log(error);
     res.status(500).send("Couldn't update answers.");
   }
-});
-
-quizRouter.param("url", async (req, res, next, url) => {
-  next();
 });
 
 module.exports = { quizRouter };

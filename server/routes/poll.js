@@ -2,10 +2,9 @@ const express = require("express");
 const pollRouter = express.Router();
 const { getPollByHashRoute, getPollAnswers, addPoll } = require("../../database/db-poll");
 
+// Saves poll and answers to the database
 pollRouter.post("/save-poll", async (req, res) => {
   try {
-    console.log(req);
-
     const { question, answers } = req.body;
 
     const result = await addPoll(question, answers);
@@ -17,6 +16,7 @@ pollRouter.post("/save-poll", async (req, res) => {
   }
 });
 
+// Renders display-poll.ejs file
 pollRouter.get("/:hashRoute", async (req, res) => {
   try {
     const pollData = await getPollByHashRoute(req.params.hashRoute);

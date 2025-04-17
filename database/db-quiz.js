@@ -101,6 +101,7 @@ async function deleteQuestion(questionId) {
 }
 
 // Adds multiple Answers
+/*
 async function addQuizAnswers(quizQuestionId, answers) {
   try {
     answers.forEach(async (answer) => {
@@ -117,6 +118,7 @@ async function addQuizAnswers(quizQuestionId, answers) {
     return err.message;
   }
 }
+  */
 
 // Turns rows into an array of question-objects
 // [{questionId, questionString, answers: [answerId, quizAnswer, isCorrect]}, {...}]
@@ -348,7 +350,7 @@ module.exports = {
   addQuiz,
   getQuizByHashUrl,
   createQuizQuestion,
-  addQuizAnswers,
+  //addQuizAnswers,
   getAllQuizQuestions,
   updateQuizQuestion,
   addQuizParticipant,

@@ -3,13 +3,14 @@ const brainstormRouter = express.Router();
 const { getBrainstorm, getBrainstormContributions, setPosition } = require("../../database/db-brainstorm");
 const path = require("path");
 
-brainstormRouter.get("/:url", async (req, res) => {
+// Renders brainstorm.ejs file
+brainstormRouter.get("/:hashRoute", async (req, res) => {
   try {
-    const brainstormData = await getBrainstorm(req.params.url);
+    const brainstormData = await getBrainstorm(req.params.hashRoute);
     if (brainstormData) {
       res.render("brainstorm", {
         theme: brainstormData.theme,
-        hash: req.params.url,
+        hash: req.params.hashRoute,
         id: brainstormData.brainstorm_id,
         endBrainstormAt: brainstormData.end_time_ms,
         wsUrl: process.env.WS_URL,
@@ -21,26 +22,18 @@ brainstormRouter.get("/:url", async (req, res) => {
   }
 });
 
-/*
-brainstormRouter.get("/:hashroute", async (req, res) => {
-  const brainstormData = await getBrainstorm(req.params.hashroute);
-
-  res.render("brainstorm", {
-    theme: brainstormData.theme,
-  });
-});
-*/
-
-brainstormRouter.get("/contributions/:id", async (req, res) => {
+// Gets all brainstorm contributions by brainstormSessionId
+brainstormRouter.get("/contributions/:brainstormSessionId", async (req, res) => {
   try {
-    const id = req.params.id;
-    const contributions = await getBrainstormContributions(id);
+    const brainstormSessionId = req.params.brainstormSessionId;
+    const contributions = await getBrainstormContributions(brainstormSessionId);
     res.status(200).send(contributions);
   } catch (error) {
     res.status(500).send("Couldn't get Brainstorm contributions.");
   }
 });
 
+// Inserts or updates the position of a contribution on the Canvas
 brainstormRouter.post("/set-position", async (req, res) => {
   try {
     const { contId, xPos, yPos } = req.body;
@@ -53,6 +46,7 @@ brainstormRouter.post("/set-position", async (req, res) => {
   }
 });
 
+// Sends the Screenshot to the client to download
 brainstormRouter.get("/download-screenshot/:hashroute", async (req, res) => {
   try {
     const hashRoute = req.params.hashroute;
@@ -65,10 +59,6 @@ brainstormRouter.get("/download-screenshot/:hashroute", async (req, res) => {
     console.log("Error inside /download-canvas : ", error);
     res.status(500).json({ error: "Failed to get the data from the server." });
   }
-});
-
-brainstormRouter.param("url", async (req, res, next, url) => {
-  next();
 });
 
 module.exports = { brainstormRouter };
