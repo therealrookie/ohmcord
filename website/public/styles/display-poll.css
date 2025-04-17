@@ -4,9 +4,6 @@
   --primary: #f15025;
   --secondary: #e6e8e6;
   --tertiary: #ced0ce;
-  --oxford-blue: #1b263bff;
-  --yinmn-blue: #415a77ff;
-  --silver-lake-blue: #778da9ff;
 }
 
 * {
@@ -72,6 +69,7 @@ h1 {
   justify-content: space-around;
 }
 
+/* https://uiverse.io/marcelodolza/kind-panther-75 */
 .background {
   width: 100%;
   height: 100%;
@@ -192,24 +190,21 @@ h1 {
   background-color: var(--black);
 }
 
-/* width */
+/* https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp */
 ::-webkit-scrollbar {
   width: 5px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 3px;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 3px;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }

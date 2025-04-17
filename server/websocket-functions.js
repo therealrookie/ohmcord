@@ -3,12 +3,12 @@ const url = require("url");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
-
 const { addAnonymousQuestion } = require("../database/db-anon-questions");
 
-function setupWSS(server) {}
+// Handles connections to Websocket Server
+function handleWss(wss, ws, req) {
+  const path = url.parse(req.url).pathname;
 
-function handleWss(wss, ws, path) {
   if (path === "/brainstorm") {
     handleBrainstormConnection(ws, wss);
   } else if (path === "/questions") {
@@ -18,6 +18,7 @@ function handleWss(wss, ws, path) {
   }
 }
 
+// Handles Brainstorm ws-connections
 function handleBrainstormConnection(ws, wss) {
   ws.on("message", async (message) => {
     const data = JSON.parse(message);
@@ -25,6 +26,7 @@ function handleBrainstormConnection(ws, wss) {
   });
 }
 
+// Handles Anonymous Questions ws-connections
 function handleQuestionsConnection(ws, wss) {
   ws.on("message", async (message) => {
     const data = JSON.parse(message);
@@ -32,11 +34,10 @@ function handleQuestionsConnection(ws, wss) {
   });
 }
 
+// Handles Brainstorm ws-messages
 async function handleBrainstormMessage(data, wss) {
   if (!data.source.includes("server")) {
     data.source = `server-${data.source}`; // server-discord or server-website
-
-    console.log("WEBSOCKET SERVER: ", data);
 
     if (data.type === "image-request") {
       try {
@@ -48,15 +49,14 @@ async function handleBrainstormMessage(data, wss) {
         return;
       }
     }
-
     wsAnswer(data, wss);
   }
 }
 
+// Handles Anonymous Questions ws-messages
 async function handleQuestionMessage(data, wss) {
   if (!data.source?.startsWith("server")) {
     data.source = `server-${data.source}`; // server-discord or server-website
-    console.log("DATA: ", data);
     if (data.type === "question") {
       questionId = await addAnonymousQuestion(data.questionSessionId, data.question);
       data.questionId = questionId;
@@ -65,6 +65,7 @@ async function handleQuestionMessage(data, wss) {
   }
 }
 
+// Answers all ws-clients
 function wsAnswer(message, wss) {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
@@ -96,6 +97,7 @@ function takeScreenshot(hashRoute) {
   });
 }
 
+// Creates the URL with all neccessary parameters to get the screenshot via Api Flash
 function createApiFlashUrl(hashRoute) {
   return (
     "https://api.apiflash.com/v1/urltoimage?" +
@@ -110,4 +112,4 @@ function createApiFlashUrl(hashRoute) {
   );
 }
 
-module.exports = { setupWSS, takeScreenshot, handleWss };
+module.exports = { handleWss };

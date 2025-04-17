@@ -4,7 +4,6 @@ const {
   addQuiz,
   getQuizByHashUrl,
   createQuizQuestion,
-  addQuizAnswers,
   getAllQuizQuestions,
   updateQuizQuestion,
   updateQuizSettings,
@@ -96,22 +95,6 @@ quizRouter.post("/create-question", async (req, res) => {
     res.status(500).send("Couldn't get Brainstorm contributions.");
   }
 });
-
-//
-/*
-quizRouter.post("/save-answers", async (req, res) => {
-  try {
-    const { answers, quizQuestionId } = req.body;
-
-    const result = await addQuizAnswers(quizQuestionId, answers);
-
-    res.status(200);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Couldn't get Brainstorm contributions.");
-  }
-});
-*/
 
 // Gets all questions and answers from the database
 // [{questionId, questionString, answers: [answerId, quizAnswer, isCorrect]}, {...}]

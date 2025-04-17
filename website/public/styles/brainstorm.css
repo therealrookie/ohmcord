@@ -59,6 +59,7 @@ body {
   z-index: 5;
 }
 
+/* https://uiverse.io/kennyotsu/short-warthog-33 */
 #canvas {
   position: absolute;
   left: 0;
@@ -128,11 +129,3 @@ body {
   margin: 5px 5px;
   padding: 5px 10px;
 }
-
-/*
-#bs-canvas {
-    background-color: var(--black);
-    width: 100vw;
-    height: 80vh;
-}
-*/

@@ -3,6 +3,7 @@
   <head>
     <meta vharset="" UTF-8 />
     <title>Quiz</title>
+    <link rel="stylesheet" href="/styles/snackbar.css" />
     <link rel="stylesheet" href="/styles/fin-quiz.css" />
     <link rel="icon" type="image/png" href="/assets/OhmcordLogo.png" />
   </head>
@@ -32,10 +33,11 @@
       </div>
 
       <div class="footer"></div>
-      <div id="snackbar"><%= locals.hash %> kopiert!</div>
+      <div id="snackbar"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/scripts/snackbar.js"></script>
     <script src="/scripts/fin-quiz.js"></script>
   </body>
 </html>

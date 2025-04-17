@@ -100,26 +100,6 @@ async function deleteQuestion(questionId) {
   }
 }
 
-// Adds multiple Answers
-/*
-async function addQuizAnswers(quizQuestionId, answers) {
-  try {
-    answers.forEach(async (answer) => {
-      const { answerString, isCorrect } = answer;
-
-      await pgpool.query("INSERT INTO public.quiz_answers (quiz_question_id, quiz_answer, is_correct) VALUES($1, $2, $3)", [
-        quizQuestionId,
-        answerString,
-        isCorrect,
-      ]);
-    });
-    return "Answers added successfully!";
-  } catch (err) {
-    return err.message;
-  }
-}
-  */
-
 // Turns rows into an array of question-objects
 // [{questionId, questionString, answers: [answerId, quizAnswer, isCorrect]}, {...}]
 function parseQuestionsResult(rows) {
@@ -350,7 +330,6 @@ module.exports = {
   addQuiz,
   getQuizByHashUrl,
   createQuizQuestion,
-  //addQuizAnswers,
   getAllQuizQuestions,
   updateQuizQuestion,
   addQuizParticipant,

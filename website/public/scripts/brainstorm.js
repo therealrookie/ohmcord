@@ -8,48 +8,6 @@ const socket = new WebSocket(`${wsUrl}/brainstorm`);
 let contributions = [];
 let weightRange = [-1, 1];
 
-function determineWeightRange() {
-  const scores = contributions.map((con) => con.score);
-  console.log("SCORES: ", scores, contributions);
-  if (scores.length > 1) {
-    weightRange[0] = Math.min.apply(null, scores);
-    weightRange[1] = Math.max.apply(null, scores);
-  } else {
-    weightRange = [0, 0];
-  }
-
-  //console.log("Scores: ", weightRange);
-}
-
-async function getContributions() {
-  try {
-    const response = await fetch(`/brainstorm/contributions/${brainstormId}`);
-    const contributions = await response.json();
-
-    return contributions;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
-
-async function setPosition(contId, xPos, yPos) {
-  //console.log("HERE:: ", contId, xPos, yPos);
-  try {
-    const response = await fetch(`/brainstorm/set-position`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contId, xPos, yPos }),
-    });
-    const newPosition = await response.json();
-
-    //return newPosition;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
 window.onload = async () => {
   centerCanvas();
   contributions = await getContributions();
@@ -59,27 +17,22 @@ window.onload = async () => {
   await addExistingContribution();
 };
 
-async function addExistingContribution() {
-  for (const contribution of contributions) {
-    await addContributionToCanvas(contribution);
-  }
-}
-
 socket.onopen = function (event) {
   console.log("WebSocket Open (client)");
 };
 
-socket.onerror = function (event) {
-  console.log("Error Event: ", event);
-  console.log("Socket: ", socket);
+socket.onerror = function (error) {
+  console.log(error);
 };
 
 socket.onmessage = async function (event) {
+  await handleWsMessage(event);
+};
+
+async function handleWsMessage(event) {
   const message = JSON.parse(event.data);
   const validBrainstormId = parseInt(message.brainstormId) === parseInt(brainstormId);
   const discordSource = message.source === "server-discord";
-
-  console.log("WS MESSAGE: ", message);
 
   if (!validBrainstormId || !discordSource) return;
 
@@ -94,10 +47,30 @@ socket.onmessage = async function (event) {
     // {source, type, brainstormId, contribution: {id, score}}
     determineWeightRange();
 
-    editContributionElement(message.contribution.id, message.contribution.score);
+    // Edits all cotribution fontsize, weight and opacity
+    editContributionElement();
   }
-};
+}
 
+// Determines the range of lowest and highest ranked contribution
+function determineWeightRange() {
+  const scores = contributions.map((con) => con.score);
+  if (scores.length > 1) {
+    weightRange[0] = Math.min.apply(null, scores);
+    weightRange[1] = Math.max.apply(null, scores);
+  } else {
+    weightRange = [0, 0];
+  }
+}
+
+// Adds all contributions after reload
+async function addExistingContribution() {
+  for (const contribution of contributions) {
+    await addContributionToCanvas(contribution);
+  }
+}
+
+// Returns a random position on the canvas
 function getRandomPosition(xpos, ypos) {
   let xStart, yStart;
   if (xpos === null || ypos === null) {
@@ -110,10 +83,12 @@ function getRandomPosition(xpos, ypos) {
   return { xStart, yStart };
 }
 
+// Returns true if coordinate range is outside canvas
 function isOutsideCanvas({ xStart, yStart, xEnd, yEnd }) {
   return xStart < 20 || yStart < 20 || xEnd > 1900 || yEnd > 1060;
 }
 
+// Returns true if the coordinate range overlays the theme
 function hitsTheme({ xStart, yStart, xEnd, yEnd }) {
   const theme = document.getElementById("theme");
 
@@ -125,6 +100,7 @@ function hitsTheme({ xStart, yStart, xEnd, yEnd }) {
   );
 }
 
+// Returns true if the coordinate range overlays another contribution
 function hitsContribution({ xStart, yStart, xEnd, yEnd }) {
   const elements = document.querySelectorAll(".contribution");
 
@@ -142,14 +118,17 @@ function hitsContribution({ xStart, yStart, xEnd, yEnd }) {
   }
 }
 
+// Returns true if the element is overlaying another element or is outside canvas
 function isColliding(contElemConstraints) {
   return isOutsideCanvas(contElemConstraints) || hitsTheme(contElemConstraints) || hitsContribution(contElemConstraints);
 }
 
+// Returns a random integer
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Maps x-coordinate depending on score
 function mapX(minScore, maxScore, score) {
   const width = 1920;
   const step = width / (Math.abs(minScore) + Math.abs(maxScore) + 1);
@@ -167,6 +146,7 @@ function mapX(minScore, maxScore, score) {
   }
 }
 
+// Maps y-coordinate depending on score
 function mapY(minScore, maxScore, score) {
   const height = 1080;
   const step = height / (Math.abs(minScore) + Math.abs(maxScore) + 1);
@@ -184,9 +164,8 @@ function mapY(minScore, maxScore, score) {
   }
 }
 
+// Maps x/y Position if they don't already exist
 function mapPosition(score, xpos, ypos) {
-  //console.log("HERE XXX: ", score, xpos, ypos);
-
   if (xpos && ypos) {
     return { xStart: xpos, yStart: ypos };
   }
@@ -199,24 +178,15 @@ function mapPosition(score, xpos, ypos) {
   if (getRndInteger(0, 1) === 0) {
     xStart = mapX(minScore, maxScore, score);
     yStart = getRndInteger(20, 1060);
-    console.log("X = map: ", yStart, xStart);
   } else {
     xStart = getRndInteger(20, 1900);
     yStart = mapY(minScore, maxScore, score);
-
-    console.log("Y = map: ", yStart, xStart);
   }
 
   return { xStart, yStart };
 }
 
-function mapWeight(minScore, maxScore, score) {
-  const minWeight = 7;
-  const maxWeight = 17;
-  return map(minWeight, maxWeight, minScore, maxScore, score) / 10;
-}
-
-// Increase or decrease font size, weight, opacity depending on score
+// Increases or decreases font size, weight, opacity depending on score
 function setWeight(contElem, score) {
   const textLength = contElem.innerHTML.length;
   const weight = map(7, 17, weightRange[0], weightRange[1], score) / 10;
@@ -224,16 +194,14 @@ function setWeight(contElem, score) {
   const fontWeigth = map(100, 900, weightRange[0], weightRange[1], score);
   const opacity = map(5, 10, weightRange[0], weightRange[1], score) / 10;
 
-  console.log("Weight: ", score, weightRange, fontWeigth, size, opacity);
-
   contElem.style.fontWeight = fontWeigth;
   contElem.style.fontSize = `${size}%`;
   contElem.style.opacity = opacity;
-  //console.log("HERE: ", opacity, score, weightRange[0], weightRange[1]);
 
   return contElem;
 }
 
+// Creates and styles HTML element of a contribution
 function createContributionElem({ id, content, score, xpos, ypos }) {
   let contElem = document.createElement("div");
   contElem.id = id;
@@ -244,8 +212,6 @@ function createContributionElem({ id, content, score, xpos, ypos }) {
   contElem = setWeight(contElem, score);
 
   const { xStart, yStart } = mapPosition(score, xpos, ypos);
-
-  //console.log("POS: ", xStart, yStart);
 
   contElem.style.visibility = "hidden";
   contElem.style.left = `${xStart}px`;
@@ -260,29 +226,25 @@ function createContributionElem({ id, content, score, xpos, ypos }) {
   return { contElem, contElemConstraints };
 }
 
-async function editContributionElement(contId, score) {
+// Edits all cotribution fontsize, weight and opacity
+async function editContributionElement() {
   contributions.forEach((cont) => {
     const contElem = document.getElementById(cont.id);
     setWeight(contElem, cont.score);
   });
 }
 
+// Adds contribution to the canvas
 async function addContributionToCanvas(contribution) {
   const { contElem, contElemConstraints } = createContributionElem(contribution);
 
-  //console.log("Contribution:", contribution, contElemConstraints);
-
-  // Collision detection before placing
   if (isColliding(contElemConstraints)) {
     console.log("Collision detected! Trying a new position...");
     canvas.removeChild(contElem);
     await addContributionToCanvas(contribution);
   } else {
-    // updatePosition()
     contElem.classList.remove("temp");
     contElem.style.visibility = "visible";
-
-    //console.log("VALUES: ", contribution.id, contElemConstraints.xStart, contElemConstraints.yStart);
 
     await setPosition(contribution.id, contElemConstraints.xStart, contElemConstraints.yStart);
   }
@@ -301,12 +263,8 @@ function map(MIN, MAX, min, max, val) {
   }
 }
 
-function getDistance(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow(x2 - x1) + Math.pow(y2 - y1));
-}
-
+// Listens to new contribution sent via the input field
 const contributionInput = document.getElementById("add-contribution");
-
 contributionInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     console.log("New contribution: ", contributionInput.value);
@@ -316,7 +274,6 @@ contributionInput.addEventListener("keypress", (event) => {
         source: "website",
         type: "contribution",
         brainstormId: brainstormId,
-        //contributionId: contributionId,
         contribution: contributionInput.value,
       })
     );
@@ -324,3 +281,31 @@ contributionInput.addEventListener("keypress", (event) => {
     contributionInput.value = "";
   }
 });
+
+// Gets and returns all contributions from the database
+async function getContributions() {
+  try {
+    const response = await fetch(`/brainstorm/contributions/${brainstormId}`);
+    const contributions = await response.json();
+
+    return contributions;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+// Saves the position values to the database
+async function setPosition(contId, xPos, yPos) {
+  try {
+    const response = await fetch(`/brainstorm/set-position`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contId, xPos, yPos }),
+    });
+    await response.json();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

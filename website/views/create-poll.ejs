@@ -3,6 +3,7 @@
   <head>
     <meta vharset="" UTF-8 />
     <title>Create Poll</title>
+    <link rel="stylesheet" href="/styles/snackbar.css" />
     <link rel="stylesheet" href="/styles/create-poll.css" />
     <link rel="icon" type="image/png" href="/assets/OhmcordLogo.png" />
   </head>
@@ -80,11 +81,14 @@
 
       <div class="footer"></div>
       <div id="background"></div>
+      <!-- https://github.com/nolanlawson/emoji-picker-element?tab=readme-ov-file#dark-mode -->
       <emoji-picker id="emoji-menu"></emoji-picker>
+      <div id="snackbar"></div>
     </div>
 
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/scripts/snackbar.js"></script>
     <script src="/scripts/create-poll.js"></script>
     <script src="/scripts/answer-markups.js"></script>
   </body>

@@ -11,11 +11,12 @@ window.addEventListener("load", async (event) => {
   currentQuestionIndex = questions.length;
 });
 
-// Save Quiz settings when changed
+// Saves Quiz settings on change
 document.getElementById("quiz-form").addEventListener("change", async function (event) {
   await updateQuizSettings(quizId, event.target.name, event.target.value);
 });
 
+// Removes question and deletes it in the database
 async function removeQuestion() {
   const questionId = document.getElementById("questions-heading").getAttribute("data-question-id");
   await deleteQuestion(questionId);
@@ -23,6 +24,7 @@ async function removeQuestion() {
   await nextQuestion();
 }
 
+// Shows the current question and its answers
 async function loadQuestion() {
   setQuestionsHeading(`${currentQuestionIndex + 1}. Frage`, questions[currentQuestionIndex].questionId);
 
@@ -39,6 +41,7 @@ async function loadQuestion() {
   });
 }
 
+// Shows the empty question input field
 function showNewQuestionInput() {
   const addAnswerButton = document.getElementById("add-answer-button");
   addAnswerButton.style.display = "block";
@@ -52,6 +55,7 @@ function showNewQuestionInput() {
   removePreviousAnswerContainers();
 }
 
+// Removes all answer containers
 function removePreviousAnswerContainers() {
   const answerContainers = document.getElementsByClassName("answer-container");
 
@@ -60,6 +64,7 @@ function removePreviousAnswerContainers() {
   });
 }
 
+// Sets the heading above a question
 function setQuestionsHeading(text, questionId) {
   const deleteQuestionButton = document.getElementById("delete-question-button");
 
@@ -69,6 +74,7 @@ function setQuestionsHeading(text, questionId) {
   questionsHeading.setAttribute("data-question-id", questionId);
 }
 
+// Sets only one correct answer
 function setCorrectAnswer(answerIndex) {
   const checkboxes = Array.from(document.getElementsByClassName("answer-checkbox"));
 
@@ -80,6 +86,7 @@ function setCorrectAnswer(answerIndex) {
   });
 }
 
+// Creates an answer container
 function createAnswerContainer(answerIndex, answerId) {
   const newAnswerContainer = document.createElement("div");
   newAnswerContainer.id = answerId; //`answer-container-${answerIndex}`;
@@ -126,7 +133,7 @@ function createAnswerContainer(answerIndex, answerId) {
   return newAnswerContainer;
 }
 
-// Add an answer-container with checkbox, input and answer-delete-button
+// Adds an answer-container with checkbox, input and answer-delete-button
 async function addAnswer(answerId) {
   const answerIndex = questionForm.children.length - 1;
   const questionId = document.getElementById("questions-heading").getAttribute("data-question-id");
@@ -144,13 +151,15 @@ async function addAnswer(answerId) {
   updateAddAnswerButton();
 }
 
+// Returns the String of the question input
 function getQuestionString() {
   return document.getElementById("question-input").value;
 }
 
+// Returns an array of all answer inputs [{answerString, isCorrect}, {...}]
 function getAnswers() {
   let answers = [];
-  const children = Array.from(questionForm.children); // Convert HTMLCollection to array for easier manipulation
+  const children = Array.from(questionForm.children);
 
   children.forEach((child) => {
     if (child.id && child.id.includes("answer-container")) {
@@ -162,7 +171,7 @@ function getAnswers() {
   return answers;
 }
 
-// Update ID and placeholders of answers
+// Updates ID and placeholders of answers
 function updateAnswerIds() {
   const answerContainerArray = Array.from(document.getElementsByClassName("answer-container"));
   answerContainerArray.forEach((answerContainer, index) => {
@@ -171,7 +180,7 @@ function updateAnswerIds() {
   });
 }
 
-// Remove the addAnswerButton after 5 answers have been added
+// Removes the addAnswerButton after 5 answers have been added
 function updateAddAnswerButton() {
   const answerContainerArray = Array.from(document.getElementsByClassName("answer-container"));
   const addAnswerButton = document.getElementById("add-answer-button");
@@ -182,6 +191,7 @@ function updateAddAnswerButton() {
   updateAnswerIds();
 }
 
+// OnEnter event of question input
 async function newQuestionEnter(event) {
   if (event.key === "Enter") {
     event.preventDefault();
@@ -189,9 +199,9 @@ async function newQuestionEnter(event) {
   }
 }
 
+// Onchange event of question input
 async function newQuestionInput(event) {
   event.preventDefault();
-  console.log(event.key);
   const questionId = document.getElementById("questions-heading").getAttribute("data-question-id");
   if (questionId === "null") {
     await newQuestion(event.target.value);
@@ -201,6 +211,7 @@ async function newQuestionInput(event) {
   return false;
 }
 
+// Adds a new question to the database, updates questions array
 async function newQuestion(question) {
   const questionId = await createQuestion(question);
   await getQuestions();
@@ -209,6 +220,7 @@ async function newQuestion(question) {
   addAnswer();
 }
 
+// Checks if all inputs are valid
 function checkForValidQuiz() {
   let isValid = true;
 
@@ -243,6 +255,7 @@ function checkForValidQuiz() {
   return isValid;
 }
 
+// Checks for valid quiz and directs to the next page
 async function saveAndFinish() {
   await getQuestions();
   const validQuiz = checkForValidQuiz();
@@ -252,6 +265,7 @@ async function saveAndFinish() {
   }
 }
 
+// Shows next or new question
 async function nextQuestion() {
   await getQuestions();
   currentQuestionIndex++;
@@ -260,6 +274,7 @@ async function nextQuestion() {
   currentQuestionIndex >= questions.length ? showNewQuestionInput() : await loadQuestion();
 }
 
+// Shows the previous question
 async function showPreviousQuestion() {
   await getQuestions();
   currentQuestionIndex--;
@@ -267,186 +282,11 @@ async function showPreviousQuestion() {
   await loadQuestion();
 }
 
+// Disables button if previous or next quiz is not "reachable"
 function checkButtonAbility() {
   const previousQuestionButton = document.getElementById("previous-question-button");
   const nextQuestionButton = document.getElementById("next-question-button");
 
   previousQuestionButton.disabled = currentQuestionIndex === 0 ? true : false;
   nextQuestionButton.disabled = currentQuestionIndex === questions.length ? true : false;
-}
-
-async function getQuestions() {
-  try {
-    const response = await fetch(`/quiz/get-questions/${quizId}`);
-    questions = await response.json();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function updateQuizSettings(quizId, name, value) {
-  try {
-    await fetch("/quiz/update-settings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ quizId: quizId, column: name, value: value }),
-    });
-  } catch (error) {
-    console.error("Error updating settings in Database:", error);
-  }
-}
-
-async function createQuestion(questionString) {
-  try {
-    const response = await fetch("/quiz/create-question", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ quizId: quizId, question: questionString }),
-    });
-
-    const result = await response.json();
-    return result.quizQuestionId;
-  } catch (error) {
-    console.error("Error saving question to Database:", error);
-  }
-}
-
-async function updateQuestionText(questionString, questionId) {
-  try {
-    const response = await fetch("/quiz/update-question", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ questionId, question: questionString }),
-    });
-
-    return response.ok;
-  } catch (error) {
-    console.error("Error in updateQuestionText:", error);
-    return false;
-  }
-}
-
-/*
-async function updateAnswerInDataBase(questionId, answers, checkboxes) {
-  try {
-    const response = await fetch("/quiz/update-answers", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ questionId, answers, checkboxes }),
-    });
-
-    return response.ok;
-  } catch (error) {
-    console.error("Error in updateAnswerInDataBase:", error);
-    return false;
-  }
-}
-  */
-
-async function createAnswer(questionId) {
-  try {
-    const response = await fetch("/quiz/create-answer", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ questionId }),
-    });
-
-    return response.json();
-  } catch (error) {
-    console.error("Error in createAnswer:", error);
-    return false;
-  }
-}
-
-async function updateCorrectAnswer(answerId, isChecked) {
-  try {
-    const response = await fetch("/quiz/update-correct-answer", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ answerId, isChecked }),
-    });
-
-    return response.json();
-  } catch (error) {
-    console.error("Error in updateCorrectAnswer:", error);
-    return false;
-  }
-}
-
-async function updateAnswerText(answerId, text) {
-  try {
-    const response = await fetch("/quiz/update-answer-text", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ answerId, text }),
-    });
-
-    return response.json();
-  } catch (error) {
-    console.error("Error in updateAnswerText:", error);
-    return false;
-  }
-}
-
-async function deleteAnswer(answerId) {
-  try {
-    const response = await fetch("/quiz/answer", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ answerId }),
-    });
-
-    return response.json();
-  } catch (error) {
-    console.error("Error in deleteAnswer:", error);
-    return false;
-  }
-}
-
-async function deleteQuestion(questionId) {
-  try {
-    const response = await fetch("/quiz/question", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ questionId }),
-    });
-
-    return response.json();
-  } catch (error) {
-    console.error("Error in deleteQuestion:", error);
-    return false;
-  }
-}
-
-function showToast(text) {
-  // Get the snackbar DIV
-  var toast = document.getElementById("snackbar");
-
-  toast.innerHTML = text;
-
-  // Add the "show" class to DIV
-  toast.className = "show";
-
-  // After 3 seconds, remove the show class from DIV
-  setTimeout(function () {
-    toast.className = toast.className.replace("show", "");
-  }, 3000);
 }

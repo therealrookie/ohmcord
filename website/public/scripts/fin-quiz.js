@@ -10,6 +10,7 @@ window.addEventListener("load", async (event) => {
   displayQuestions();
 });
 
+// Returns all questions from the database
 async function getQuestions() {
   try {
     const response = await fetch(`/quiz/get-questions/${quizId}`);
@@ -19,16 +20,17 @@ async function getQuestions() {
   }
 }
 
+// Displays a question and its answers
 function createQuestionElements(question) {
   const questionContainer = document.createElement("div");
   questionContainer.classList.add("question-container");
 
-  // Display actual question text
+  // Displays actual question text
   const questionHeading = document.createElement("h5");
   questionHeading.innerHTML = question.questionString;
   questionContainer.appendChild(questionHeading);
 
-  // Display each answer
+  // Displays each answer
   question.answers.forEach((a, index) => {
     const answerText = document.createElement("p");
     answerText.innerHTML = `${index + 1}. ${a.quizAnswer}`; // Show real answer text
@@ -38,30 +40,17 @@ function createQuestionElements(question) {
   document.getElementById("questions").appendChild(questionContainer);
 }
 
+// Display all questions
 function displayQuestions() {
   questions.forEach((question) => {
     createQuestionElements(question);
   });
 }
 
+// Create container for copying the 6 digit Hash code
 const copyCodeContainer = document.getElementById("copy-code-field");
 copyCodeContainer.addEventListener("click", () => {
   const code = document.getElementById("hash-url").innerHTML;
   navigator.clipboard.writeText(code);
   showToast(`Code <i>${code}</i> kopiert!`);
 });
-
-function showToast(text) {
-  // Get the snackbar DIV
-  var toast = document.getElementById("snackbar");
-
-  toast.innerHTML = text;
-
-  // Add the "show" class to DIV
-  toast.className = "show";
-
-  // After 3 seconds, remove the show class from DIV
-  setTimeout(function () {
-    toast.className = toast.className.replace("show", "");
-  }, 3000);
-}

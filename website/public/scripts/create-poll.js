@@ -2,17 +2,19 @@ const questionForm = document.getElementById("question-form");
 const picker = document.querySelector("emoji-picker");
 const background = document.getElementById("background");
 
+// Closes the Emoji Picker
 const closeEmojiMenu = () => {
   picker.style.visibility = "hidden";
   background.style.visibility = "hidden";
-  //background.removeEventListener("click", closeEmojiMenu);
 };
 
+// Handles the click on an emoji
 const handleEmojiClick = (event, emojiContainer) => {
   emojiContainer.innerHTML = event.detail.unicode;
   closeEmojiMenu();
 };
 
+// Opens the emoji Picker
 function openEmojiMenu(emojiContainer) {
   console.log(emojiContainer);
 
@@ -30,21 +32,17 @@ function openEmojiMenu(emojiContainer) {
   return false;
 }
 
-function addAnswer(text, emoji) {
-  const addAnswerContainers = document.getElementsByClassName("answer-container");
-
-  const answerContainerArray = Array.from(addAnswerContainers);
-
-  if (answerContainerArray.length >= 10) return;
-
-  const answerIndex = questionForm.children.length - 1;
-
-  updateAddAnswerButton();
-
+// Creates a container for emojiContainer, answerInput and deleteButton
+function createNewAnswerContainer(answerIndex) {
   const newAnswerContainer = document.createElement("div");
   newAnswerContainer.id = `answer-container-${answerIndex}`;
   newAnswerContainer.classList = "answer-container";
 
+  return newAnswerContainer;
+}
+
+// Creates an emojiContainer
+function createEmojiContainer(emoji, answerIndex) {
   const emojiContainer = document.createElement("div");
   emojiContainer.classList.add("emoji-container");
   emojiContainer.id = `emoji-container-${answerIndex}`;
@@ -56,6 +54,11 @@ function addAnswer(text, emoji) {
   }
   emojiContainer.onclick = () => openEmojiMenu(emojiContainer);
 
+  return emojiContainer;
+}
+
+// Creates an answer Text Input
+function createAnswerTextInput(text, answerIndex) {
   const newAnswerTextInput = document.createElement("input");
   newAnswerTextInput.classList.add("answer-text-input");
   newAnswerTextInput.type = "text";
@@ -66,6 +69,11 @@ function addAnswer(text, emoji) {
     newAnswerTextInput.placeholder = `${answerIndex}. Antwort`;
   }
 
+  return newAnswerTextInput;
+}
+
+// Creates the delete Button for an answer
+function createDeleteAnswerButton(newAnswerContainer) {
   const newDeleteAnswerButton = document.createElement("button");
   newDeleteAnswerButton.innerHTML = "&#10006;";
   newDeleteAnswerButton.classList.add("delete-answer-button");
@@ -76,6 +84,28 @@ function addAnswer(text, emoji) {
     return false;
   };
 
+  return newDeleteAnswerButton;
+}
+
+// Adds an answer
+function addAnswer(text, emoji) {
+  const addAnswerContainers = document.getElementsByClassName("answer-container");
+  const answerContainerArray = Array.from(addAnswerContainers);
+
+  if (answerContainerArray.length >= 10) return;
+
+  const answerIndex = questionForm.children.length - 1;
+
+  updateAddAnswerButton();
+
+  const newAnswerContainer = createNewAnswerContainer(answerIndex);
+
+  const emojiContainer = createEmojiContainer(emoji, answerIndex);
+
+  const newAnswerTextInput = createAnswerTextInput(text, answerIndex);
+
+  const newDeleteAnswerButton = createDeleteAnswerButton(newAnswerContainer);
+
   newAnswerContainer.appendChild(emojiContainer);
   newAnswerContainer.appendChild(newAnswerTextInput);
   newAnswerContainer.appendChild(newDeleteAnswerButton);
@@ -85,6 +115,7 @@ function addAnswer(text, emoji) {
   updateAddAnswerButton();
 }
 
+// Removes the add-answer-button if there are 10 answers added
 function updateAddAnswerButton() {
   const addAnswerContainers = document.getElementsByClassName("answer-container");
   const addAnswerButton = document.getElementById("add-answer-button");
@@ -98,25 +129,26 @@ function updateAddAnswerButton() {
   }
 }
 
+// Updates answerIds if an answer gets deleted
 function updateAnswerIds() {
-  const children = Array.from(questionForm.children); // Convert HTMLCollection to array for easier manipulation
-  let answerIndex = 1; // Start indexing from 1 for consistency with placeholders
+  const children = Array.from(questionForm.children);
+  let answerIndex = 1;
 
   children.forEach((child) => {
     if (child.id && child.id.includes("answer-container")) {
-      child.id = `answer-container-${answerIndex}`; // Update the container ID
+      child.id = `answer-container-${answerIndex}`;
 
-      // Update the placeholder text of the text input inside the container
       const textInput = child.querySelector("input[type='text']");
       if (textInput) {
         textInput.placeholder = `${answerIndex}. Antwort`;
       }
 
-      answerIndex++; // Increment the index for the next answer
+      answerIndex++;
     }
   });
 }
 
+// Saves the Poll to the database and redirects to the next page
 async function createPoll() {
   const question = getQuestionData();
   const answers = getAnswers();
@@ -129,6 +161,7 @@ async function createPoll() {
   console.log(question, answers);
 }
 
+// Saves the poll to the database
 async function savePoll(question, answers) {
   try {
     const response = await fetch("/poll/save-poll/", {
@@ -146,6 +179,7 @@ async function savePoll(question, answers) {
   }
 }
 
+// Gets question and general poll data from the html inputs
 function getQuestionData() {
   const question = questionForm.querySelector("input").value;
   const multipleAnswers = document.getElementById("multiple-answers-checkbox").checked;
@@ -153,12 +187,13 @@ function getQuestionData() {
   const duration = durationElement.getAttribute("data-value");
 
   if (question === "") {
-    alert("Frage kann nicht leer sein!");
+    showToast(`Frage darf nicht leer sein!`);
     return;
   }
   return { question, multipleAnswers, duration };
 }
 
+// Parses the emojicode
 function getEmoji(answerContainer) {
   const emojiCode = answerContainer.querySelector("div").innerHTML.codePointAt(0);
   const skinColorCode = answerContainer.querySelector("div").innerHTML.codePointAt(1);
@@ -168,6 +203,7 @@ function getEmoji(answerContainer) {
   else return `${emojiCode}`;
 }
 
+// Array of possible duration values
 const durationArray = [
   { value: "1", text: "1 Stunde" },
   { value: "4", text: "4 Stunden" },
@@ -178,6 +214,7 @@ const durationArray = [
   { value: "336", text: "2 Wochen" },
 ];
 
+// Fill the dropdown menu with durationoptions
 function setDurationOptions() {
   const durationDropdown = document.getElementById("duration-dropdown");
   const setDuration = document.getElementById("set-duration");
@@ -196,6 +233,7 @@ function setDurationOptions() {
 
 setDurationOptions();
 
+// Get the selected duration
 function getDuration() {
   const durationOptions = Array.from(document.getElementsByClassName("duration-option"));
   const setDuration = document.getElementById("set-duration");
@@ -210,6 +248,7 @@ function getDuration() {
   });
 }
 
+// Collects all the answers (emoji, answer-string)
 function getAnswers() {
   let answers = [];
   const answerContainers = Array.from(questionForm.getElementsByClassName("answer-container"));
@@ -224,7 +263,7 @@ function getAnswers() {
     answers.push({ emoji, answer });
   });
   if (answerContainers.length !== answers.length) {
-    alert("Frage kann nicht leer sein!");
+    showToast("Frage darf nicht leer sein!");
     return;
   }
   return answers;

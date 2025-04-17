@@ -22,6 +22,7 @@ document.getElementById("create-quiz-btn").addEventListener("click", async () =>
   window.location.href = `/quiz/${quizHashUrl}`;
 });
 
+// Adds quizdata to the database and returns hashRoute
 const createQuiz = async (quizData) => {
   try {
     const response = await fetch("/quiz", {

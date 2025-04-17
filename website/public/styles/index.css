@@ -162,6 +162,7 @@ p {
   outline: none;
 }
 
+/* https://uiverse.io/kennyotsu/short-warthog-33 */
 #brainstorm-container {
   position: absolute;
   left: 0;
@@ -172,6 +173,7 @@ p {
   background-position: -5px -5px;
 }
 
+/* https://uiverse.io/kennyotsu-monochromia/spotty-cheetah-65 */
 #question-container {
   position: absolute;
   right: 0;
@@ -207,6 +209,7 @@ p {
   transition: background-size 0.2s ease-in-out;
 }
 
+/* https://uiverse.io/16alves02/short-lionfish-89 */
 #quiz-container {
   position: absolute;
   top: 0;
@@ -238,6 +241,7 @@ p {
   justify-content: center;
 }
 
+/* https://uiverse.io/marcelodolza/kind-panther-75 */
 #poll-container {
   position: absolute;
   right: 0;

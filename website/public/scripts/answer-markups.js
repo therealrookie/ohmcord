@@ -41,7 +41,7 @@ let currentTime = { hours: currentDate.getHours(), minutes: currentDate.getMinut
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
 
-// Render all the different selection-types (keywords, time, weekdays, date)
+// Renders all the different selection-types (keywords, time, weekdays, date)
 function renderMarkup() {
   addKeywords();
   addTimePicker();
@@ -50,7 +50,7 @@ function renderMarkup() {
   renderCalendar(currentMonth, currentYear);
 }
 
-// Add a selection to the last focused input or add a new answer and set the value
+// Adds a selection to the last focused input or adds a new answer and sets the value
 function setAnswerInput(text, emoji) {
   if (currentInput !== undefined) {
     currentInput.value = `${currentInput.value}${currentInput.value && ", "}${text}`;
@@ -85,7 +85,7 @@ document.addEventListener("click", setSelectedInput);
     Keyword Selection - Render keywords
 */
 
-// Create and return single keyword
+// Creates and returns single keyword
 function createKeyword(keyword) {
   const keywordDiv = document.createElement("div");
   keywordDiv.classList.add("keyword");
@@ -95,7 +95,7 @@ function createKeyword(keyword) {
   return keywordDiv;
 }
 
-// Add keywords to their container
+// Adds keywords to their container
 function addKeywords() {
   const keywordPicker = document.getElementById("keyword-picker");
   keywords.forEach((keyword) => {
@@ -108,7 +108,7 @@ function addKeywords() {
     Time Selection - Render time-selection
 */
 
-// Set the hours (before, current, after)
+// Sets the hours (before, current, after)
 function setHours(hours) {
   const hourPicker = document.getElementById("hour-picker").children;
   const hourSelection = document.getElementById("time-selection").children[0];
@@ -118,7 +118,7 @@ function setHours(hours) {
   hourPicker[2].innerHTML = addZeroToSingleDigit(parseHours(hours + 1));
 }
 
-// Set the minutes (before, current, after)
+// Sets the minutes (before, current, after)
 function setMinutes(minutes) {
   const minutesPicker = document.getElementById("minute-picker").children;
   const minutesSelection = document.getElementById("time-selection").children[2];
@@ -128,20 +128,20 @@ function setMinutes(minutes) {
   minutesPicker[2].innerHTML = addZeroToSingleDigit(parseMinutes(minutes + 5));
 }
 
-// Set / update hours and minutes
+// Sets / updates hours and minutes
 function addTimePicker() {
   setHours(currentTime.hours);
   setMinutes(currentTime.minutes);
 }
 
-// Parse hours 24h
+// Parses hours 24h
 function parseHours(hours) {
   if (hours > 23) return 0;
   else if (hours < 0) return 23;
   else return hours;
 }
 
-// Parse minutes 60min (5min intervals)
+// Parses minutes 60min (5min intervals)
 function parseMinutes(minutes) {
   if (minutes > 55) {
     return 0;
@@ -150,7 +150,7 @@ function parseMinutes(minutes) {
   } else return minutes;
 }
 
-// Parse minutes + add/subtract one hour when minutes pass a full hour
+// Parses minutes + adds/subtracts one hour when minutes pass a full hour
 function parseMinutesAddFullHour(minutes) {
   if (minutes > 55) {
     currentTime.hours = parseHours(currentTime.hours + 1);
@@ -161,7 +161,7 @@ function parseMinutesAddFullHour(minutes) {
   } else return minutes;
 }
 
-// Get the position of the mouse
+// Gets the position of the mouse
 function mouseWheelLeft(xPos) {
   const left = timePicker.getBoundingClientRect().left;
   const width = timePicker.getBoundingClientRect().width;
@@ -169,6 +169,7 @@ function mouseWheelLeft(xPos) {
   return xPos - left < width / 2;
 }
 
+// Calculates new time values left side -> hours // right side -> minutes
 function determineNewTimeValues(event) {
   if (mouseWheelLeft(event.x)) {
     const newHours = currentTime.hours + event.deltaY / 100;
@@ -179,7 +180,7 @@ function determineNewTimeValues(event) {
   }
 }
 
-// Listen to mouse-wheel-events inside the time-picker-container, display new time
+// Listens to mouse-wheel-events inside the time-picker-container, display new time
 timePicker.addEventListener("wheel", (event) => {
   event.preventDefault();
 
@@ -188,7 +189,7 @@ timePicker.addEventListener("wheel", (event) => {
   addTimePicker();
 });
 
-// Add time-selection to an answer-input
+// Adds time-selection to an answer-input when pressed
 timeSelection.addEventListener("click", function () {
   let time = "";
   Array.from(timeSelection.children).forEach((child) => {
@@ -202,7 +203,7 @@ timeSelection.addEventListener("click", function () {
     Weekday Selection - Render all 7 weekdays
 */
 
-// Create and return single weekday
+// Creates and returns single weekday
 function createWeekdayDiv(weekday) {
   const weekdayDiv = document.createElement("div");
   weekdayDiv.classList.add("keyword");
@@ -212,7 +213,7 @@ function createWeekdayDiv(weekday) {
   return weekdayDiv;
 }
 
-// Add weekdays to weekday-picker
+// Adds weekdays to weekday-picker
 function addWeekdays() {
   const weekdayPicker = document.getElementById("weekday-picker");
   weekdays.forEach((weekday) => {
@@ -223,9 +224,10 @@ function addWeekdays() {
 
 /*
     Date Selection - Render a calendar for a custom date-selection
+    https://dev.to/wizdomtek/creating-a-dynamic-calendar-using-html-css-and-javascript-29m
 */
 
-// Add Mo, Di, Mi... to the calendar
+// Adds Mo, Di, Mi... to the calendar
 function addCalendarWeekdays() {
   weekdays.forEach((day) => {
     const weekday = document.createElement("div");
@@ -234,19 +236,19 @@ function addCalendarWeekdays() {
   });
 }
 
-// Render calender days
+// Renders calender days
 function renderCalendar(month, year) {
   calendarDates.innerHTML = "";
   monthYear.textContent = `${months[month]} ${year}`;
 
-  // Create blanks for days of the week before the first day
+  // Creates blanks for days of the week before the first day
   const firstDay = new Date(year, month, 1).getDay();
   for (let i = 0; i < firstDay; i++) {
     const blank = document.createElement("div");
     calendarDates.appendChild(blank);
   }
 
-  // Add all the days
+  // Adds all the days
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   for (let i = 1; i <= daysInMonth; i++) {
     const day = document.createElement("div");

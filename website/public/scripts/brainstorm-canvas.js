@@ -2,7 +2,6 @@ const canvas = document.getElementById("canvas");
 const canvasContainer = document.getElementById("canvas-container");
 
 let zoom, xPos, yPos;
-
 let canvasGrabbed = false;
 
 function centerCanvas() {
@@ -68,9 +67,43 @@ canvasContainer.addEventListener("mousemove", (event) => {
   }
 });
 
-//window.onload = centerCanvas;
 window.onresize = centerCanvas;
 
+// Makes the downloadbutton visible and the input field hidden
+async function timerEnds(timer) {
+  clearInterval(timerInterval);
+
+  timer.innerHTML = "00:00";
+
+  const downloadButton = document.getElementById("download-button");
+  downloadButton.style.visibility = "visible";
+
+  const addContribution = document.getElementById("add-contribution");
+  addContribution.style.visibility = "hidden";
+}
+
+// Sets up the timer, is called every 100ms
+const setupTimer = async () => {
+  const timer = document.getElementById("timer");
+
+  const endTime = timer.getAttribute("data-end-time");
+  const timeLeftMillis = endTime - Date.now();
+
+  if (timeLeftMillis <= 0) {
+    await timerEnds(timer);
+    return;
+  }
+
+  let totalSeconds = Math.floor(timeLeftMillis / 1000);
+  let minutes = Math.floor(totalSeconds / 60);
+  let seconds = totalSeconds - minutes * 60;
+
+  timer.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+};
+
+let timerInterval = window.setInterval(setupTimer, 100);
+
+// Requests the canvas as Screenshot to download
 async function downloadCanvas() {
   const hashRoute = document.getElementById("hash-route").innerHTML;
   try {
@@ -96,55 +129,3 @@ async function downloadCanvas() {
     return null;
   }
 }
-
-async function uploadCanvas() {
-  const url = window.location.href;
-  const hashRoute = document.getElementById("hash-route").innerHTML;
-
-  try {
-    const response = await fetch(`/brainstorm/upload-screenshot`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url, hashRoute }),
-    });
-
-    console.log(response);
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-async function timerEnds(timer) {
-  clearInterval(timerInterval);
-
-  timer.innerHTML = "00:00";
-
-  //await uploadCanvas();
-
-  const downloadButton = document.getElementById("download-button");
-  downloadButton.style.visibility = "visible";
-
-  const addContribution = document.getElementById("add-contribution");
-  addContribution.style.visibility = "hidden";
-}
-
-const setupTimer = async () => {
-  const timer = document.getElementById("timer");
-
-  const endTime = timer.getAttribute("data-end-time");
-  const timeLeftMillis = endTime - Date.now();
-
-  if (timeLeftMillis <= 0) {
-    await timerEnds(timer);
-    return;
-  }
-
-  let totalSeconds = Math.floor(timeLeftMillis / 1000);
-  let minutes = Math.floor(totalSeconds / 60);
-  let seconds = totalSeconds - minutes * 60;
-
-  timer.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
-};
-
-let timerInterval = window.setInterval(setupTimer, 100);
