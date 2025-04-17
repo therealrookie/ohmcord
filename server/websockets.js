@@ -38,9 +38,11 @@ function takeScreenshot(hashRoute) {
       const fileStream = fs.createWriteStream(filePath);
       response.pipe(fileStream);
 
-      fileStream.end();
       fileStream.on("error", reject);
-      fileStream.on("finish", resolve);
+      fileStream.on("finish", () => {
+        fileStream.end();
+        resolve();
+      });
     });
   });
 
