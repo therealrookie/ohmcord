@@ -30,6 +30,21 @@ function takeScreenshot(hashRoute) {
   const filePath = path.join(uploadDir, `brainstorm-${hashRoute}.png`);
 
   return new Promise((resolve, reject) => {
+    https.get(apiFlashUrl, (response) => {
+      //if (response.statusCode !== 200) reject();
+
+      const fileStream = fs.createWriteStream(filePath);
+      response.pipe(fileStream);
+
+      fileStream.end();
+      fileStream.on("error", reject);
+      fileStream.on("finish", () => {
+        resolve();
+      });
+    });
+  });
+
+  return new Promise((resolve, reject) => {
     const apiFlashUrl = createApiFlashUrl(hashRoute);
 
     https
@@ -95,21 +110,6 @@ function takeScreenshot(hashRoute) {
         console.error("HTTPS Request failed:", error.message);
         reject(error);
       });
-  });
-
-  return new Promise((resolve, reject) => {
-    https.get(apiFlashUrl, (response) => {
-      //if (response.statusCode !== 200) reject();
-
-      const fileStream = fs.createWriteStream(filePath);
-      response.pipe(fileStream);
-
-      fileStream.end();
-      fileStream.on("error", reject);
-      fileStream.on("finish", () => {
-        resolve();
-      });
-    });
   });
 
   /*
