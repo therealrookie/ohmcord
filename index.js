@@ -6,8 +6,9 @@ const { Client, GatewayIntentBits } = require("discord.js");
 
 // Instanciate Discord Client
 const discordClient = new Client({
-  intents: [GatewayIntentBits.MessageContent],
+  intents: [],
 });
+//GatewayIntentBits.MessageContent
 
 discordClient.login(process.env.TOKEN);
 
