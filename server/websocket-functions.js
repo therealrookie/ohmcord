@@ -44,8 +44,8 @@ async function handleBrainstormMessage(data, wss) {
         await takeScreenshot(data.hashRoute);
         data.source = `server-website`;
         data.type = "image";
-      } catch (e) {
-        console.error("Image fetch failed:", e.message);
+      } catch (error) {
+        console.error("Image fetch failed:", error);
         return;
       }
     }
