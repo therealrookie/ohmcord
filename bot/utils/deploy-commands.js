@@ -25,6 +25,12 @@ for (const file of commandFiles) {
 // Constructs and prepares an instance of the REST module
 const rest = new REST().setToken(process.env.TOKEN);
 
+// for global commands
+rest
+  .delete(Routes.applicationCommand(process.env.CLIENT_ID, process.env.DEL_CMD))
+  .then(() => console.log("Successfully deleted application command"))
+  .catch(console.error);
+
 // Deploys commands
 (async () => {
   try {
