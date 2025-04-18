@@ -16,8 +16,6 @@ const handleEmojiClick = (event, emojiContainer) => {
 
 // Opens the emoji Picker
 function openEmojiMenu(emojiContainer) {
-  console.log(emojiContainer);
-
   background.style.visibility = "visible";
   picker.style.visibility = "visible";
 
@@ -155,10 +153,8 @@ async function createPoll() {
 
   if (question && answers) {
     const hashUrl = await savePoll(question, answers);
-    console.log(hashUrl);
     window.location.href = `/poll/${hashUrl}`;
   }
-  console.log(question, answers);
 }
 
 // Saves the poll to the database

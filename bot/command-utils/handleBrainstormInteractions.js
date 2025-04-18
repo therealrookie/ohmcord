@@ -50,7 +50,6 @@ function createContributionActionRows(contributions, hashRoute) {
     const actionRow = new ActionRowBuilder();
 
     for (let j = i; j < i + 5 && j < contributions.length; j++) {
-      console.log(contributions[j]);
       const contributionButton = new ButtonBuilder()
         .setCustomId(`contribution_${contributions[j].contributionId}`)
         .setLabel(`${contributions[j].contribution} (${contributions[j].score})`)

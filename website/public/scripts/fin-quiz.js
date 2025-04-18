@@ -6,7 +6,6 @@ let questions = [];
 
 window.addEventListener("load", async (event) => {
   await getQuestions();
-  console.log(questions);
   displayQuestions();
 });
 

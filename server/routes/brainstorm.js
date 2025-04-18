@@ -17,7 +17,7 @@ brainstormRouter.get("/:hashRoute", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.render("error", { text: "Dieses Brainstorm existiert leider nicht...", url: process.env.URL });
   }
 });
@@ -56,7 +56,7 @@ brainstormRouter.get("/download-screenshot/:hashroute", async (req, res) => {
 
     res.download(filePath);
   } catch (error) {
-    console.log("Error inside /download-canvas : ", error);
+    console.error("Error inside /download-canvas : ", error);
     res.status(500).json({ error: "Failed to get the data from the server." });
   }
 });

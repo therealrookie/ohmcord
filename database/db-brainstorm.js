@@ -92,7 +92,7 @@ async function getContributionPositions(contIds) {
     const positions = await pgpool.query("SELECT * FROM public.brainstorm_contribution_positions WHERE contribution_id = any($1)", [contIds]);
     return positions.rows;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error("Failed to fetch position data");
   }
 }

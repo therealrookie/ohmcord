@@ -111,8 +111,6 @@ async function downloadCanvas() {
       method: "GET",
     });
 
-    console.log(response);
-
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -122,8 +120,6 @@ async function downloadCanvas() {
     a.click();
     a.remove();
     window.URL.revokeObjectURL(url);
-
-    console.log(response);
   } catch (error) {
     console.error(error);
     return null;

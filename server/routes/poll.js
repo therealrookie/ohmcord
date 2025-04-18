@@ -11,7 +11,7 @@ pollRouter.post("/save-poll", async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send("Couldn't get Brainstorm contributions.");
   }
 });
@@ -32,7 +32,7 @@ pollRouter.get("/:hashRoute", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deiner Umfrage...", url: process.env.URL });
   }
 });

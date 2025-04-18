@@ -15,7 +15,7 @@ questionRouter.get("/:hashRoute", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.render("error", { text: "Diese Fragerunde existiert leider nicht...", url: process.env.URL });
   }
 });

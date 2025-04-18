@@ -84,16 +84,24 @@ function takeScreenshot(hashRoute) {
   const apiFlashUrl = createApiFlashUrl(hashRoute);
 
   return new Promise((resolve, reject) => {
-    https.get(apiFlashUrl, (response) => {
-      const fileStream = fs.createWriteStream(filePath);
-      response.pipe(fileStream);
+    https
+      .get(apiFlashUrl, (response) => {
+        const fileStream = fs.createWriteStream(filePath);
+        response.pipe(fileStream);
 
-      fileStream.on("error", reject);
-      fileStream.on("finish", () => {
-        fileStream.end();
-        resolve();
+        fileStream.on("error", (error) => {
+          console.error(error);
+          reject();
+        });
+        fileStream.on("finish", () => {
+          fileStream.end();
+          resolve();
+        });
+      })
+      .on("error", (error) => {
+        console.error(error);
+        reject();
       });
-    });
   });
 }
 

@@ -5,7 +5,7 @@ const socket = new WebSocket(`${wsUrl}/questions`);
 
 const questions = getQuestions(questionSessionId);
 
-socket.onopen = function (event) {
+socket.onopen = function () {
   console.log("WebSocket Open (client)");
 };
 
@@ -132,7 +132,6 @@ async function addAnswers(questionId) {
 function addNewAnswer(data) {
   const questionNote = document.getElementById(data.questionId);
   const answerList = questionNote.querySelector("ol");
-  console.log(answerList);
 
   const li = document.createElement("li");
   li.textContent = data.answer;
@@ -148,7 +147,7 @@ async function getQuestions(id) {
     renderQuestionNotes(questions);
     return questions.map((cont) => Object.values(cont)[0]);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 }
@@ -161,7 +160,7 @@ async function getAnswers(questionId) {
 
     return answers;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return [];
   }
 }

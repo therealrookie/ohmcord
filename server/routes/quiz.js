@@ -29,7 +29,7 @@ quizRouter.get("/:url", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deines Quiz...", url: process.env.URL });
   }
 });
@@ -54,7 +54,7 @@ quizRouter.get("/fin/:url", async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.render("error", { text: "Es ist ein Fehler aufgetaucht, während des Speicherns deines Quiz...", url: process.env.URL });
   }
 });
@@ -104,7 +104,7 @@ quizRouter.get(`/get-questions/:quizId`, async (req, res) => {
     const allQuestions = await getAllQuizQuestions(quizId);
     res.status(200).send(allQuestions);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send("Couldn't get Quiz questions.");
   }
 });
@@ -118,7 +118,7 @@ quizRouter.put("/update-question", async (req, res) => {
 
     res.status(200).send("Question updated sucessfully.");
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send("Couldn't update Question.");
   }
 });
@@ -131,7 +131,7 @@ quizRouter.post("/create-answer", async (req, res) => {
     const result = await createAnswer(questionId);
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send("Couldn't update answers.");
   }
 });
@@ -144,7 +144,7 @@ quizRouter.put("/update-correct-answer", async (req, res) => {
     const result = await updateCorrectAnswer(answerId, isChecked);
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send("Couldn't update answers.");
   }
 });
@@ -157,7 +157,7 @@ quizRouter.put("/update-answer-text", async (req, res) => {
     const result = await updateAnswerText(answerId, text);
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send("Couldn't update answers.");
   }
 });
@@ -170,7 +170,7 @@ quizRouter.delete("/answer", async (req, res) => {
     const result = await deleteAnswer(answerId);
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send("Couldn't update answers.");
   }
 });
@@ -183,7 +183,7 @@ quizRouter.delete("/question", async (req, res) => {
     const result = await deleteQuestion(questionId);
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send("Couldn't update answers.");
   }
 });

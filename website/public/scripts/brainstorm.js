@@ -239,7 +239,6 @@ async function addContributionToCanvas(contribution) {
   const { contElem, contElemConstraints } = createContributionElem(contribution);
 
   if (isColliding(contElemConstraints)) {
-    console.log("Collision detected! Trying a new position...");
     canvas.removeChild(contElem);
     await addContributionToCanvas(contribution);
   } else {
@@ -267,8 +266,6 @@ function map(MIN, MAX, min, max, val) {
 const contributionInput = document.getElementById("add-contribution");
 contributionInput.addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
-    console.log("New contribution: ", contributionInput.value);
-
     socket.send(
       JSON.stringify({
         source: "website",

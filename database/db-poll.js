@@ -8,7 +8,7 @@ async function getPollByHashRoute(hashRoute) {
 
     return quiz.rows[0];
   } catch (error) {
-    console.log("Error at function getPollByHashRoute(): ", error);
+    console.error("Error at function getPollByHashRoute(): ", error);
     throw new Error("Failed to fetch poll data");
   }
 }
@@ -20,7 +20,7 @@ async function getPollAnswers(pollId) {
 
     return quiz.rows;
   } catch (error) {
-    console.log("Error at function getPollAnswers(): ", error);
+    console.error("Error at function getPollAnswers(): ", error);
     throw new Error("Failed to fetch poll data");
   }
 }

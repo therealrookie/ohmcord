@@ -270,7 +270,6 @@ async function nextQuestion() {
   await getQuestions();
   currentQuestionIndex++;
   checkButtonAbility();
-  console.log(currentQuestionIndex, questions.length);
   currentQuestionIndex >= questions.length ? showNewQuestionInput() : await loadQuestion();
 }
 

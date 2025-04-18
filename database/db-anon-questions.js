@@ -42,7 +42,7 @@ async function getQuestionMessageId(questionId) {
     const questionMessageId = await pgpool.query("SELECT discord_message_id FROM public.question_contributions WHERE question_id = $1", [questionId]);
     return questionMessageId.rows[0].discord_message_id;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error("Failed to fetch brainstorm data");
   }
 }
@@ -53,7 +53,7 @@ async function getQuestionById(questionId) {
     const question = await pgpool.query("SELECT question FROM public.question_contributions WHERE question_id = $1", [questionId]);
     return question.rows[0].question;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error("Failed to fetch brainstorm data");
   }
 }
@@ -74,7 +74,7 @@ async function getAnonymousQuestions(questionSessionId) {
     const questions = await pgpool.query("SELECT * FROM public.question_contributions WHERE question_session_id = $1", [questionSessionId]);
     return questions.rows;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error("Failed to fetch brainstorm data");
   }
 }
@@ -98,7 +98,7 @@ async function getAnonymousAnswers(questionId) {
     const questions = await pgpool.query("SELECT * FROM public.question_answers WHERE question_id = $1", [questionId]);
     return questions.rows;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error("Failed to fetch brainstorm data");
   }
 }

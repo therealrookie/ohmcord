@@ -20,7 +20,7 @@ async function getQuizByHashUrl(hashRoute) {
     const quiz = await pgpool.query("SELECT * FROM public.quiz WHERE url = $1", [hashRoute]);
     return quiz.rows[0];
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error("Failed to fetch brainstorm data");
   }
 }
@@ -179,7 +179,7 @@ async function addQuizParticipant(data) {
 
     return response.rows[0].participants_id;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return error;
   }
 }
@@ -193,7 +193,7 @@ async function getUserQuestionStatus(quizId, userId) {
     ]);
     return response.rows[0]?.question_status;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return -1;
   }
 }
@@ -207,7 +207,7 @@ async function setUserQuestionStatus(quizId, userId, status) {
     );
     return response.rows[0];
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return -1;
   }
 }
@@ -220,7 +220,7 @@ async function updateCorrectAnswers(quizId, userId) {
       [quizId, userId]
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -233,7 +233,7 @@ async function addQuizEndtime(quizId, userId, endTimeMs) {
       userId,
     ]);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -247,7 +247,7 @@ async function getQuizParticipantData(quizId, userId) {
     ]);
     return response.rows[0];
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -263,7 +263,7 @@ async function getQuizParticipantsRanking(quizId) {
     );
     return response.rows;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -273,7 +273,7 @@ async function getQuestionAttemptsById(questionId) {
     const response = await pgpool.query("SELECT attempts, correct FROM public.quiz_questions WHERE quiz_question_id = $1", [questionId]);
     return { attempts: response.rows[0].attempts, correct: response.rows[0].correct };
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -289,7 +289,7 @@ async function setQuestionAttemptsById(questionId, isCorrect) {
       [questionId, isCorrect]
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -319,10 +319,9 @@ async function clearQuizData(quizId) {
 async function updateQuizSettings(body) {
   try {
     const { quizId, column, value } = body;
-    const response = await pgpool.query(`UPDATE public.quiz SET ${column} = $1 WHERE quiz_id = $2 RETURNING *`, [value, quizId]);
-    console.log(response);
+    await pgpool.query(`UPDATE public.quiz SET ${column} = $1 WHERE quiz_id = $2 RETURNING *`, [value, quizId]);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 

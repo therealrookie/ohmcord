@@ -106,7 +106,6 @@ function buildNextQuestionActionRow(questionIndex, totalQuestions) {
 // Sends a reply message after an answer-button was pressed
 async function checkAnswerMessage(buttonInteraction, quizData, questions) {
   const { userId, userQuestionStatus, givenAnswerIndex, questionIndex } = await getUserAnswerData(quizData.quiz_id, buttonInteraction);
-  console.log({ userId, userQuestionStatus, givenAnswerIndex, questionIndex });
 
   if (userQuestionStatus < questionIndex) {
     await setUserQuestionStatus(quizData.quiz_id, userId, questionIndex);
@@ -116,8 +115,6 @@ async function checkAnswerMessage(buttonInteraction, quizData, questions) {
 
   const message = await createAnswerReplyMessage(quizData.quiz_id, questions[questionIndex - 1], buttonInteraction.user.id, givenAnswerIndex);
   const actionRow = buildNextQuestionActionRow(questionIndex, questions.length);
-
-  console.log(message, actionRow);
 
   await buttonInteraction.reply({ content: message, components: [actionRow], ephemeral: true });
 }

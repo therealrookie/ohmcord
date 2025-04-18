@@ -39,7 +39,6 @@ async function handleBrainstormCommand(interaction) {
     const validSource = parsedMessage.source === "server-website";
 
     if (validBrainstormId && validSource && parsedMessage.type === "image" && !imageSent) {
-      console.log("ParsedMessage: ", parsedMessage);
       await sendBrainstormCanvas(client, hashRoute, interaction);
 
       imageSent = true;
