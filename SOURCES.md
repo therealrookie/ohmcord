@@ -64,12 +64,12 @@ https://node-postgres.com/features/transactions
 
 emoji-picker-element
 
-https://github.com/nolanlawson/emoji-picker-element?tab=readme-ov-file#dark-mode
+https://github.com/nolanlawson/emoji-picker-element?tab=readme-ov-file
 
 dropdown menu
 
 https://www.w3schools.com/css/css_dropdowns.asp
 
-calender
+calendar
 
 https://dev.to/wizdomtek/creating-a-dynamic-calendar-using-html-css-and-javascript-29m

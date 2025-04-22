@@ -16,9 +16,12 @@ function startBot(client) {
     } else return;
 
     /*
+
+    TODO Modals should be handled globally and not in every instance of the command
+
     if (interaction.isModalSubmit()) {
       await handleModalInteraction(interaction);
-    } else 
+    }
      */
   });
 }
